@@ -1,0 +1,9 @@
+{
+    "/api": {
+        "target": "https://transport.lares.ro/",
+        "secure": false,
+        "logLevel": "debug",
+        "changeOrigin": true
+    },
+    "logLevel": "error"
+}

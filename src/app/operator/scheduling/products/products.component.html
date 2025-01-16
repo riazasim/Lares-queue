@@ -1,0 +1,9 @@
+<mat-tab-group>
+    <mat-tab *ngFor="let tabData of tabsData">
+        <ng-template mat-tab-label>
+            <img src="{{tabData.tabImg}}">
+            {{tabData.tabName}}
+        </ng-template>
+        <app-products-tab [Classes]=tabData.tabHeaders.Class [Headers]=tabData.tabHeaders.Headers ></app-products-tab>
+    </mat-tab>
+</mat-tab-group>

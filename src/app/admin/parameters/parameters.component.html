@@ -1,0 +1,24 @@
+<div class="p-6 bg-white rounded-lg">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Parameters</h2>
+    <p class="text-lightGray">
+        Let’s set the parameters of the simulation.<br> 
+        Parameters are related to access points, tenants, drivers’ discipline and even the LPR system performance.<br> 
+        Make sure you set the values as close to your real life scenarios because the data represents the entry point for the simulation.    
+    </p>
+<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+    <mat-tab *ngFor="let tabData of tabsData">
+        <ng-template mat-tab-label>
+            <!-- <img src="{{tabData.tabImg}}"> -->
+            {{tabData.tabName}}
+        </ng-template>
+        <p class="my-4 text-gray"> {{tabData.tabParagraph}}</p>
+        <app-parameters-tab [Classes]=tabData.tabHeaders.Class [Headers]=tabData.tabHeaders.Headers ></app-parameters-tab>
+    </mat-tab>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            QUEUE
+        </ng-template>
+        <app-parameters-queue></app-parameters-queue>
+    </mat-tab>
+</mat-tab-group>
+</div>

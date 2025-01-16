@@ -1,0 +1,14 @@
+main {
+    @apply shadow-lg;
+    min-height: calc(100vh - 190px);
+    background: white;
+    border-radius: var(--app-border-radius);
+
+    @media screen and (max-width: 1400px) {
+        overflow: auto;
+    }
+
+    @media screen and (max-width: 576px) {
+        min-height: 100%;
+    }
+}

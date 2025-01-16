@@ -1,0 +1,59 @@
+<section class="bg-white max-md:min-w-100 min-lg:min-w-[850px] h-full p-[50px] overflow-auto">
+    <div class="flex justify-between min-lg:items-center max-lg:flex-col">
+        <div><h2 class="heading-2 font-bold text-primary">Shipment ID - {{ (planning$ | async)?.sId}}</h2></div>
+        <div class="flex gap-10">
+            <fa-icon icon="print" class="text-primary text-[35px] cursor-pointer"></fa-icon>
+            <fa-icon icon="file-pdf" class="text-primary text-[35px] cursor-pointer"></fa-icon>
+            <fa-icon icon="envelope" class="text-primary text-[35px] cursor-pointer"></fa-icon>
+        </div>
+    </div>
+    <div class="py-10">
+        <div class="flex min-lg:justify-between min-lg:items-center max-lg:flex-col">
+            <div><h4 class="heading-4 text-primary">Shipment Details</h4></div>
+        </div>
+        <div class="grid min-lg:grid-rows-3 min-lg:grid-cols-2 max-md:grid-rows-6 max-md:grid-cols-1 py-2">
+            <div><span class="font-bold">Status: </span> 
+            <!-- <mat-chip [ngStyle]="{
+                'background': (planning$ | async)?.statusColor
+            }">{{(planning$ | async)?.status || 'No status'}}</mat-chip> -->
+            </div>
+            <div><span class="font-bold">Driver: </span> 
+                <!-- {{ (planning$ | async)?.driverName || '-'}} -->
+            </div>
+            <div><span class="font-bold">Operation: </span>
+                 <!-- {{ (planning$ | async)?.operation || '-'}} -->
+                </div>
+            <div><span class="font-bold">Auto License Plate: </span>
+                 <!-- {{ (planning$ | async)?.truckLicensePlateFront || '-'}} -->
+                </div>
+            <div><span class="font-bold">Products: </span>
+                 <!-- {{ (planning$ | async)?.products || '-'}} -->
+                </div>
+            <div><span class="font-bold">Avize marfa: </span> -</div>
+        </div>
+    </div>
+    <div>
+        <h4 class="heading-4 font-bold text-primary mb-3">Send Message</h4>
+        <div class="flex flex-col items-center justify-center">
+            <div textarea-wrapper leftIcon="message-lines">
+                <textarea inputRef cols="50" rows="10" placeholder="Message"></textarea>
+            </div>
+            <div class="flex justify-center w-full py-5">
+                <p class="w-[400px]">Requires response</p>
+            </div>
+            <div class="flex items-center w-[400px]">
+                <div>
+                    <input inputRef type="radio" name="requiresResponse">
+                    <label class="ml-2" for="">Yes</label>
+                </div>
+                <div class="ml-5">
+                    <input inputRef type="radio" name="requiresResponse">
+                    <label class="ml-2" for="">No</label>
+                </div>
+            </div>
+            <div class="flex justify-end w-full">
+                <button type="button" class="btn btn-primary" (click)="triggerPlanUpgradeWarning.emit()">Next</button>
+            </div>
+        </div>
+    </div>
+</section>

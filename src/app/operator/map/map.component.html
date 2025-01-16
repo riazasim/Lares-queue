@@ -1,0 +1,11 @@
+<div class="relative">
+    <app-loader *ngIf="isLoading$ | async" [isOverlay]="true" message="Wait map is loading."></app-loader>
+    <google-map [center]="center" [zoom]="zoom" height="750px" width="100%">
+        <map-marker *ngFor="let marker of myMarkerPositions" icon="assets/images/marker_red.png" [position]="marker.position" [title]="marker.title">
+        </map-marker>
+        <map-marker *ngFor="let marker of otherMarkerPositions" icon="assets/images/marker_yellow.png" [position]="marker.position" [title]="marker.title">
+        </map-marker>
+    </google-map>
+    <app-train-search *ngIf="transportMode === 'RAILWAY'" id="search" (results)="retrieveMapData($event)" (mapLoading$)="mapLoading($event)"></app-train-search>
+    <app-search *ngIf="transportMode === 'WATER'" id="search" (results)="retrieveMapData($event)" (mapLoading$)="mapLoading($event)"></app-search>
+</div>

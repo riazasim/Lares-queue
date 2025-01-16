@@ -1,0 +1,41 @@
+<full-empty-container *ngIf="transportMode !== 'RAILWAY'">
+    <div class="flex justify-center">
+        <!-- <fa-icon icon="comment-lines" class="text-primary text-[160px]"></fa-icon> -->
+        <img src="assets/images/plannin-boat.svg" alt="Flag">
+    </div>
+
+    <div class="mt-10">
+        <h4 class="heading-4 text-center pb-10">{{'The are no routes scheduled' | translate}}</h4>
+        <p class="heading-6 text-center text-gray"
+            [innerHTML]="'There are no ships routes at the moment.<br>Use the button below to add a new RID.' | safeHtml">
+        </p>
+        <div class="text-center pt-10 flex justify-center px-10">
+            <div *ngIf="userRole === 'ROLE_USER_TRANSPORT'">
+                <button routerLink="./add" type="button"
+                    class="btn btn-primary rounded-r-lg flex-grow h-[50px] max-w-[200px]">
+                    <span class="text-lg">Add Route</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</full-empty-container>
+<full-empty-container *ngIf="transportMode === 'RAILWAY'">
+    <div class="flex justify-center">
+        <img src="assets/images/carbon_train-speed.png" alt="Flag">
+    </div>
+
+    <div class="mt-10">
+        <h4 class="heading-4 text-center pb-10">{{'The are no shipments scheduled' | translate}}</h4>
+        <p class="heading-6 text-center text-gray"
+            [innerHTML]="'There are no shipments at the moment.<br>Use the button below to add a new SID.' | safeHtml">
+        </p>
+        <div class="text-center pt-10 flex justify-center px-10">
+            <div *ngIf="userRole === 'ROLE_USER_TRANSPORT'">
+                <button routerLink="./add" type="button"
+                    class="btn btn-primary rounded-r-lg flex-grow h-[50px] max-w-[200px]">
+                    <span class="text-lg">Add Shipment</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</full-empty-container>

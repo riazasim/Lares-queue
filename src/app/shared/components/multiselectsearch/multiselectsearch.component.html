@@ -1,0 +1,65 @@
+<!-- <mat-form-field class="example-chip-list" appearance="fill" floatLabel="never">
+  <mat-label>
+    Locations
+  </mat-label> -->
+  <!-- <div iconic-input-wrapper leftIcon="garage">
+    <input (click)="chipList.focus()" inputRef type="text" placeholder="Locations" formControlName="productCode">
+  </div> -->
+  <!-- <mat-chip-list #chipList aria-label="Fruit selection">
+    <mat-chip
+      *ngFor="let item of items; let i = index"
+      (removed)="remove(i)">
+      <span *ngIf="field">
+        {{ item[field] }}
+      </span>
+      <button matChipRemove>&times;</button>
+    </mat-chip>
+    <div iconic-input-wrapper leftIcon="garage">
+      <input
+        inputRef
+        placeholder="Add location..."
+        #fruitInput
+        [formControl]="fruitCtrl"
+        [matAutocomplete]="auto"
+        [matChipInputFor]="chipList"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        (matChipInputTokenEnd)="add($event)">
+    </div>
+  </mat-chip-list>
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+    <mat-option *ngFor="let item of filteredFruits | async" [value]="item">
+      {{item.name}}
+    </mat-option>
+  </mat-autocomplete> -->
+<!-- </mat-form-field> -->
+
+<app-loader *ngIf="!data.length"></app-loader>
+<mat-form-field *ngIf="data.length" class="example-chip-list" appearance="fill">
+  <div class="iconic-layout-wrapper">
+    <div class="input-container">
+      <fa-icon *ngIf="leftIcon" [icon]="leftIcon" size="lg" class="icon"></fa-icon>
+      <mat-chip-listbox #chipList>
+        <mat-chip *ngFor="let item of items; let i = index" (removed)="remove(i)">
+          {{ item[field] }}
+          <button matChipRemove>
+            <fa-icon icon="close"></fa-icon>
+          </button>
+        </mat-chip>
+        <!-- <input
+          [placeholder]="placeholder"
+          #fruitInput
+          [formControl]="fruitCtrl"
+          [matAutocomplete]="auto"
+          [matChipInputFor]="chipList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          (matChipInputTokenEnd)="add($event)"> -->
+      </mat-chip-listbox>
+      <fa-icon *ngIf="rightIcon" [icon]="rightIcon" size="lg" class="icon ml-auto pr-3"></fa-icon>
+    </div>
+  </div>
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+    <mat-option *ngFor="let item of filteredFruits | async" [value]="item">
+      {{item.name}}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>

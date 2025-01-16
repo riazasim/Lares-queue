@@ -1,0 +1,8 @@
+:host {
+    ::ng-deep {
+        .mdc-circular-progress__indeterminate-container circle {
+          stroke: white;
+        }
+    
+    }
+}

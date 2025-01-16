@@ -1,0 +1,181 @@
+.card {
+    display: flex;
+    border: 1px transparent solid;
+    border-radius: 12px;
+    height: 140px;
+    width: 300px;
+
+    .left {
+        flex-basis: 80px;
+        border: 1px transparent solid;
+        border-radius: 12px 0 0 12px;
+        background-color: #1B9FE8;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .right {
+        flex-basis: 220px;
+        border: 1px transparent solid;
+        border-radius: 0 12px 12px 0;
+        background-color: #FFFFFF;
+        display: flex;
+        flex-direction: column;
+
+        // gap: 2px;
+        .top {
+            flex-basis: 100px;
+            padding: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: auto;
+            scrollbar-width: none;
+        }
+
+        .bottom {
+            display: flex;
+            justify-content: space-evenly;
+            flex-basis: 27px;
+
+            div .vertical {
+                border-left: 1px solid #CCCCCC;
+                height: 24px;
+            }
+        }
+    }
+}
+
+::ng-deep .input-container {
+    min-height: 0px !important;
+}
+
+::ng-deep .mat-mdc-form-field-flex {
+    width: 198px !important;
+    align-items: center !important;
+}
+
+::ng-deep .mdc-text-field {
+    padding: 0px !important;
+    overflow: visible !important;
+}
+
+// ::ng-deep .errors-container{
+//     height: 0px !important;
+// }
+::ng-deep.iconic-layout-wrapper>.input-container {
+    background-color: white;
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 1px solid #A0A0A0;
+    border-radius: var(--app-border-radius);
+    padding: 0.1rem;
+    // min-height: var(--control-height, 50px);
+}
+
+.vl {
+    border-left: 2px solid #CCCCCC;
+    height: 27px;
+}
+
+[type='text']:focus,
+input:where(:not([type])):focus,
+[type='email']:focus,
+[type='url']:focus,
+[type='password']:focus,
+[type='number']:focus,
+[type='date']:focus,
+[type='datetime-local']:focus,
+[type='month']:focus,
+[type='search']:focus,
+[type='tel']:focus,
+[type='time']:focus,
+[type='week']:focus,
+[multiple]:focus,
+textarea:focus,
+select:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    --ring-inset: var(--empty,
+            /*!*/
+            /*!*/
+        );
+    --ring-offset-width: 0px;
+    --ring-offset-color: 0;
+    --ring-color: #25ebab;
+    --ring-offset-shadow: var(--ring-inset) 0 0 0 var(--ring-offset-width) var(--ring-offset-color);
+    --ring-shadow: var(--ring-inset) 0 0 0 calc(1px + var(--ring-offset-width)) var(--ring-color);
+    box-shadow: var(--ring-offset-shadow), var(--ring-shadow), var(--shadow);
+    border-color: 0;
+}
+
+::ng-deep.mat-mdc-form-field-bottom-align::before {
+    content: white !important;
+    display: block !important;
+    height: 0px !important;
+}
+
+table {
+    text-indent: 0;
+    border-color: inherit;
+    border-collapse: inherit;
+}
+
+.result-container {
+    // width: 25%;
+    width: 300px;
+    height: 320px;
+    overflow: auto;
+    border-radius: 12px;
+    background-color: #FFFFFF;
+    scrollbar-width: none;
+}
+
+.mat-mdc-table thead,
+.mat-mdc-header-row,
+.mat-mdc-header-cell {
+    background: #1B9FE8;
+}
+
+.mat-mdc-paginator{
+    background: transparent;
+    color: white !important;
+}
+
+::ng-deep .mat-mdc-icon-button[disabled] .mat-mdc-paginator-icon{
+    fill: rgba(255, 255, 255, 0.6) !important;
+}
+
+::ng-deep .mat-mdc-icon-button .mat-mdc-paginator-icon{
+    fill: rgba(255, 255, 255, 1) !important;
+}
+
+.mat-mdc-header-cell {
+    border-bottom-color: var(--mat-table-row-item-outline-color, rgba(0, 0, 0, 0.12));
+    border-bottom-width: var(--mat-table-row-item-outline-width, 1px);
+    border-bottom-style: solid;
+    letter-spacing: var(--mat-table-header-headline-tracking);
+    font-weight: inherit;
+    line-height: inherit;
+    color: white;
+}
+
+.mat-mdc-row {
+    background: white;
+}
+
+.mat-row {
+    background: white;
+}
+
+.overlay-content {
+    position: absolute;
+    top: 50px;
+    right: calc(100% - (100% - 50px));
+    background-color: transparent;
+    padding: 10px;
+    z-index: 50;
+    // border: 1px solid black;
+}

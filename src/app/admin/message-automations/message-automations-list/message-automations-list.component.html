@@ -1,0 +1,63 @@
+<section *ngIf="dataSource.length; else empty">
+    <material-panel-table [showSearchbar]="false" [showButton]="false" [showHeader]="true" tableTitle="Add message - automation trigger">
+    <div table class="w-full shadow-lg">
+        <ng-scrollbar track="horizontal" [autoHeightDisabled]="false">
+          <table class="material-table no-wrap overflow-hidden" matSort
+                 [class.loading]="loading" aria-label="Usage Table"
+                 cdk-table [dataSource]="dataSource">
+
+            <ng-container cdkColumnDef="operation">
+              <th cdk-header-cell *cdkHeaderCellDef scope="col">
+                <div mat-sort-header="operation">Operation</div>
+              </th>
+              <td cdk-cell *cdkCellDef="let row" class="text-left" >{{row.operation}}</td>
+            </ng-container>
+
+            <ng-container cdkColumnDef="trigger" >
+              <th cdk-header-cell *cdkHeaderCellDef scope="col">
+                <div mat-sort-header="trigger">Trigger</div>
+              </th>
+              <td cdk-cell *cdkCellDef="let row">{{row.trigger}}</td>
+            </ng-container>
+
+            <ng-container cdkColumnDef="scheduling">
+              <th cdk-header-cell *cdkHeaderCellDef scope="col">
+                <div mat-sort-header="scheduling">Scheduling</div>
+              </th>
+              <td cdk-cell *cdkCellDef="let row">{{row.scheduling}}</td>
+            </ng-container>
+
+            <ng-container cdkColumnDef="status">
+              <th cdk-header-cell *cdkHeaderCellDef scope="col">
+                <div mat-sort-header="status">Status</div>
+              </th>
+              <td cdk-cell *cdkCellDef="let row">{{row.status}}</td>
+            </ng-container>
+
+            <!-- Header and Row Declarations -->
+            <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+            <tr cdk-row *cdkRowDef="let row; columns: displayedColumns"></tr>
+            <tr *cdkNoDataRow>
+              <td [colSpan]="displayedColumns.length">
+                <span *ngIf="loading">
+                  Loading the data
+                </span>
+                <span
+                  *ngIf="dataSource.length === 0 && !loading">No results found</span>
+                <span
+                  *ngIf="dataSource.length > 0  && !loading">Nicio înregistrare nu corespunde criteriilor de căutare</span>
+              </td>
+            </tr>
+          </table>
+        </ng-scrollbar>
+      </div>
+      <div optional class="bg-white p-4">
+          <button type="button" class="text-primary">
+            <fa-icon icon="circle-plus" class="text-primary"></fa-icon>
+            Add New Automation</button>
+      </div>
+    </material-panel-table>
+</section>
+<ng-template #empty>
+  <no-message-automations></no-message-automations>
+</ng-template>

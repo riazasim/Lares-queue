@@ -1,0 +1,26 @@
+<ng-container *ngIf="isUmexOrganization; else basic">
+    <div class="flex flex-col gap-2">
+        <div *ngIf="planning.goodsBuyer">
+            <span class="font-bold">Client:</span>
+            <span *ngIf="(planning.operationType | lowercase) === 'loading'" class="pl-2">{{planning.goodsSupplier || '-'}}</span>
+            <span *ngIf="(planning.operationType | lowercase) === 'unloading'" class="pl-2">{{planning.goodsBuyer || '-'}}</span>
+        </div>
+        <div *ngIf="planning.goodsSupplier">
+            <span class="font-bold">Supplier:</span>
+            <span *ngIf="(planning.operationType | lowercase) === 'loading'" class="pl-2">{{planning.goodsBuyer || '-'}}</span>
+            <span *ngIf="(planning.operationType | lowercase) === 'unloading'" class="pl-2">{{planning.goodsSupplier || '-'}}</span>
+        </div>
+    </div>
+</ng-container>
+<ng-template #basic>
+    <div class="flex flex-col gap-2">
+        <div *ngIf="planning.goodsBuyer">
+            <span class="font-bold">Client:</span>
+            <span class="pl-2">{{planning.goodsBuyer || '-'}}</span>
+        </div>
+        <div *ngIf="planning.goodsSupplier">
+            <span class="font-bold">Supplier:</span>
+            <span class="pl-2">{{planning.goodsSupplier || '-'}}</span>
+        </div>
+    </div>
+</ng-template>

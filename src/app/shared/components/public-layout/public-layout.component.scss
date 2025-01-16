@@ -1,0 +1,32 @@
+:host {
+    display: block;
+    height: 100%;
+  }
+  
+  aside,
+  main {
+    height: 100%;
+    overflow: hidden;
+    flex-grow: 1;
+  }
+  
+  aside {
+    display: none;
+    flex-basis: 54vw;
+    @apply min-lg:block;
+  }
+  
+  main {
+    flex-basis: 46vw;
+    overflow-y: auto;
+    @media screen and (max-width: 556px) {
+      width: 100%;
+      flex-basis: auto;
+    }
+  }
+  
+  .layout-wrapper {
+    display: flex;
+    height: 100%;
+  }
+  

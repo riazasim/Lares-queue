@@ -1,0 +1,14 @@
+a {
+  &[href] {
+    @apply text-primary;
+    &.download {
+      color: inherit;
+    }
+  }
+  &:hover {
+    @apply text-primary-light;
+  }
+  &:visited {
+    @apply text-primary-dark;
+  }
+}

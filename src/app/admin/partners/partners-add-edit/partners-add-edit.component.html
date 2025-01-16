@@ -1,0 +1,92 @@
+<edit-container [headerTitle]="id ?  'Edit Partner Details':'Add Partner Details'">
+    <app-loader *ngIf="(isLoading$ | async)" [isContainer]="true" [fullScreen]="false"></app-loader>
+    <form *ngIf="!(isLoading$ | async)" [formGroup]="partnerForm">
+        <div>
+            <div>
+                <h6 class="font-bold">Details</h6>
+                <div class="min-xl:columns-2 flex gap-4">
+                    <div class="flex-[8] h-[90px]">
+                        <div iconic-input-wrapper leftIcon="user">
+                            <input inputRef type="text" id="name" placeholder="Partner Name" formControlName="name" />
+                        </div>
+                    </div>
+                    <div class="flex-[4] h-[90px]">
+                        <div iconic-select-wrapper leftIcon="eye">
+                            <select spAccessInputRef name="status" id="status" formControlName="status">
+                                <option disabled selected value="">Status</option>
+                                <option *ngFor="let status of status" [value]="status.value">
+                                    {{ status.name }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h6 class="font-bold">Address</h6>
+                <div class="flex items-center gap-4 h-[110px]">
+                    <div class="flex-[3]" iconic-input-wrapper leftIcon="location-crosshairs">
+                        <input placeholder="Street" inputRef type="text" id="addrStreet" formControlName="addrStreet">
+                    </div>
+                    <div class="flex-1">
+                        <div iconic-input-wrapper>
+                            <input placeholder="No." inputRef type="text" formControlName="addrStreetNumber">
+                        </div>
+                    </div>
+                    <div>
+                        <div iconic-input-wrapper>
+                            <input placeholder="City" inputRef type="text" formControlName="addrCity">
+                        </div>
+                    </div>
+                    <div>
+                        <div iconic-input-wrapper>
+                            <input placeholder="County" inputRef type="text" formControlName="addrCounty">
+                        </div>
+                    </div>
+                    <div class="flex-[2]">
+                        <div iconic-input-wrapper>
+                            <input placeholder="Country" inputRef type="text" formControlName="addrCountry">
+                        </div>
+                    </div>
+                    <div class="flex-[2]">
+                        <div iconic-input-wrapper>
+                            <input placeholder="Zip Code" inputRef type="text" formControlName="addrZipCode">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="min-xl:columns-2">
+                    <div>
+                        <div iconic-input-wrapper leftIcon="envelope">
+                            <input inputRef placeholder="Email" type="text" id="contactEmail"
+                                formControlName="contactEmail">
+                        </div>
+                    </div>
+                    <div>
+                        <div iconic-input-wrapper leftIcon="mobile">
+                            <input inputRef placeholder="Phone" type="tel" minlength="7" maxlength="17"
+                                id="contactPhone" formControlName="contactPhone">
+                        </div>
+                        <!-- <phonenumber [buttonPlaceholder]="'button.select' | translate"
+                            [placeholder]="'contact.phone-nr' | translate"
+                            [formGroup]="partnerForm" buttonField="phoneRegionCode"
+                            [selectedPhoneRegionCode]="selectedPhoneRegionCode" field="contactPhone">
+                        </phonenumber> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-end pt-5">
+            <div class="flex gap-4">
+                <button [routerLink]="id ? '../../list' : '../list'" class="btn btn-outline-primary" type="button">
+                    Cancel
+                </button>
+                <button class="btn btn-primary" type="button" (click)="saveUser()"
+                    [disabled]="partnerForm.invalid || (isLoading$ | async)">
+                    Save
+                </button>
+            </div>
+        </div>
+    </form>
+</edit-container>

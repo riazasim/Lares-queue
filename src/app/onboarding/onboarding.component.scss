@@ -1,0 +1,17 @@
+:host {
+  ::ng-deep {
+    @import "swiper/swiper.min.css";
+    @import "swiper/modules/navigation/navigation.min.css";
+    @import "swiper/modules/pagination/pagination.min.css";
+
+
+    .swiper-pagination .swiper-pagination-bullet,
+    .swiper-pagination .swiper-pagination-bullet-active {
+      background-color: #F15A5A;
+    }
+
+    swiper .swiper-button-next, .swiper-button-prev {
+      color: #F15A5A;
+    }
+  }
+}

@@ -1,0 +1,26 @@
+<success-container>
+  <h2 class="text-3xl">Step {{ selectedIndex + 1 }} - {{selected?.ariaLabel}}</h2>
+
+  <div [ngTemplateOutlet]="selected ? selected.content : null"></div>
+
+  <div class="flex justify-end pt-5">
+    <div *ngIf="selectedIndex !== 2 && selectedIndex !== 3" class="flex gap-4">
+      <button [routerLink]="id ? '../../' : '../'" class="btn btn-outline-primary" type="button">Cancel</button>
+      <button *ngIf="selectedIndex > 0" class="btn btn-outline-primary" type="button" cdkStepperPrevious>Previous</button>
+      <button [disabled]="selectedIndex === 1 && ![
+          automationTypeEnum.noAutomation,
+          automationTypeEnum.timeBased,
+          automationTypeEnum.actionBased
+      ].includes((automationType.value ?? 1)) ||
+      (selectedIndex === 0 && (!messageForm.get('name')?.value ||
+      !messageForm.get('message')?.value))" class="btn btn-primary" type="button" cdkStepperNext>Next</button>
+    </div>
+
+    <div *ngIf="selectedIndex === 2 && (automationType.value === automationTypeEnum.actionBased ||
+                                        automationType.value === automationTypeEnum.timeBased)" class="flex gap-4">
+      <button [routerLink]="id ? '../../' : '../'" class="btn btn-outline-primary" type="button">Cancel</button>
+      <button *ngIf="selectedIndex > 0" class="btn btn-outline-primary" type="button" cdkStepperPrevious>Previous</button>
+      <button class="btn btn-primary" type="button" cdkStepperNext>Save</button>
+    </div>
+  </div>
+</success-container>

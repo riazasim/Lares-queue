@@ -1,0 +1,16 @@
+<div class="max-w-sm px-4 py-4 min-sm:px-16 min-sm:py-8">
+  <div class="whitespace-pre-line  max-w-xs mb-8">
+    <p class="font-bold text-muted text-xl text-center mb-4 text-columnCell">
+      Are you sure you want to delete locomotive/wagon ?
+    </p>
+    <p class="font-bold max-w-xs text-center text-sm text-columnCell">
+      You can also edit the record
+      using the icon in the right column of the table.
+    </p>
+  </div>
+
+  <div class="flex justify-around flex-wrap-reverse gap-4">
+    <button tabIndex="-1" (click)="cancel()" class="btn btn-outline-primary min-w-[130px]">Cancel</button>
+    <button tabIndex="-1" (click)="confirm()" class="btn btn-primary min-w-[130px]">Delete</button>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+<div class="layout-wrapper">
+    <header>
+        <div class="menu-container" *ngIf="showHeader">
+            <ng-content select="[menu]"></ng-content>
+        </div>
+    </header>
+    <main class="!rounded-xl shadow-lg border border-transparent" [class]="Class"
+        [ngStyle]="{'scrollbar-width' : 'none','overflow' : 'hidden'}">
+        <ng-content select="[content]"></ng-content>
+    </main>
+</div>

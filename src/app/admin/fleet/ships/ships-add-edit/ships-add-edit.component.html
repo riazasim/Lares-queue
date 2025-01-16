@@ -1,0 +1,100 @@
+<edit-container [headerTitle]="id ?  'Edit Ship Details':'Add Ship Details'">
+    <app-loader *ngIf="(isLoading$ | async)" [isContainer]="true" [fullScreen]="false"></app-loader>
+    <form [formGroup]="shipForm" *ngIf="!(isLoading$ | async)">
+        <div class="grid min-lg:grid-cols-2 grid-cols-1 gap-x-10 min-3xl:gap-x-20 gap-y-4 pt-[100px] min-xl:px-[50px]">
+            <div class="flex flex-col  gap-y-4 px-[50px]">
+                <div iconic-input-wrapper leftSvg="assets/images/ship-name.svg">
+                    <input inputRef type="text" placeholder="Ship name" formControlName="name" />
+                </div>
+                <div iconic-select-wrapper leftSvg="assets/images/ship-name.svg"
+                    >
+                    <select spAccessInputRef name="shipType" id="shipType" formControlName="shipType">
+                        <option value="" disabled selected>Ship Type</option>
+                        <option *ngFor="let item of shipTypes" [value]="item.id">
+                            {{ item.name }}
+                        </option>
+                    </select>
+                </div>
+                <div iconic-input-wrapper leftIcon="user">
+                    <input inputRef type="text" placeholder="Ship Owner"
+                        formControlName="shipowner" />
+                </div>
+                <div iconic-input-wrapper leftSvg="assets/images/shipRegNo.svg">
+                    <input inputRef type="text" placeholder="Ship Registration Number"
+                        formControlName="registrationNo" />
+                </div>
+                <div iconic-input-wrapper leftSvg="assets/images/circum_gps.svg">
+                    <input inputRef type="text" placeholder="AIS" formControlName="ais" />
+                </div>
+                <div iconic-select-wrapper leftSvg="assets/images/engine.svg">
+                    <select spAccessInputRef name="propulsionType" id="propulsionType" formControlName="propulsionType">
+                        <option value="" disabled selected>Propulsion Type</option>
+                        <option *ngFor="let item of propulsionType" [value]="item.name">
+                            {{ item.name }}
+                        </option>
+                    </select>
+                </div>
+                <div iconic-select-wrapper leftSvg="assets/images/scheduling_lock.svg"
+                    >
+                    <select spAccessInputRef name="lockType" id="lockType" formControlName="lockType">
+                        <option value="" disabled selected>Type of lock</option>
+                        <option *ngFor="let item of typeOfLock" [value]="item.id">
+                            {{ item.name }}
+                        </option>
+                    </select>
+                </div>
+                <!-- <mat-select class="mb-6" formControlName="lockType" placeholder="Type Of Lock">
+                    <searchbar>
+                        <fa-icon icon="search" leftIcon></fa-icon>
+                        <input input type="text" (keyup)="onInputChange($event)">
+                    </searchbar>
+                    <hr class="my-1 ">
+                    <mat-option *ngFor="let item of (typeOfLock | filter: search : 'name'); let i = index;"
+                        [value]="item.id">
+                        {{item.name}}
+                    </mat-option>
+                    <div class="w-full" *ngIf="(typeOfLock | filter: search : 'name').length === 0">
+                        <p class="text-center text-columnCell">No Item Found</p>
+                    </div>
+                </mat-select> -->
+            </div>
+            <div class="flex flex-col gap-x-10 gap-y-4 px-[50px]">
+                <div iconic-input-wrapper leftSvg="assets/images/pavillion.svg">
+                    <input inputRef type="text" placeholder="Pavilion" formControlName="pavilion" />
+                </div>
+                <div iconic-input-wrapper leftSvg="assets/images/engine.svg">
+                    <input inputRef type="text" placeholder="Engine Power" formControlName="enginePower" />
+                </div>
+                <div iconic-input-wrapper leftSvg="assets/images/scheduling_length.svg">
+                    <input inputRef type="number" placeholder="Length (m)*" formControlName="length" />
+                </div>
+                <div iconic-input-wrapper leftSvg="assets/images/scheduling_width.svg">
+                    <input inputRef type="number" placeholder="Width (m)*" formControlName="width" />
+                </div>
+                <div iconic-input-wrapper leftSvg="assets/images/scheduling_depth.svg">
+                    <input inputRef type="number" placeholder="Max Draft (m)*" formControlName="maxDraft" />
+                </div>
+                <div iconic-input-wrapper leftSvg="assets/images/scheduling_convoy.svg">
+                    <input inputRef type="number" placeholder="Aerial Guage (M)*" formControlName="aerialGauge" />
+                </div>
+                <div iconic-input-wrapper leftSvg="assets/images/scheduling_weight.svg">
+                    <input inputRef type="number" placeholder="Capacity Max (m)*" formControlName="maxCapacity" />
+                </div>
+            </div>
+        </div>
+        <div class="min-xl:px-[50px] grid min-lg:grid-cols-2 grid-cols-1 gap-x-10 min-3xl:gap-x-20 mt-4">
+            <div class="gap-y-4 mb-5 min-xl:px-[50px]">
+                <button [routerLink]="id ? '../../list' : '../list'"
+                    class="btn btn-outline-primary w-full min-h-[50px] !text-[18px]">
+                    Cancel
+                </button>
+            </div>
+            <div class="gap-y-4 mb-5 min-xl:px-[50px]">
+                <button [disabled]="shipForm.invalid || (isLoading$ | async)" type="button"
+                    class="btn btn-primary w-full min-h-[50px] !text-[18px]" (click)="saveShip()">
+                    Save
+                </button>
+            </div>
+        </div>
+    </form>
+</edit-container>

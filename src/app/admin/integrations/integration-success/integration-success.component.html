@@ -1,0 +1,13 @@
+<success-container [headerTitle]="'Integration'">
+    <div>
+        <h4 class="heading-4 py-10 text-center">Success!</h4>
+        <p class="text-center heading-6 max-w-[929px] mx-auto" [innerHTML]="'Your integration was succesfully created. Please make sure to follow the progress in this platform'"></p>
+    </div>
+    <div class="text-center py-5">
+        <fa-icon icon="party-horn" class="text-primary min-md:text-[270px] text-[90px]"></fa-icon>
+    </div>
+    <div class="flex max-md:flex-col min-xl:px-40 max-md:px-0 mx-auto gap-4">
+        <button type="button" class="btn btn-primary system-button max-md:w-full" routerLink="../">Home</button>
+        <button type="button" class="btn btn-primary system-button max-md:w-full" routerLink="../add">New Integration</button>
+    </div>
+</success-container>

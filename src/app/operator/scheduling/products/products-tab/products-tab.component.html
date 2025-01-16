@@ -1,0 +1,39 @@
+<material-panel-table [showHeader]="false">
+    <div table class="w-full overflow-hidden">
+        <ng-scrollbar track="horizontal" [autoHeightDisabled]="false" style="scrollbar-width: none;">
+            <table class="material-table no-wrap overflow-hidden">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th *ngFor="let Header of Headers;">{{Header}}</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr class="bg-[#C9C9C9]">
+                        <td></td>
+                        <td>Count: 6 wagons</td>
+                        <td>Total (kg):</td>
+                        <td>Total (kg):</td>
+                        <td>Total (kg):</td>
+                        <td>Count: 32 seals</td>
+                        <td>Average:</td>
+                        <td>Average:</td>
+                        <td>Average:</td>
+                        <td>Average:</td>
+                    </tr>
+                    <tr *ngFor="let row of rows;">
+                        <td>
+                            {{row}}
+                        </td>
+                        <td *ngFor="let Header of Headers;">
+                                <input matInput class="text-center"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </ng-scrollbar>
+        <button type="button" class="text-primary font-bold py-5" (click)="addContact()">
+            <fa-icon icon="circle-plus"></fa-icon> Add Wagon
+        </button>
+    </div>
+</material-panel-table>

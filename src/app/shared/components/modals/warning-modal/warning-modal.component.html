@@ -1,0 +1,26 @@
+<div class="min-w-[90%] min-sm:min-w-[480px] p-2 flex flex-col gap-1 items-center">
+    <div class="flex w-full justify-end">
+        <fa-icon [icon]="xmark" (click)="confirm()" size="lg" class="icon cursor-pointer !text-[#A0A0A0]">
+        </fa-icon>
+    </div>
+    <div class="flex w-full justify-center">
+        <fa-icon [icon]="warn" class="icon !text-[#17a0b5] text-[128px] max-h-[128px] flex justify-center items-center">
+        </fa-icon>
+    </div>
+    <div class="flex items-center flex-col gap-2">
+        <div class="whitespace-pre-line max-w-xs mb-8">
+            <p class="font-bold text-muted text-xl text-center mb-4 text-columnCell">
+                Minimum two points should be present
+            </p>
+            <p class="font-bold max-w-xs text-center text-sm text-columnCell">
+                Atleast two points should be made before adding
+                shipments to the planning.
+            </p>
+        </div>
+
+        <div *ngIf="data?.isDelWarn" class="flex justify-around flex-wrap-reverse gap-4">
+            <button tabIndex="-1" (click)="cancel()" class="btn btn-outline-primary min-w-[130px]">Cancel</button>
+            <button tabIndex="-1" (click)="confirm()" class="btn btn-primary min-w-[130px]">Delete</button>
+        </div>
+    </div>
+</div>

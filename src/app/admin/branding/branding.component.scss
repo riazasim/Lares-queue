@@ -1,0 +1,55 @@
+// :host {
+//     display: flex;
+//     flex: 1;
+//     justify-content: center;
+//     align-items: center;
+//     height: 100%;
+//     width: 100%;
+// }
+
+
+main {
+    @apply shadow-lg p-10 rounded;
+    min-height: calc(100vh - 190px);
+    background: white;
+    border-radius: var(--app-border-radius);
+
+    @media screen and (max-width: 1400px) {
+        overflow: auto;
+    }
+
+    @media screen and (max-width: 576px) {
+        min-height: 100%;
+    }
+
+    .x {
+        display: none;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        color: #CCC;
+        font-size: 150px;
+        z-index: 1;
+    }
+
+    .photo-container {
+        position: relative;
+    }
+
+    .photo-container:hover {
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .x {
+            display: block;
+        }
+        img {
+            -webkit-filter: brightness(0.3);
+            filter: brightness(0.3);
+        }
+    }
+    
+    
+}

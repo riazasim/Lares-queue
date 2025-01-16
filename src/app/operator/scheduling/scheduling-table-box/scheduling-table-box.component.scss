@@ -1,0 +1,59 @@
+:host {
+    table {
+        width: unset!important;
+        border-collapse: collapse;
+        table-layout: fixed!important;
+        tr, td, th {
+            padding: 0;
+            margin: 0;
+            min-width: 50px;
+            max-width: 60px;
+            width: 60px;
+
+            &.dock-name {
+                max-width: 90px;
+                width: 90px;
+            }
+        }
+    
+        tr td {
+            padding-bottom: 30px;
+            h6 {
+                // max-width: 90px;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+    
+            & > div.square {
+                height: 50px;
+                width: 60px;
+                border: 1px solid black;
+                background: #AEAAAA;
+    
+                &.break {
+                    background: #806000;
+                }
+    
+                &.free {
+                    background: #70AD47;
+    
+                    &.cursor-pointer:hover {
+                        filter: brightness(85%);
+                    }
+    
+                    &.service {
+                        background: #FFC000;
+                    }
+    
+                    &.planned {
+                        background: #3ab0ed;
+                    }
+    
+                    &.occupied {
+                        background: #ED7D31;
+                    }
+                }
+            }
+        }
+    }
+}

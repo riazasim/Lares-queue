@@ -1,0 +1,43 @@
+<edit-container headerTitle="Add operation">
+    <app-loader *ngIf="(isLoading$ | async)" [isContainer]="true" [fullScreen]="false"></app-loader>
+    <form *ngIf="!(isLoading$ | async)" [formGroup]="operationForm">
+        <div>
+            <div>
+                <div class="flex flex-col mx-auto max-w-[440px] gap-5">
+                    <div class="h-[90px]">
+                        <div iconic-input-wrapper leftIcon="grip">
+                            <input inputRef type="text" id="operationName" formControlName="name" placeholder="Operation Name">
+                        </div>
+                    </div>
+                    <div class="h-[90px]">
+                        <div iconic-input-wrapper leftIcon="timer">
+                            <input inputRef type="number" id="allocatedTime" formControlName="allocatedTime" placeholder="Allocated Time (minutes)">
+                        </div>
+                    </div>
+                    <div class="h-[90px]">
+                        <div textarea-wrapper leftIcon="file-lines">
+                            <textarea inputRef type="text" formControlName="description" placeholder="Description"></textarea>
+                        </div>
+                    </div>
+                    <div for="type" class="h-[90px]">
+                    <div iconic-select-wrapper leftIcon="envelope" >
+                        <select spAccessInputRef name="type" id="type" formControlName="type">
+                            <option value="" disabled>Select type</option>
+                                <option value="loading">Loading</option>
+                                <option value="unloading">Unloading</option>
+                        </select>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-end pt-5">
+            <div class="flex gap-4">
+                <button [routerLink]="id ? '../../list' : '../list'" class="btn btn-outline-primary"
+                    type="button">Cancel</button>
+                <button class="btn btn-primary" type="button" (click)="saveOperation()">Save</button>
+            </div>
+        </div>
+    </form>
+</edit-container>

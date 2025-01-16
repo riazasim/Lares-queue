@@ -1,0 +1,168 @@
+<edit-container [headerTitle]="'Recommended Integrations'">
+    <mat-stepper #stepper [linear]="true" class="h-[calc(100vh - 261px)]">
+        <mat-step *ngIf="!id" label="Choose integration type">
+            <app-loader *ngIf="(isLoading$ | async)" [isContainer]="true" [fullScreen]="false"></app-loader>
+            <section *ngIf="!(isLoading$ | async)" class="h-[calc(100dvh-290px)] flex flex-col justify-between">
+                    <div class="flex gap-5 h-[calc(100%-100px)]">
+                        <div class="card slide-in-bottom rounded-lg border bg-white" 
+                            (click)="selectIntegrationType('yard')" [ngClass]="selectedIntegrationType == 'yard' ? 'selected-location' : ' '">
+                            <div class="flex justify-center p-10 border border-gray rounded-full h-[150px] w-[150px] items-center mx-auto">
+                                <img src="assets/images/yard-icon.svg" />
+                            </div>
+                            <div class="flex justify-center py-5">
+                                <h4 class="heading-3 text-panelColor">Yard App</h4>
+                            </div>
+                        </div>
+                        
+                        <div class="card pointer-events-none bg-[#D3D3D3] slide-in-bottom rounded-lg border" 
+                            (click)="selectIntegrationType('access')" [ngClass]="selectedIntegrationType == 'access' ? 'selected-location' : ' '">
+                            <div class="flex justify-center p-10 border border-gray rounded-full h-[150px] w-[150px] items-center mx-auto">
+                                <img src="assets/images/barrier.svg" />
+                            </div>
+                            <div class="flex justify-center py-5">
+                                <h4 class="heading-3 text-panelColor">Access App</h4>
+                            </div>
+                        </div>
+                        
+                        <div class="card pointer-events-none bg-[#D3D3D3] slide-in-bottom rounded-lg border"
+                            (click)="selectIntegrationType('reporting')" [ngClass]="selectedIntegrationType == 'reporting' ? 'selected-location' : ' '">
+                            <div class="flex justify-center p-10 border border-gray rounded-full h-[150px] w-[150px] items-center mx-auto">
+                                <img src="assets/images/reporting-access.svg" />
+                            </div>
+                            <div class="flex justify-center py-5">
+                                <h4 class="heading-3 text-panelColor">Reporting App</h4>
+                            </div>
+                        </div>
+                    </div>
+                        <div class="flex justify-center max-sm:flex-col min-sm:gap-10 gap-4 max-sm:w-full">
+                            <button class="btn btn-outline-primary system-button max-sm:w-full" type="button" [disabled]="(isLoading$ | async)" [routerLink]="id ? '../../' : '../'">{{'button.cancel' | translate}}</button>
+                            <button class="btn btn-primary system-button max-sm:w-full" type="button" [disabled]="!selectedIntegrationType" (click)="stepper.next()">{{'button.next' | translate}}</button>
+                        </div>
+            </section>
+        </mat-step>
+        <mat-step label="Integration details">
+            <app-loader *ngIf="(isLoading$ | async)" [isContainer]="true" [fullScreen]="false"></app-loader>
+            <!-- <div *ngIf="!(isLoading$ | async) && integrationForm" class="tw-flex"> -->
+            <div class="flex">
+                 <!-- left side -->
+                <div class="bg-[#F4F6F8] flex flex-col basis-4/12 p-8 rounded-sm">
+                    <div class="flex gap-5 mb-4">
+                        <img src="assets/images/integration-icon.svg" width="37px" height="50px"/>
+                        <h1 class="text-[30px] font-medium">Integration</h1>
+                    </div>
+                    <p class="text-[#68687C] text-[20px]">By adding a Yard integration, you will have access to all the actions allowedby your partner.</p><br>
+                    <p class="text-[#68687C] text-[20px]">Fill in the details in the form to the right. You can also import the location details from the partner or associate an existing location. </p><br>
+                    <p class="text-[#68687C] text-[20px]">You can test the integration by clicking the test Button.</p><br>
+                    <!-- <p class="text-[#68687C] text-[20px]">For more details check out our integration manual. </p><br> -->
+                    <b class="text-[#68687C] text-[20px]">ATTENTION!!!</b>
+                    <b class="text-[#68687C] text-[20px]">For more details check out our integration manual.</b>
+                </div>
+                <!-- right side -->
+                <form [formGroup]="integrationForm" class="w-full flex flex-col basis-8/12 p-4 pl-6">
+                    <h1 class="text-[24px] font-medium pb-2 border-b-2">Integrations Details</h1>
+                    <!-- <div class="mt-2">
+                        <label for="name">Name</label>
+                        <div iconic-input-wrapper >
+                            <input inputRef type="text" id="name" formControlName="name">
+                        </div>
+                    </div> -->
+                    <div class="mt-2">
+                        <label for="partner">Partner</label>
+                        <div iconic-input-wrapper>
+                            <input inputRef type="text" id="partner" formControlName="partner">
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <label for="port">{{'location.title' | translate}}</label>
+                        <div iconic-select-wrapper>
+                            <select inputRef name="port" id="port" formControlName="portId">
+                                <option value="null" disabled>{{'button.select-name' | translate: {'name': 'location.title' | translate | lowercase } }}</option>
+                                <option *ngFor="let location of ($locations | async)" [value]="location.id">{{location.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <label for="key">Api key</label>
+                        <div class="flex gap-4">
+                            <input inputRef type="text" id="key" formControlName="apiKey"
+                                   class="w-full border-2 border-[#A0A0A0] rounded-[10px] h-[53px] p-[0.5rem] bg-[#A0A0A0]">
+                            <button disabled type="button" class="btn btn-outline-primary px-4 min-w-[150px]">Test</button>
+                        </div>
+                    </div>
+                    <h1 class="text-[24px] font-medium pb-2 border-b-2 mt-4">Permissions</h1>
+                    <!-- <div class="grid col-span-2 grid-cols-1 min-md:grid-cols-2 gap-3 mt-5 justify between"> -->
+                    <div class="grid col-span-2 grid-cols-1 gap-3 mt-5 justify between">
+                        <div>
+                            <app-toggle [field]="'create'" [model]="scopes.includes(integrationPermissionEnum.CREATE_BOOKINGS)" toggleHeight="22px" toggleWidth="38px" 
+                                        circleSize="14px" leftCircleSize="17px" (onModelChange)="toggleScope($event, integrationPermissionEnum.CREATE_BOOKINGS)"></app-toggle>
+                            <label class="ml-3">Create booking request</label>
+                        </div>
+                        <div>
+                            <app-toggle [field]="'update'" [model]="scopes.includes(integrationPermissionEnum.UPDATE_BOOKINGS)" toggleHeight="22px" toggleWidth="38px" 
+                                        circleSize="14px" leftCircleSize="17px" (onModelChange)="toggleScope($event, integrationPermissionEnum.UPDATE_BOOKINGS)"></app-toggle>
+                            <label class="ml-3">Update booking request</label>
+                        </div>
+                        <div>
+                            <app-toggle [field]="'cancel'" [model]="scopes.includes(integrationPermissionEnum.CANCEL_BOOKINGS)" toggleHeight="22px" toggleWidth="38px" 
+                                        circleSize="14px" leftCircleSize="17px" (onModelChange)="toggleScope($event, integrationPermissionEnum.CANCEL_BOOKINGS)"></app-toggle>
+                            <label class="ml-3">Cancel booking request</label>
+                        </div>
+                        <div>
+                            <app-toggle [field]="'view'" [model]="scopes.includes(integrationPermissionEnum.VIEW_SID)" toggleHeight="22px" toggleWidth="38px" 
+                                        circleSize="14px" leftCircleSize="17px" (onModelChange)="toggleScope($event, integrationPermissionEnum.VIEW_SID)"></app-toggle>
+                            <label class="ml-3">View SID</label>
+                        </div>
+                        <!-- <div>
+                            <app-toggle [field]="'initiate'" [model]="scopes.includes(integrationPermissionEnum.INITIATE_VALIDATION)" toggleHeight="22px" toggleWidth="38px" 
+                                        circleSize="14px" leftCircleSize="17px" (onModelChange)="toggleScope($event, integrationPermissionEnum.INITIATE_VALIDATION)"></app-toggle>
+                            <label class="ml-3">Initiate validation</label>
+                        </div> -->
+                        <!-- <div>
+                            <app-toggle [field]="'parent'" [model]="scopes.includes(integrationPermissionEnum.PARENT_LOCATION)" toggleHeight="22px" toggleWidth="38px" 
+                                        circleSize="14px" leftCircleSize="17px" (onModelChange)="toggleScope($event, integrationPermissionEnum.PARENT_LOCATION)"></app-toggle>
+                            <label class="ml-3">Parent location</label>
+                        </div> -->
+                        <!-- <div>
+                            <app-toggle [field]="'checkin'" [model]="scopes.includes(integrationPermissionEnum.CHECKIN_VISITS)" toggleHeight="22px" toggleWidth="38px" 
+                                        circleSize="14px" leftCircleSize="17px" (onModelChange)="toggleScope($event, integrationPermissionEnum.CHECKIN_VISITS)"></app-toggle>
+                            <label class="ml-3">Checkin visits</label>
+                        </div> -->
+                        <!-- <div>
+                            <app-toggle [field]="'checkout'" [model]="scopes.includes(integrationPermissionEnum.CHECKOUT_VISITS)" toggleHeight="22px" toggleWidth="38px" 
+                                        circleSize="14px" leftCircleSize="17px" (onModelChange)="toggleScope($event, integrationPermissionEnum.CHECKOUT_VISITS)"></app-toggle>
+                            <label class="ml-3">Checkout visits</label>
+                        </div> -->
+                        <!-- <div>
+                            <app-toggle [field]="'cancel'" [model]="scopes.includes(integrationPermissionEnum.CANCEL_VISITS)" toggleHeight="22px" toggleWidth="38px" 
+                                        circleSize="14px" leftCircleSize="17px" (onModelChange)="toggleScope($event, integrationPermissionEnum.CANCEL_VISITS)"></app-toggle>
+                            <label class="ml-3">Cancel visits</label>
+                        </div> -->
+                        <!-- <div>
+                            <app-toggle [field]="'reject'" [model]="scopes.includes(integrationPermissionEnum.REJECT_VISITS)" toggleHeight="22px" toggleWidth="38px" 
+                                        circleSize="14px" leftCircleSize="17px" (onModelChange)="toggleScope($event, integrationPermissionEnum.REJECT_VISITS)"></app-toggle>
+                            <label class="ml-3">Reject visits</label>
+                        </div> -->
+                        <!-- <div>
+                            <app-toggle [field]="'waiting'" [model]="scopes.includes(integrationPermissionEnum.SET_VISIT_WAITING)" toggleHeight="22px" toggleWidth="38px" 
+                                        circleSize="14px" leftCircleSize="17px" (onModelChange)="toggleScope($event, integrationPermissionEnum.SET_VISIT_WAITING)"></app-toggle>
+                            <label class="ml-3">Set visit waiting</label>
+                        </div> -->
+                        <!-- <div>
+                            <app-toggle [field]="'planned'" [model]="scopes.includes(integrationPermissionEnum.SET_VISIT_PLANNED)" toggleHeight="22px" toggleWidth="38px" 
+                                        circleSize="14px" leftCircleSize="17px" (onModelChange)="toggleScope($event, integrationPermissionEnum.SET_VISIT_PLANNED)"></app-toggle>
+                            <label class="ml-3">Set visit planned</label>
+                        </div> -->
+                        <!-- <div>
+                            <app-toggle [field]="'pending'" [model]="scopes.includes(integrationPermissionEnum.SET_VISIT_PENDING)" toggleHeight="22px" toggleWidth="38px" 
+                                        circleSize="14px" leftCircleSize="17px" (onModelChange)="toggleScope($event, integrationPermissionEnum.SET_VISIT_PENDING)"></app-toggle>
+                            <label class="ml-3">Set visit pending</label>
+                        </div> -->
+                        <div>
+                            <button [disabled]="isLoading$ | async" type="button" class="btn btn-primary min-w-[150px] float-right" (click)="saveIntegration()">{{'button.save' | translate}}</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </mat-step>
+    </mat-stepper>
+ </edit-container>

@@ -1,0 +1,20 @@
+<div class="max-w-lg min-sm:min-w-[500px]">
+  <div class="flex items-center justify-between px-4 py-4">
+    <h2 class="text-textDefault text-xl font-bold">{{data?.name}} - Plan operation</h2>
+    <div class="close-button text-[25px] cursor-pointer" (click)="cancel()">&times;</div>
+  </div>
+  <div mat-dialog-body class="px-4">
+    <div class="flex justify-between mb-2">
+        <div><span class="font-bold">Date:</span> {{data?.date | date : 'dd.MM.yyyy'}}</div>
+        <div><span class="font-bold">Time Slot:</span> {{data?.timeSlot || '-'}}</div>
+    </div>
+    <div iconic-input-wrapper rightIcon="browser">
+      <input #inputSID inputRef type="text" placeholder="Insert SID (Shipment ID)">
+    </div>
+  </div>
+
+  <div class="flex justify-between flex-wrap-reverse gap-4 px-4 pb-4">
+    <button tabIndex="-1" (click)="confirm()" class="bg-primary py-2 text-white min-w-[130px] rounded-full">Add manually</button>
+    <button tabIndex="-1" (click)="confirm()" class="bg-primary py-2 text-white min-w-[130px] rounded-full">Save</button>
+  </div>
+</div>

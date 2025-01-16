@@ -1,0 +1,35 @@
+<!-- <div class="p-6 bg-white rounded-lg">
+  <h2 class="text-2xl font-semibold text-gray-800 mb-4">Simulation</h2>
+  <p class="text-lightGray mb-4">
+    Now that parameters were set and queues generated, you can start the 24 hours simulation.<br />
+    You can set the simulation speed or skip directly to reports.
+  </p>
+
+  <div class="flex gap-3 my-4">
+    <div class="flex gap-1">
+      <input type="radio" id="allTenants" name="tenantSelection" value="All Tenants"
+        (change)="selectTenant('All Tenants')" class="h-5 w-5 border-[#CCCCCC]" />
+      <label for="allTenants" class=" text-[#354050] font-semibold">All tenants</label>
+    </div>
+    <div class="flex gap-1">
+      <input type="radio" id="selectTenant" name="tenantSelection" value="Select Tenant"
+        (change)="selectTenant('Select Tenant')" class="h-5 w-5 border-[#CCCCCC]" />
+      <label for="selectTenant" class=" text-[#354050] font-semibold">Select tenant</label>
+    </div>
+
+
+  </div>
+  <div *ngIf="isSelectedTenant$ | async" class="mt-4 w-[50%]" [matTooltip]="'Select Tenant'" matTooltipClass="drop-shadow-lg"
+    matTooltipPosition="above" iconic-select-wrapper leftSvg="assets/images/building-05.svg">
+    <select spAccessInputRef name="tenant" id="tenant">
+      <option disabled value="">Select Tenant</option>
+      <option *ngFor="let tenant of tenants" [value]="tenant.id">
+        {{ tenant.name }}
+      </option>
+    </select>
+  </div>
+
+  <div class="mt-6 text-right">
+    <button type="button" (click)="next()" class="btn btn-primary w-[160px]">Next</button>
+  </div>
+</div> -->

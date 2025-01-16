@@ -1,0 +1,32 @@
+<edit-container headerTitle="Add Status">
+  <app-loader *ngIf="(isLoading$ | async)" [isContainer]="true" [fullScreen]="false"></app-loader>
+  <form [formGroup]="statusForm" *ngIf="!(isLoading$ | async)">
+    <div class="flex flex-col mx-auto my-auto max-w-[440px] gap-5">
+      <div>
+        <div iconic-input-wrapper leftIcon="list">
+          <input inputRef
+                 type="text"
+                 placeholder="Status name"
+                 formControlName="name">
+        </div>
+      </div>
+      <div>
+        <div iconic-input-wrapper leftIcon="circle-dashed">
+          <input style="height: 40px" inputRef type="color" formControlName="color">
+        </div>
+      </div>
+      <div>
+        <div iconic-input-wrapper leftIcon="align-left">
+          <input inputRef type="text" placeholder="Status description" formControlName="description">
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-end pt-5">
+      <div class="flex gap-4">
+        <button [disabled]="(isLoading$ | async)" [routerLink]="id ? '../..' : '../'" class="btn btn-outline-primary" type="button">Cancel</button>
+        <button [disabled]="statusForm.invalid || (isLoading$ | async)" class="btn btn-primary" type="button" (click)="saveList()">Save</button>
+      </div>
+    </div>
+  </form>
+</edit-container>

@@ -1,0 +1,437 @@
+<mat-stepper labelPosition="bottom" [linear]="isLinear" #stepper>
+    <mat-step label="Route Details" [stepControl]="schedulingForm">
+        <app-loader *ngIf="isLoading$ | async" [isContainer]="true" [fullScreen]="false"></app-loader>
+        <form [formGroup]="schedulingForm" *ngIf="!(isLoading$ | async)">
+            <div
+                class="grid min-lg:grid-cols-2 grid-cols-1 gap-x-10 min-3xl:gap-x-20 gap-y-4 pt-[100px] min-xl:px-[50px]">
+                <div class="flex flex-col gap-y-4 min-xl:px-[50px]">
+                    <div [loading]="(isPortsLoading$ | async)" iconic-input-wrapper leftIcon="user"
+                        formGroupName="routingDetail">
+                        <input inputRef type="text" placeholder="Convoy Type" formControlName="convoyType" />
+                    </div>
+                    <div class="grid grid-cols-2 gap-x-8 gap-y-4 mb-5">
+                        <datepicker [loading]="(isPortsLoading$ | async)" matTooltipClass="drop-shadow-lg"
+                            matTooltipPosition="above" [matTooltip]="'Pick ETA date' | translate" [model]="filterDate"
+                            [isHeaderPosition]="true" [height]="52" (dateChanged)="OnDateChange($event)">
+                        </datepicker>
+                        <timepicker [loading]="(isPortsLoading$ | async)" matTooltipClass="drop-shadow-lg"
+                            matTooltipPosition="above" [matTooltip]="'Pick ETA time' | translate" [height]="52"
+                            [model]="filterTime" (modelChange)="OnTimeChange($event)"></timepicker>
+                    </div>
+                    <!-- <div [loading]="(isPortsLoading$ | async)" iconic-input-wrapper leftIcon="location-dot"
+                        formGroupName="routingDetail">
+                        <input inputRef type="text" placeholder="Location Port" formControlName="locationPort" />
+                    </div> -->
+                    <div [loading]="(isPortsLoading$ | async)" iconic-select-wrapper
+                    leftSvg="assets/images/scheduling_ship_type.svg"
+                    formGroupName="routingDetail" (change)="onDeparturePortChange($event)">
+                    <select spAccessInputRef name="departurePort" id="departurePort"
+                        formControlName="departurePort">
+                        <option disabled value="">
+                            Departure Port
+                        </option>
+                        <option *ngFor="let departurePort of ports" [value]="departurePort.id">
+                            {{ departurePort.name }}
+                        </option>
+                    </select>
+                </div>
+                    <div [loading]="(isPortsLoading$ | async)" iconic-select-wrapper
+                        leftSvg="assets/images/scheduling_map_location.svg"
+                        formGroupName="routingDetail">
+                        <select spAccessInputRef name="zone" id="zone" formControlName="departureZone">
+                            <option disabled value="">
+                                Departure Zone
+                            </option>
+                            <option *ngFor="let zone of departureZone" [value]="zone.name">
+                                {{ zone.name }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- <div iconic-select-wrapper leftIcon="grid-2"
+                        [formGroup]="routingDetail">
+                        <select spAccessInputRef name="company" id="company" formControlName="company">
+                            <option disabled value="">Company</option>
+                            <option *ngFor="let company of companies" [value]="company.id">
+                                {{ company.name }}
+                            </option>
+                        </select>
+                    </div> -->
+                </div>
+                <div class="flex flex-col gap-y-4 min-xl:px-[50px]">
+                    <!-- <p>&nbsp;</p> -->
+
+                <div [loading]="(isPortsLoading$ | async)" iconic-select-wrapper
+                    leftSvg="assets/images/scheduling_arrival_port.svg"
+                    formGroupName="routingDetail" (change)="onArrivalPortChange($event)">
+                    <select spAccessInputRef name="arrivalPort" id="arrivalPort" formControlName="arrivalPort">
+                        <option disabled value="">Arival Port</option>
+                        <option *ngFor="let arivalPort of ports" [value]="arivalPort.id">
+                            {{ arivalPort.name }}
+                        </option>
+                    </select>
+                </div>
+                <div [loading]="(isPortsLoading$ | async)" iconic-select-wrapper
+                        leftSvg="assets/images/scheduling_map_location.svg"
+                        formGroupName="routingDetail">
+                        <select spAccessInputRef name="zone" id="zone" formControlName="arrivalZone">
+                            <option disabled value="">
+                                Arrival Zone
+                            </option>
+                            <option *ngFor="let zone of arrivalZone" [value]="zone.name">
+                                {{ zone.name }}
+                            </option>
+                        </select>
+                    </div>
+                <div [loading]="(isPortsLoading$ | async) || (isPortChangeLoading$ | async)" iconic-select-wrapper
+                leftIcon="grid-2"
+                    formGroupName="routingDetail">
+                    <select spAccessInputRef name="company" id="company" formControlName="company">
+                        <option disabled value="">Company</option>
+                        <option *ngFor="let company of companies" [value]="company.id">
+                            {{ company.name }}
+                        </option>
+                    </select>
+                </div>
+                    <div [loading]="(isPortsLoading$ | async)" iconic-input-wrapper
+                        leftSvg="assets/images/scheduling_port.svg" formGroupName="routingDetail">
+                        <input inputRef type="text" placeholder="Pilot Company" formControlName="pilotCompany" />
+                    </div>
+                    <!-- <div [loading]="(isPortsLoading$ | async)" iconic-input-wrapper
+                        leftSvg="assets/images/scheduling_length.svg" formGroupName="routingDetail">
+                        <input inputRef type="number" placeholder="Length (m)*" formControlName="length" />
+                    </div> -->
+                    <!-- <div [loading]="(isPortsLoading$ | async)" iconic-input-wrapper
+                        leftSvg="assets/images/scheduling_width.svg" formGroupName="routingDetail">
+                        <input inputRef type="number" placeholder="Width (m)*" formControlName="width" />
+                    </div> -->
+                    <!-- <div [loading]="(isPortsLoading$ | async)" iconic-input-wrapper
+                        leftSvg="assets/images/scheduling_depth.svg" formGroupName="routingDetail">
+                        <input inputRef type="number" placeholder="Max Draft" formControlName="maxDraft" />
+                    </div> -->
+                    <!-- <div [loading]="(isPortsLoading$ | async)" iconic-input-wrapper
+                        leftSvg="assets/images/scheduling_convoy.svg" formGroupName="routingDetail">
+                        <input inputRef type="number" placeholder="Aerial Guage (M)*" formControlName="arrivalGauge" />
+                    </div> -->
+                    <!-- <div [loading]="(isPortsLoading$ | async)" iconic-input-wrapper
+                        leftSvg="assets/images/scheduling_weight.svg" formGroupName="routingDetail">
+                        <input inputRef type="number" placeholder="Capacity max (m)*" formControlName="maxCapacity" />
+                    </div> -->
+                    <!-- <div [loading]="(isPortsLoading$ | async)" iconic-select-wrapper
+                        leftSvg="assets/images/scheduling_lock.svg"
+                        formGroupName="routingDetail">
+                        <select spAccessInputRef name="typeOfLock" id="typeOfLock" formControlName="lockType">
+                            <option disabled value="">Type of lock</option>
+                            <option *ngFor="let typeOfLock of typeOfLock" [value]="typeOfLock.id">
+                                {{ typeOfLock.name }}
+                            </option>
+                        </select>
+                    </div> -->
+                </div>
+            </div>
+            <div class="min-xl:px-[50px] grid min-lg:grid-cols-2 grid-cols-1 gap-x-10 min-3xl:gap-x-20 mt-4">
+                <div class="gap-y-4 mb-5 min-xl:px-[50px]">
+                    <button type="button" class="btn btn-primary w-full min-h-[50px] !text-[18px]" routerLink="../">
+                        {{ "button.back" | translate }}
+                    </button>
+                </div>
+                <div class="gap-y-4 mb-5 min-xl:px-[50px]">
+                    <button type="button" class="btn btn-primary w-full min-h-[50px] !text-[18px]"
+                         (click)="next(1)">
+                        {{ "button.next" | translate }}
+                    </button>
+                </div>
+            </div>
+        </form>
+    </mat-step>
+    <mat-step label="Convoi">
+        <app-loader *ngIf="isLoading$ | async" [isContainer]="true" [fullScreen]="false"></app-loader>
+        <form [formGroup]="convoyForm" *ngIf="!(isLoading$ | async)">
+            <div
+                class="grid min-lg:grid-cols-2 grid-cols-1 gap-x-10 min-3xl:gap-x-20 gap-y-4 pt-[100px] min-xl:px-[50px]">
+                <div class="flex flex-col gap-y-4 min-xl:px-[50px]">
+                    <!-- <div iconic-select-wrapper leftIcon="grid-2" >
+                        <select spAccessInputRef name="company" id="company" formControlName="company">
+                            <option disabled value="">Company</option>
+                            <option *ngFor="let company of companies" [value]="company.id">
+                                {{ company.name }}
+                            </option>
+                        </select>
+                    </div> -->
+                    <div iconic-select-wrapper leftSvg="assets/images/scheduling_operator.svg"
+                        >
+                        <select spAccessInputRef name="operator" id="operator" formControlName="operator">
+                            <option disabled value="">Operator*</option>
+                            <option *ngFor="let operator of operator" [value]="operator.id">
+                                {{ operator.name }}
+                            </option>
+                        </select>
+                    </div>
+                    <div iconic-input-wrapper leftSvg="assets/images/scheduling_navigation.svg">
+                        <input inputRef type="text" placeholder="Navigation type*" formControlName="navigationType" />
+                    </div>
+
+                    <div iconic-input-wrapper leftSvg="assets/images/scheduling_ship_owner.svg">
+                        <input inputRef type="text" placeholder="Ship owner" formControlName="shipowner" />
+                    </div>
+                    <mat-select class="mb-6" placeholder="Products" multiple formControlName="products"
+                        (onSelectionChange)="onProductChange($event)">
+                        <searchbar>
+                            <fa-icon icon="search" leftIcon></fa-icon>
+                            <input input type="text" (keyup)="onInputChange($event)">
+                        </searchbar>
+                        <hr class="my-1 ">
+                        <mat-option *ngFor="let product of (products | filter: search : 'name'); let i = index;"
+                            [value]="product.id">
+                            {{product.name}}
+                        </mat-option>
+                        <div class="w-full" *ngIf="(products | filter: search : 'name').length === 0">
+                            <p class="text-center text-columnCell">No Product Found</p>
+                        </div>
+                    </mat-select>
+                    <div iconic-input-wrapper leftSvg="assets/images/scheduling_purpose.svg">
+                        <input inputRef type="text" placeholder="Purpose" formControlName="purpose" />
+                    </div>
+                    <div iconic-select-wrapper leftSvg="assets/images/scheduling_trafic_type.svg"
+                        >
+                        <select spAccessInputRef name="trafficType" id="trafficType" formControlName="trafficType">
+                            <option disabled value="">Traffic type*</option>
+                            <option *ngFor="let trafficType of trafficType" [value]="trafficType.id">
+                                {{ trafficType.name }}
+                            </option>
+                        </select>
+                    </div>
+                    <div iconic-select-wrapper leftSvg="assets/images/scheduling_operation_type.svg"
+                        >
+                        <select spAccessInputRef name="operationType" id="operationType" formControlName="operatonType">
+                            <option disabled value="">Operation type</option>
+                            <option *ngFor="let operationType of operationType" [value]="operationType.id">
+                                {{ operationType.name }}
+                            </option>
+                        </select>
+                    </div>
+                    <div iconic-input-wrapper leftSvg="assets/images/scheduling_unit.svg">
+                        <input inputRef type="text" placeholder="Unit.no" formControlName="unitNo" />
+                    </div>
+                    <div iconic-input-wrapper leftSvg="assets/images/scheduling_observation.svg">
+                        <input inputRef type="text" placeholder="Observation" formControlName="observation" />
+                    </div>
+                    <div iconic-input-wrapper leftSvg="assets/images/scheduling_port.svg">
+                        <input inputRef type="text" maxlength="4" placeholder="Pavilion*" formControlName="pavilion" />
+                    </div>
+
+                </div>
+                <div class="flex flex-col gap-y-4 min-xl:px-[50px]">
+                    <div iconic-select-wrapper leftIcon="grid-2" >
+                        <select spAccessInputRef name="ship" id="ship" (change)="onShipSelected($event)"
+                            formControlName="ship">
+                            <option disabled value="">Ship</option>
+                            <option *ngFor="let ship of shipsList" [value]="ship.attributes.id">
+                                {{ ship.attributes.name }}
+                            </option>
+                        </select>
+                    </div>
+                    <div iconic-select-wrapper leftSvg="assets/images/scheduling_ship_type.svg"
+                        >
+                        <select spAccessInputRef name="shipType" id="shipType" formControlName="shipType">
+                            <option disabled value="">Ship type*</option>
+                            <option *ngFor="let shipType of shipType" [value]="shipType.id">
+                                {{ shipType.name }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div iconic-input-wrapper leftSvg="assets/images/scheduling_engine.svg">
+                        <input inputRef type="number" placeholder="Engine power" formControlName="enginePower" />
+                    </div>
+
+                    <div iconic-input-wrapper leftSvg="assets/images/scheduling_file.svg">
+                        <input inputRef type="number" placeholder="LOA" formControlName="lengthOverall" />
+                    </div>
+                    <div iconic-input-wrapper leftSvg="assets/images/scheduling_width.svg">
+                        <input inputRef type="number" placeholder="Width (m)*" formControlName="width" />
+                    </div>
+                    <div iconic-input-wrapper leftSvg="assets/images/scheduling_depth.svg">
+                        <input inputRef type="number" placeholder="Max draft (m)*" formControlName="maxDraft" />
+                    </div>
+                    <div iconic-input-wrapper leftSvg="assets/images/scheduling_weight.svg">
+                        <input inputRef type="number" placeholder="C.max (t)*" formControlName="maxQuantity" />
+                    </div>
+                    <div iconic-input-wrapper
+                        leftSvg="assets/images/scheduling_convoy.svg">
+                        <input inputRef type="number" placeholder="Aerial Guage (M)*" formControlName="arrivalGauge" />
+                    </div>
+                    <!-- <div iconic-select-wrapper
+                        leftSvg="assets/images/scheduling_lock.svg" >
+                        <select spAccessInputRef name="typeOfLock" id="typeOfLock" formControlName="lockType">
+                            <option disabled value="">Type of lock</option>
+                            <option *ngFor="let typeOfLock of typeOfLock" [value]="typeOfLock.id">
+                                {{ typeOfLock.name }}
+                            </option>
+                        </select>
+                    </div> -->
+                    <div iconic-input-wrapper
+                        leftSvg="assets/images/scheduling_lock.svg">
+                        <input inputRef type="text" placeholder="Type of lock" formControlName="lockType" />
+                    </div>
+                    <div iconic-input-wrapper leftSvg="assets/images/scheduling_weight.svg">
+                        <input inputRef type="number" placeholder="Quantity (t)" formControlName="quantity" />
+                    </div>
+
+                </div>
+            </div>
+            <div class="min-xl:px-[50px] grid min-lg:grid-cols-2 grid-cols-1 gap-x-10 min-3xl:gap-x-20 mt-4">
+                <div class="gap-y-4 mb-5 min-xl:px-[50px]">
+                    <button type="button" class="btn btn-primary w-full min-h-[50px] !text-[18px]" matStepperPrevious>
+                        {{ "button.back" | translate }}
+                    </button>
+                </div>
+                <div class="gap-y-4 mb-5 min-xl:px-[50px]">
+                    <button type="button" class="btn btn-primary w-full min-h-[50px] !text-[18px]" (click)="next(2)">
+                        {{ "button.next" | translate }}
+                    </button>
+                </div>
+            </div>
+        </form>
+    </mat-step>
+    <mat-step label="Additional Data">
+        <app-loader *ngIf="isLoading$ | async" [isContainer]="true" [fullScreen]="false"></app-loader>
+        <div *ngIf="!(isLoading$ | async)">
+            <div class="pt-[100px] min-xl:px-[50px]">
+                <form class="grid min-lg:grid-cols-2 grid-cols-1 gap-x-10 min-3xl:gap-x-20 gap-y-4"
+                    [formGroup]="convoyForm">
+                    <div class="flex flex-col gap-y-4 min-xl:px-[50px]">
+                        <div iconic-input-wrapper leftIcon="user">
+                            <input inputRef type="text" placeholder="Operator" formControlName="additionalOperator"
+                                class="text-center" />
+                        </div>
+                        <mat-button-toggle-group class="flex w-full justify-end items-center mb-[21px]">
+                            <button
+                                class="min-h-[53px] min-md:min-w-[53px] max-sm:w-full rounded-l-[10px] border-y border-l border-borderColor rounded-r-none">
+                                <fa-icon icon="file-lines" size="lg" class="mx-2 cursor-pointer">
+                                </fa-icon>
+                            </button>
+                            <input
+                                class="text-center w-full outline-0 shadow-none ring-offset-0 focus:ring-offset-0 focus:shadow-none focus:ring-0 min-h-[53px] border-x-0 border-borderColor rounded-x-0"
+                                type="text" [value]="file1Text$ | async" (click)="file1.click()" readonly
+                                placeholder="Choose file" />
+                            <input #file1 hidden type="file" (change)="
+                                    patchFile($any($event.target).files[0] , 0)
+                                " />
+                            <button (click)="file1.click()"
+                                class="bg-primary text-white hover:bg-primary-dark min-h-[53px] min-md:min-w-[60px] max-sm:w-full rounded">
+                                <fa-icon icon="upload" size="2x" class="mx-2 cursor-pointer text-white">
+                                </fa-icon>
+                            </button>
+                        </mat-button-toggle-group>
+                        <mat-button-toggle-group class="flex w-full justify-end items-center mb-[21px]">
+                            <button
+                                class="min-h-[53px] min-md:min-w-[53px] max-sm:w-full rounded-l-[10px] border-y border-l border-borderColor rounded-r-none">
+                                <fa-icon icon="file-lines" size="lg" class="mx-2 cursor-pointer">
+                                </fa-icon>
+                            </button>
+                            <input
+                                class="text-center w-full outline-0 shadow-none ring-offset-0 focus:ring-offset-0 focus:shadow-none focus:ring-0 min-h-[53px] border-x-0 border-borderColor rounded-x-0"
+                                type="text" [value]="file2Text$ | async" (click)="file2.click()" readonly
+                                placeholder="Choose file" />
+                            <input #file2 hidden type="file" (change)="
+                                    patchFile($any($event.target).files[0] , 1)
+                                " />
+                            <button (click)="file2.click()"
+                                class="bg-primary text-white hover:bg-primary-dark min-h-[53px] min-md:min-w-[60px] max-sm:w-full rounded">
+                                <fa-icon icon="upload" size="2x" class="mx-2 cursor-pointer text-white">
+                                </fa-icon>
+                            </button>
+                        </mat-button-toggle-group>
+                        <mat-button-toggle-group *ngIf="showFileThree$ | async" class="flex w-full justify-end items-center mb-[21px]">
+                            <button class="min-h-[53px] min-md:min-w-[53px] max-sm:w-full rounded-l-[10px] border-y border-l border-borderColor rounded-r-none">
+                              <fa-icon icon="file-lines" size="lg"
+                                    class="mx-2 cursor-pointer">
+                                </fa-icon>
+                            </button>
+                            <input class="text-center w-full outline-0 shadow-none ring-offset-0 focus:ring-offset-0 focus:shadow-none focus:ring-0 min-h-[53px] border-x-0 border-borderColor	rounded-x-0"
+                            type="text" [value]="file3Text$ | async" (click)="file3.click()" readonly placeholder="Choose file">
+                            <input #file3 hidden type="file" (change)="patchFile($any($event.target).files[0], 2)">
+                            <button (click)="file3.click()" class="bg-primary text-white hover:bg-primary-dark min-h-[53px] min-md:min-w-[60px] max-sm:w-full rounded">
+                              <fa-icon icon="upload" size="2x"
+                                  class="mx-2 cursor-pointer text-white">
+                              </fa-icon>
+                            </button>
+                          </mat-button-toggle-group>
+                        <button *ngIf="!(showFileThree$ | async)" type="button" class="text-primary font-bold mr-auto"
+                            (click)="showFileThree$.next(true)">
+                            <fa-icon icon="circle-plus"></fa-icon> Add New
+                            Document
+                        </button>
+                    </div>
+                    <div class="grid grid-rows-2 gap-y-4 min-xl:px-[50px]">
+                        <div textarea-wrapper leftIcon="user" [isFullHeight]="true">
+                            <textarea class="break-words whitespace-pre-wrap resize-none" inputRef
+                                placeholder="Client's comments:" rows="10" cols="1"
+                                formControlName="clientComments"></textarea>
+                        </div>
+                        <div textarea-wrapper leftIcon="id-card" [isFullHeight]="true">
+                            <textarea class="break-words whitespace-pre-wrap resize-none" inputRef
+                                placeholder="Operator's comments" rows="10" cols="1"
+                                formControlName="operatorComments"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="min-xl:px-[50px] mt-8 grid min-lg:grid-cols-2 grid-cols-1 gap-x-10 min-3xl:gap-x-20">
+                <div class="gap-y-4 mb-5 min-xl:px-[50px]">
+                    <button type="button" class="btn btn-primary w-full min-h-[50px] !text-[18px]" matStepperPrevious>
+                        {{ "button.back" | translate }}
+                    </button>
+                </div>
+                <div class="gap-y-4 mb-5 min-xl:px-[50px]">
+                    <button type="button" class="btn btn-primary w-full min-h-[50px] !text-[18px]" (click)="next(3)">
+                        {{ "button.next" | translate }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </mat-step>
+    <mat-step label="Save or Extend">
+        <app-loader *ngIf="isLoading$ | async" [isContainer]="true" [fullScreen]="false"></app-loader>
+        <div class="flex flex-col justify-center" *ngIf="!(isLoading$ | async)">
+            <div class="flex-1 flex justify-center gap-10 w-full max-lg:flex-col cursor-pointer">
+                <div (click)="saveScheduling()"
+                    class="flex min-lg:flex-col gap-5 items-center justify-evenly w-full min-lg:w-[400px] h-[520px] rounded-[10px] border border-transparent shadow-md cursor-pointer">
+                    <div class="flex flex-col gap-2 items-center cursor-pointer">
+                        <div
+                            class="border border-[#B7B7B7] rounded-full flex justify-center items-center w-[155px] h-[155px] cursor-pointer">
+                            <img src="assets/images/scheduling_flag.svg" alt="Flag">
+                        </div>
+                        <h2 class="text-4xl text-[#696969] font-bold cursor-pointer">Convoi ended</h2>
+                    </div>
+                    <div class="w-[335px] mx-[auto] text-center cursor-pointer">
+                        <p class="text-3xl text-[#696969] font-normal cursor-pointer">
+                            Click this button if you added all the ships of the convoy.
+                        </p>
+                    </div>
+                </div>
+                <div (click)="navigate(1)"
+                    class="flex min-lg:flex-col justify-evenly gap-5 items-center w-full min-lg:w-[400px] h-[520px] rounded-[10px] border border-transparent shadow-md cursor-pointer">
+                    <div class="flex flex-col gap-2 items-center cursor-pointer">
+                        <div
+                            class="border border-[#B7B7B7] rounded-full flex justify-center items-center w-[155px] h-[155px] cursor-pointer">
+                            <img src="assets/images/scheduling_boat.svg" alt="Flag">
+                        </div>
+                        <h2 class="text-4xl text-[#696969] font-bold cursor-pointer">Add ship to convoy</h2>
+                    </div>
+                    <div class="w-[335px] mx-[auto] text-center cursor-pointer">
+                        <p class="text-3xl text-[#696969] font-normal cursor-pointer">
+                            Click this button to add a new ship to the convoy.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-center mt-8">
+                <button type="button" class="btn btn-primary w-[440px] min-h-[50px] !text-[18px]" matStepperPrevious>
+                    {{ "button.back" | translate }}
+                </button>
+            </div>
+        </div>
+    </mat-step>
+</mat-stepper>

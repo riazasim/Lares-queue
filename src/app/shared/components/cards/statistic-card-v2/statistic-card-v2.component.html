@@ -1,0 +1,14 @@
+<div card class="min-h-[95px] min-w-[250px] p-0" [shadow]="shadow">
+  <div content class="flex items-center absolute inset-0">
+    <div *ngIf="icon || dashSvg" class="flex-grow max-w-[132px] h-full flex">
+      <div class="rounded-full w-8 h-8 m-auto ml-5 flex justify-center items-center" [ngStyle]="{ background: colorStyle }">
+        <fa-icon *ngIf="icon"  [icon]="icon" class="text-white m-auto"></fa-icon>
+        <img *ngIf="dashSvg" [src]="dashSvg" alt="icon" class="h-6 w-6"/>
+      </div>
+    </div>
+    <div class="flex flex-col flex-grow items-end p-5">
+      <span class="font-bold text-3xl" [ngStyle]="{ color: textColor }">{{ numericValue }}</span>
+      <span class="font-bold text-lg">{{ label }}</span>
+    </div>
+  </div>
+</div>

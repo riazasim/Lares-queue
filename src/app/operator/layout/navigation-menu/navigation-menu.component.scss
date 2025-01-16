@@ -1,0 +1,95 @@
+@import "../../../../assets/scss/variables";
+
+:host {
+  display: block;
+  height: 50px;
+  width: 100%;
+  @apply min-md:w-20 min-md:h-full;
+}
+
+.circle {
+  border-radius: 40px;
+  height: 40px;
+  width: 40px;
+  background: $default-blue;
+}
+
+.layout-wrapper {
+  width: 100%;
+  height: 100%;
+  background-color: var(--nav-bg, white);
+  box-shadow: var(--nav-shadows, 0px 0px 10px 10px rgba(7, 14, 47, 0.02));
+  display: flex;
+  @apply min-md:flex-col min-md:pb-8 min-md:pt-2;
+}
+
+.logo {
+  display: none;
+  padding: 0 0.5rem 0.5rem 0.5rem;
+  @apply min-md:block;
+}
+
+.upper-menu-items,
+.lower-menu-items {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.upper-menu-items {
+  flex-grow: 1;
+  @apply min-md:justify-start min-md:flex-col min-md:mb-4;
+}
+
+.lower-menu-items {
+  @apply min-md:flex-col min-md:justify-end min-md:flex-grow;
+}
+
+
+// menu
+
+.upper-menu-items .layout-wrapper,
+.lower-menu-items .layout-wrapper {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  // justify-content: center;
+  align-items: center;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  min-width: 50px;
+  height: auto;
+  // position: relative;
+
+  > fa-icon {
+    color: var(--primary-color);
+    font-size: 0.7rem;
+    @apply min-md:text-base;
+  }
+
+  > .menu-item-label {
+    display: none;
+    font-size: 0.9rem;
+    margin-top: 0.4rem;
+    text-align: center;
+    @apply min-md:block;
+  }
+
+  &.active,
+  &:focus,
+  &:hover {
+    background-color: var(--primary-color);
+
+    fa-icon {
+      color: white;
+    }
+
+    .menu-item-label {
+      color: white;
+    }
+
+    .circle {
+      background: #FFF;
+    }
+  }
+}

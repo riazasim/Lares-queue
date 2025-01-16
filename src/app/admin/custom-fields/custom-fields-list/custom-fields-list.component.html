@@ -1,0 +1,24 @@
+<edit-container headerTitle="List - {{moduleName}}" buttonLabel="Add custom field" (buttonClicked)="openAddEditModal()">
+    <app-loader *ngIf="(isLoading$ | async)" [isContainer]="true" [fullScreen]="false"></app-loader>
+    <form *ngIf="!(isLoading$ | async)">
+        <div>
+            <div class="columns-2" *ngFor="let field of (customFields$ | async)">
+                <div class="text-right">{{field.name || '-'}}</div>
+                <div class="flex gap-2">
+                    <fa-icon (click)="openAddEditModal(field.id)" icon="pen" class="text-primary cursor-pointer" size="lg"></fa-icon>
+                    <fa-icon icon="trash-can" class="text-primary cursor-pointer" size="lg"></fa-icon>
+                </div>
+            </div>
+        </div>
+  
+      <div class="flex justify-end pt-5">
+          <div class="flex gap-4">
+              <button routerLink="../../" class="btn btn-outline-primary" type="button">Cancel</button>
+          </div>
+      </div>
+      <div class="flex justify-center" *ngIf="!(customFields$ | async)?.length">
+        There're no items!
+      </div>
+  </form>
+  </edit-container>
+  

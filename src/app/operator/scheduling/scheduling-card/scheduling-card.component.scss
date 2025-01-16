@@ -1,0 +1,14 @@
+:host {
+  width: 100%;
+}
+::ng-deep.mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) .mdc-evolution-chip__text-label {
+  color: white !important;
+}
+.text-color{
+color: #E04D3B;
+}
+// ::ng-deep.border-l-\[8px\] {
+//   color:#009C10;
+//   border-left-width: 8px;
+// }
+

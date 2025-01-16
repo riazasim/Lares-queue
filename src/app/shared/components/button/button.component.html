@@ -1,0 +1,20 @@
+<button
+[type]="type"
+[class]="class"
+[style]="style"
+[disabled]="disabled"
+class="btn gap-4 flex items-center justify-between"
+[ngClass]="{
+    'btn-primary': buttonType === 'primary',
+    'btn-warning': buttonType === 'warn',
+    'btn-disabled': buttonType === 'disabled',
+    'btn-secondary': buttonType === 'secondary',
+    'h-[50px]': buttonSize === 'medium',
+    'w-[250px]': buttonSize === 'medium',
+    'text-white': buttonType === 'disabled'
+}">
+<div>&nbsp;</div>
+<div><ng-content></ng-content></div>
+<div *ngIf="!loading">&nbsp;</div>
+<mat-spinner *ngIf="loading" [diameter]="buttonSize==='small'?20:buttonSize==='large'?30:25"></mat-spinner>
+</button>

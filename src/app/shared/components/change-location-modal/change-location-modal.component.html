@@ -1,0 +1,35 @@
+<div class="px-4 py-4 min-xl:px-16 min-xl:py-8">
+    <div class="mb-8">
+        <h1 class="heading-1 text-columnCell text-center py-10">{{ 'location.pick-another-location' | translate }}</h1>
+        <div class="flex max-xl:flex-col justify-between">
+            <p>{{ 'location.you-can-also-search-for' | translate }}</p>
+            <searchbar [minWidth]="500">
+                <fa-icon icon="search" leftIcon></fa-icon>
+                <input input type="text" [placeholder]="'location.search-location' | translate" [(ngModel)]="search">
+            </searchbar>
+        </div>
+        <div class="flex flex-wrap max-xl:flex-col justify-center items-center w-full h-full gap-4 p-2"
+            *ngIf="data?.locations && data?.locations?.length">
+            <div (click)="selectLocation(i, item?.attributes?.id)"
+                [ngClass]="{'border border-primary': selectedLocations.includes(item?.attributes?.id)}"
+                class="flex grow min-xl:w-1/4 flex-col shadow-lg cursor-pointer min-lg:max-w-[390px] max-md:w-full"
+                *ngFor="let item of data.locations | filter: search : 'attributes?.name'; let i = index;">
+                <div class="text-center">
+                    <div [title]="item?.attributes?.name" class="bg-center bg-no-repeat bg-cover min-h-[219px] min-md:min-w-[320px]"
+                        [style.background-image]="'url(' + item?.attributes?.imgPreview?.fullpath + ')'"></div>
+                </div>
+                <div class="font-bold text-center py-4">{{item?.attributes?.name}}</div>
+            </div>
+            <div class="w-full" *ngIf="(data?.locations | filter: search : 'name').length === 0">
+                <p class="text-center text-columnCell">No Location Found</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex justify-center flex-wrap-reverse gap-4 max-sm:flex-col max-sm:w-full">
+        <button tabIndex="-1" (click)="cancel()"
+            class="btn btn-outline-primary system-button max-sm:w-full">Cancel</button>
+        <button [disabled]="!id" tabIndex="-1" (click)="confirm()"
+            class="btn btn-primary system-button max-sm:w-full">Save</button>
+    </div>
+</div>

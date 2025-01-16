@@ -1,0 +1,36 @@
+<div class="layout-wrapper">
+    <a [routerLink]="logoRedirect" class="logo">
+        <img *ngIf="logoSrc; else iconLogo" [src]="logoSrc" alt="logo" />
+        <ng-template #iconLogo>
+            <fa-icon icon="truck-fast" size="3x" class="text-primary"></fa-icon>
+        </ng-template>
+    </a>
+    <div class="upper-menu-items">
+        <div class="layout-wrapper" routerLink="../operator/dashboard">
+            <fa-icon icon="tachometer-fast" size="2x"></fa-icon>
+            <span class="menu-item-label">Dashboard</span>
+        </div>
+        <div class="layout-wrapper" routerLink="../admin/partners">
+            <fa-icon [icon]="['fas', 'shield-check']" size="2x"></fa-icon>
+            <span class="menu-item-label">Partners</span>
+        </div>
+        <div class="layout-wrapper" routerLink="../admin/locations">
+            <fa-icon icon="location-dot" size="2x"></fa-icon>
+            <span class="menu-item-label">Locations</span>
+        </div>
+        <div class="layout-wrapper" routerLink="scheduling">
+            <fa-icon icon="calendar-range" size="2x"></fa-icon>
+            <span class="menu-item-label">Scheduling</span>
+        </div>
+        <!-- <div class="layout-wrapper" routerLink="../admin/list-management">
+            <fa-icon icon="square-list" size="2x"></fa-icon>
+            <span class="menu-item-label text-gray">List</span>
+        </div> -->
+    </div>
+    <div class="lower-menu-items">
+        <div class="layout-wrapper" routerLink="../admin/location-settings">
+            <fa-icon icon="sliders-up" size="2x"></fa-icon>
+            <span class="menu-item-label">Settings</span>
+        </div>
+    </div>
+</div>

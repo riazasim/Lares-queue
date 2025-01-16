@@ -1,0 +1,90 @@
+<div class="max-w-lg min-sm:min-w-[500px]">
+    <app-loader *ngIf="(isLoading$ | async)" [isContainer]="true" [fullScreen]="false"></app-loader>
+    <form [formGroup]="customFieldGroup" *ngIf="!(isLoading$ | async)">
+        <div class="flex justify-between">
+          <h2 mat-dialog-title>Edit</h2>
+          <div class="close-button text-[25px] cursor-pointer" (click)="cancel()">&times;</div>
+        </div>
+        <div class="mb-8">
+            <p class="text-gray text-center pb-4">Name your field and choose desired type</p>
+          <div class="flex justify-between mb-2 gap-4">
+              <div class="w-full">
+                <div iconic-input-wrapper>
+                  <input inputRef type="text" placeholder="Field Name" formControlName="name">
+                </div>
+              </div>
+              <div class="w-full">
+                <div iconic-select-wrapper >
+                    <select inputRef name="type" id="type" formControlName="type">
+                        <option value="" disabled>Select type</option>
+                        <option value="text">Text</option>
+                        <option value="number">Number</option>
+                        <option value="textarea">Paragraph</option>
+                        <option value="date">Date</option>
+                        <option value="time">Time</option>
+                        <option value="checkbox">Checkbox</option>
+                        <option value="radio">Radio</option>
+                    </select>
+                </div>
+                <div *ngIf="(inputType$ | async) === 'date'" class="pt-4" iconic-select-wrapper >
+                  <select inputRef name="type" id="type" formControlName="format">
+                      <option value="" disabled>Select format</option>
+                      <option value="dd-MMM-yyyy">dd-MMM-yyyy</option>
+                      <option value="MM/dd/yyyy">MM/dd/yyyy</option>
+                      <option value="dd.MM.yyyy">dd.MM.yyyy</option>
+                      <option value="yyyy-MM-dd">yyyy-MM-dd</option>
+                  </select>
+                </div>
+                <div *ngIf="(inputType$ | async) === 'time'" class="pt-4" iconic-select-wrapper >
+                  <select inputRef name="type" id="type" formControlName="format">
+                      <option value="" disabled>Select format</option>
+                      <option value="HH:mm:ss">HH:mm:ss</option>
+                      <option value="HH:mm">HH:mm</option>
+                  </select>
+                </div>
+              </div>
+          </div>
+          <div class="mb-4">
+            <label class="cursor-pointer mr-3" for="isrequired">Required</label>
+            <input id="isrequired" type="checkbox" class="mr-2 h-[25px] w-[25px] cursor-pointer" formControlName="required">
+          </div>
+          <div *ngIf="['text', 'number', 'paragraph'].includes((inputType$ | async) ?? '')" iconic-input-wrapper>
+            <input inputRef type="text" placeholder="Input placeholder" formControlName="placeholder">
+          </div>
+          <div class="mb-4 border-gray" textarea-wrapper>
+            <textarea class="text-gray" inputRef placeholder="Description" formControlName="description">
+              </textarea>
+          </div>
+          <div *ngIf="['checkbox', 'radio'].includes((inputType$ | async) ?? '')" formArrayName="customFieldLists" class="flex gap-2 flex-wrap max-w-[640px]">
+            <div *ngFor="let field of customFieldsList.controls; let i = index" class="button-container flex items-center">
+              <ng-container [formGroupName]="i">
+                <input type="text" formControlName="value">
+                <fa-icon (menuClosed)="updateLabel(i)" [matMenuTriggerFor]="menu" #trigger="matMenuTrigger" (click)="openMenu(trigger, i)" class="text-primary cursor-pointer pr-1" icon="pen" size="lg"></fa-icon>
+                <fa-icon (click)="removeCustomFieldList(i)" class="text-primary cursor-pointer" icon="square-xmark" size="lg"></fa-icon>
+                <mat-menu #menu="matMenu" yPosition="above" [hasBackdrop]="false">
+                  <div class="p-4 flex flex-col gap-2">
+                    <div (click)="$event.stopPropagation();">
+                      <label>Label</label>
+                      <input class="w-full" type="text" placeholder="Label" formControlName="label">
+                    </div>
+                    <div (click)="$event.stopPropagation();">
+                      <label>Value</label>
+                      <input class="w-full" type="text" placeholder="Value" formControlName="value">
+                    </div>
+                    <button class="text-primary" (click)="updateLabel(i)">Save</button>
+                  </div>
+                </mat-menu>
+              </ng-container>
+            </div>
+            <fa-icon *ngIf="customFieldsList.length < 30" (click)="addCustomFieldList()" class="text-primary cursor-pointer self-center" icon="square-plus" size="lg"></fa-icon>
+          </div>
+        </div>
+
+        <div class="flex justify-between flex-wrap-reverse gap-4">
+          <button (click)="cancel()"
+            class="border border-primary py-2 text-primary min-w-[130px] rounded-full">Cancel</button>
+          <button (click)="save()"
+            class="bg-primary py-2 text-white min-w-[130px] rounded-full">{{data.id ? 'Save' : 'Add'}}</button>
+        </div>
+    </form>
+  </div>

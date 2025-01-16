@@ -1,0 +1,14 @@
+<section>
+    <header class="flex min-md:flex-row flex-col justify-between pb-2">
+        <h3 class="heading-3 font-bold">{{headerTitle}}</h3>
+        <div class="flex min-md:flex-row flex-col gap-4">
+            <button class="btn btn-primary min-md:min-w-[4rem] min-w-full min-md:ml-auto max-md:self-center" matRipple
+              *ngIf="buttonLabel" (click)="buttonClicked.emit()">{{buttonLabel}}</button>
+            <button class="btn btn-primary min-md:min-w-[4rem] min-w-full min-md:ml-auto max-md:self-center" matRipple
+              *ngIf="secondButtonLabel" (click)="secondButtonClicked.emit()">{{secondButtonLabel}}</button>
+        </div>
+    </header>
+    <main>
+        <ng-content></ng-content>
+    </main>
+</section>

@@ -1,0 +1,39 @@
+<section class="bg-white max-md:min-w-100 min-lg:min-w-[850px] h-full p-[50px] overflow-auto">
+    <div class="flex justify-between min-lg:items-center max-lg:flex-col">
+        <div><h2 class="heading-2 font-bold text-primary">Shipment ID - {{(planning$ | async)?.sId}}</h2></div>
+        <div>
+            <datepicker (dateChanged)="triggerFetchPlannings.emit($event)" [model]="filterDate" [isHeaderPosition]="true" [height]="37"></datepicker>
+        </div>
+    </div>
+    <div class="py-10">
+        <div class="flex min-lg:justify-between min-lg:items-center max-lg:flex-col">
+            <div><h4 class="heading-4 text-primary">Shipment Details</h4></div>
+        </div>
+        <div class="grid min-lg:grid-rows-3 min-lg:grid-cols-2 max-md:grid-rows-6 max-md:grid-cols-1 py-2">
+            <div><span class="font-bold">Status: </span>
+            </div>
+            <div><span class="font-bold">Driver: </span>
+                 <!-- {{(planning$ | async)?.driverName || '-'}} -->
+                </div>
+            <div><span class="font-bold">Operation: </span> 
+                <!-- {{((planning$ | async)?.operation) || '-'}} -->
+            </div>
+            <div><span class="font-bold">Auto License Plate: </span>
+                 <!-- {{(planning$ | async)?.truckLicensePlateFront || '-'}} -->
+                </div>
+            <div><span class="font-bold">Products: </span>
+                 <!-- {{(planning$ | async)?.products || '-'}} -->
+                </div>
+            <div><span class="font-bold">Avize marfa: </span> -</div>
+        </div>
+    </div>
+    <app-loader class="m-auto flex-grow" *ngIf="isLoading" [fullScreen]="false"></app-loader>
+    <div *ngIf="!isLoading">
+        <h4 class="heading-4 font-bold text-primary mb-3">Shipment Planning</h4>
+        <scheduling-table [isLoadingDashboard]="isLoading" (onToggleModal)="triggerUpdatePlanning.emit($event)" 
+        [isToggleOpened]="true" [filterDate]="filterDate"></scheduling-table>
+        <div class="flex justify-end">
+            <button type="button" class="btn px-10 btn-primary" (click)="sidenav.close()">Save</button>
+        </div>
+    </div>
+</section>

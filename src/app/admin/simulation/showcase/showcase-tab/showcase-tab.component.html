@@ -1,0 +1,109 @@
+<div>
+    <div class="p-3 my-2 w-full h-[140px] border border-[#E4E7EC] rounded-lg">
+    
+        <div class="flex gap-2 justify-between items-center my-2">
+            <span class="text-[#46474C] font-semibold">Timeline</span>
+            <span class="text-[#46474C] font-semibold">Simulation speed: 2 min</span>
+        </div>
+
+      <div class="px-6 slider-container">
+        <!-- Time Display -->
+        <div class="time-display" [style.left]="getSliderPosition()">
+          <span>{{ hours }}:{{ minutes }}</span>
+          <div class="time-arrow"></div>
+        </div>
+      
+        <!-- Slider -->
+        <input
+          type="range"
+          min="1"
+          max="1440"
+          [value]="sliderValue"
+          class="slider"
+          id="myRange"
+          (input)="updateSlider()"
+          [(ngModel)]="sliderValue"
+        />
+      
+        <!-- Time Labels -->
+        <div class="time-labels">
+          <span *ngFor="let time of generateTimeLabels()">{{ time }}</span>
+        </div>
+      </div>
+        
+      </div>
+    <div class="p-3 my-2 w-full border border-[#E4E7EC] rounded-lg">
+    
+        <div class="flex gap-2 justify-start items-center p-2">
+            <span class="text-[#46474C] font-semibold" *ngFor="let Header of Headers;">{{Header}}</span>
+        </div>
+        <hr class="mx-2 my-1">
+        <div class="grid min-lg:grid-cols-2 grid-cols-1 gap-x-10 min-3xl:gap-x-20 gap-y-4 p-2">
+            <div class="flex flex-col">
+                <div class="flex gap-2 justify-between items-center my-2">
+                    <span class="text-[#46474C]">No of trucks Inside</span>
+                    <span class="text-[#46474C]">132</span>
+                </div>
+                <hr class="my-1">
+                <div class="flex gap-2 justify-between items-center my-2">
+                    <span class="text-[#46474C]">No. of trucks outside</span>
+                    <span class="text-[#46474C]">132</span>
+                </div>
+                <hr class="my-1">
+                <div class="flex gap-2 justify-between items-center my-2">
+                    <span class="text-[#46474C]">Total processed trucks</span>
+                    <span class="text-[#46474C]">475</span>
+                </div>
+                <div class="flex justify-start gap-10 mt-4">
+                    <div class="flex items-center gap-2">
+                      <div class="w-2 h-14 bg-[#FACC15] rounded-md" ></div>
+                      <span class="text-[#46474C] font-medium">120 <br> Early</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <div class="w-2 h-14 bg-[#3B82F6] rounded-md"></div>
+                      <span class="text-[#46474C] font-medium">45 <br> Late</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <div class="w-2 h-14 bg-[#EC4899] rounded-md"></div>
+                      <span class="text-[#46474C] font-medium">18 <br> Expired</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <div class="w-2 h-14 bg-[#14B8A6] rounded-md"></div>
+                      <span class="text-[#46474C] font-medium">457 <br> On time</span>
+                    </div>
+                  </div>
+            </div>
+            <div class="flex flex-col">
+                <div class="flex gap-2 justify-between items-center my-2">
+                    <span class="text-[#46474C]">Outside queue length (km)</span>
+                    <span class="text-[#46474C]">132</span>
+                </div>
+                <hr class="my-1">
+                <div class="flex gap-2 justify-between items-center my-2">
+                    <span class="text-[#46474C]">Average queue speed (km/h)</span>
+                    <span class="text-[#46474C]">132</span>
+                </div>
+                <hr class="my-1">
+                <div class="flex gap-2 justify-between items-center my-2">
+                    <span class="text-[#46474C]">Average time to enter (min) </span>
+                    <span class="text-[#46474C]">132</span>
+                </div>
+                <hr class="my-1">
+                <div class="flex gap-2 justify-between items-center my-2">
+                    <span class="text-[#46474C]">Total access granted</span>
+                    <span class="text-[#46474C]">428</span>
+                </div>
+                <hr class="my-1">
+            </div>
+        </div> 
+       
+      </div>
+      <div class="flex justify-center items-center bg-gray-100">
+        <svg #sigmoidSvg class=" bg-white"></svg>
+      </div>
+
+</div>
+<div class="flex gap-3 justify-end mt-6">
+  <button type="button" class="btn text-white bg-[#3498DB] w-[160px]">Start / Stop</button>
+    <button type="button" (click)="next()" class="btn text-white bg-[#3498DB] w-[160px]">Next</button>
+  </div>

@@ -1,0 +1,50 @@
+<div class="flex-grow flex flex-col gap-8">
+    <div class="flex sm:justify-center md:flex-row max-md:flex-col">
+        <h4 class="heading-4 mr-3">Settings</h4>
+        <searchbar [minWidth]="500">
+            <fa-icon icon="search"></fa-icon>
+            <input input class="rounded" type="text" placeholder="Search" [(ngModel)]="search">
+        </searchbar>
+    </div>
+    <div class="max-md:grid gap-8 min-lg:columns-4 max-md:columns-1">
+        <div
+            class="slide-in-bottom max-w-sm rounded-[20px] overflow-hidden shadow-lg bg-white p-5 min-h-[280px]">
+            <ul *ngIf="!(isLoading$ | async)">
+                <li>
+                    <h5 class="text-xl font-bold">General</h5>
+                </li>
+                <li *ngIf="userRole !== 'ROLE_USER_OPERATOR'">
+                    <a routerLink="../users">Users</a>
+                </li>
+                <li *ngFor="let item of general | filter: search : 'name'">
+                    <a *ngIf="!item.link" href="javascript:void(0)">{{item.name}}</a>
+                    <a *ngIf="item.link" [routerLink]="item.link">{{item.name}}</a>
+                </li>
+            </ul>
+        </div>
+        <div
+            class="slide-in-bottom max-w-sm rounded-[20px] overflow-hidden shadow-lg bg-white p-5 min-h-[280px]">
+            <ul>
+                <li>
+                    <h5 class="text-xl font-bold">Advanced</h5>
+                </li>
+                <li *ngFor="let item of operations | filter: search : 'name'">
+                    <a *ngIf="!item.link" href="javascript:void(0)">{{item.name}}</a>
+                    <a *ngIf="item.link" [routerLink]="item.link">{{item.name}}</a>
+                </li>
+            </ul>
+        </div>
+        <div
+            class="slide-in-bottom max-w-sm rounded-[20px] overflow-hidden shadow-lg bg-white p-5 min-h-[280px]">
+            <ul>
+                <li>
+                    <h5 class="text-xl font-bold">Developers</h5>
+                </li>
+                <li *ngFor="let item of developers | filter: search : 'name'">
+                    <a *ngIf="!item.link" href="javascript:void(0)">{{item.name}}</a>
+                    <a *ngIf="item.link" [routerLink]="item.link">{{item.name}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

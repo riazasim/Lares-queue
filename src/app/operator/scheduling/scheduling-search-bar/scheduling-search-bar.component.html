@@ -1,0 +1,48 @@
+<div class="flex bg-white rounded-md items-center">
+    <fa-icon icon="search" size="2x" class="mx-2 text-darkgray"></fa-icon>
+    <input class="rounded-2 border-transparent min-w-[180px] md:min-w-[280px] w-full" type="text" [placeholder]="'search' | translate"
+        maxlength="100" name="searchValue" [formControl]="searchValue">
+    <button [disabled]="isLoading || disabled"
+        [ngClass]="{'bg-white': !disabled, 'bg-gray-500': disabled }"
+        class="min-h-[35px] min-md:min-w-[30px] max-sm:w-full rounded-r" type="button"
+        [matMenuTriggerFor]="searchByMenu">
+        <fa-icon [icon]="['fas', 'caret-down']" size="2x" class="mx-2 cursor-pointer text-darkgray">
+        </fa-icon>
+    </button>
+    <mat-menu #searchByMenu="matMenu" class="!bg-white !min-w-[180px]">
+        <div class="flex flex-col bg-gray-50">
+            <div
+                class="block px-4 font-medium text-gray-700 rounded-t-lg bg-gray-50 dark:bg-gray-800 dark:text-white">
+                {{'filter-by' | translate}}:
+            </div>
+            <button
+                class="flex justify-between items-center w-full px-4 hover:bg-gray-200 min-h-[2.5rem]"
+                [disabled]="isLoading" (click)="setFilter(1)"><span>SID</span> <fa-icon class="text-primary"
+                    *ngIf="(selectedFilter$ | async)?.curr === 1" icon="check"></fa-icon> </button>
+            <button
+                class="flex justify-between items-center w-full px-4 hover:bg-gray-200 min-h-[2.5rem]"
+                [disabled]="isLoading" (click)="setFilter(2)">{{'booking.front-plate-license-number' | translate}}
+                <fa-icon class="text-primary" *ngIf="(selectedFilter$ | async)?.curr === 2"
+                    icon="check"></fa-icon></button>
+            <button
+                class="flex justify-between items-center w-full px-4 hover:bg-gray-200 min-h-[2.5rem]"
+                [disabled]="isLoading" (click)="setFilter(3)">{{'booking.back-plate-license-number' | translate}}
+                <fa-icon class="text-primary" *ngIf="(selectedFilter$ | async)?.curr === 3"
+                    icon="check"></fa-icon></button>
+            <button
+                class="flex justify-between items-center w-full px-4 hover:bg-gray-200 min-h-[2.5rem]"
+                [disabled]="isLoading" (click)="setFilter(4)">{{'docks.dock' | translate}} <fa-icon
+                    class="text-primary" *ngIf="(selectedFilter$ | async)?.curr === 4"
+                    icon="check"></fa-icon></button>
+            <button
+                class="flex justify-between items-center w-full px-4 hover:bg-gray-200 min-h-[2.5rem]"
+                [disabled]="isLoading" (click)="setFilter(5)">{{'generics.status' | translate}} <fa-icon
+                    class="text-primary" *ngIf="(selectedFilter$ | async)?.curr === 5"
+                    icon="check"></fa-icon></button>
+            <button
+                class="flex justify-between items-center w-full px-4 hover:bg-gray-200 min-h-[2.5rem]"
+                [disabled]="isLoading" (click)="setFilter(6)">Timeslot <fa-icon class="text-primary"
+                    *ngIf="(selectedFilter$ | async)?.curr === 6" icon="check"></fa-icon></button>
+        </div>
+    </mat-menu>
+</div>

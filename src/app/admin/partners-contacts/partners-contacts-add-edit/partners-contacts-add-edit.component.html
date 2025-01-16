@@ -1,0 +1,49 @@
+<edit-container headerTitle="Add partner contact">
+    <app-loader *ngIf="isLoading" [isContainer]="true" [fullScreen]="false"></app-loader>
+    <form [formGroup]="partnerContactForm" *ngIf="!isLoading">
+        <div class="flex flex-col mx-auto max-w-[440px] gap-5">
+            <div>
+                <div iconic-input-wrapper leftIcon="id-badge">
+                    <input inputRef 
+                            type="text" 
+                            placeholder="Partner Name"
+                            [matAutocomplete]="auto"
+                            formControlName="fullName">
+                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="updatePartnerId($event)">
+                        <mat-option *ngFor="let partner of partners" [value]="partner">
+                            {{partner.name}}
+                        </mat-option>
+                        </mat-autocomplete>
+                </div>
+            </div>
+            <div>
+                <div iconic-input-wrapper leftIcon="location-dot">
+                    <input inputRef type="text" placeholder="Address" formControlName="address">
+                </div>
+            </div>
+            <div>
+                <div iconic-input-wrapper leftIcon="phone">
+                    <input inputRef type="text" placeholder="Phone" formControlName="contactNumber">
+                </div>
+            </div>
+            <div>
+                <div iconic-input-wrapper leftIcon="envelope">
+                    <input inputRef type="text" placeholder="Email" formControlName="email">
+                </div>
+            </div>
+            <div>
+                <div>
+                    <input id="partner" type="checkbox" class="mr-2 h-[25px] w-[25px]">
+                    <label class="cursor-pointer" for="partner">Add as partner user</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-end pt-5">
+            <div class="flex gap-4">
+                <button [routerLink]="id ? '../../list' : '../list'" class="btn btn-outline-primary" type="button">Cancel</button>
+                <button class="btn btn-primary" type="button" (click)="savePartner()">Save</button>
+            </div>
+        </div>
+    </form>
+</edit-container>

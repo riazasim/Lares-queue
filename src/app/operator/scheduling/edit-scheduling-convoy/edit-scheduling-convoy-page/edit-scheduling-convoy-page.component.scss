@@ -1,0 +1,133 @@
+.mat-stepper-horizontal {
+    margin-top: 8px;
+
+    ::ng-deep div.mat-horizontal-stepper-header-container {
+        padding: 0 15%;
+        margin: 0 auto;
+    }
+}
+
+[multiple],
+textarea,
+select {
+    appearance: none;
+    background-color: #fff;
+    border-color: #a0a0a0;
+    border-width: 1px;
+    border-radius: 3px;
+    padding-top: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 1rem;
+    padding-left: 1rem;
+    font-size: var(--form-control-font-size);
+    line-height: 1.5rem;
+    --tw-shadow: 0 0 #0000;
+}
+
+.mat-mdc-select-arrow-wrapper {
+    height: 24px;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    margin-right: 7px;
+}
+
+::ng-deep.mat-mdc-select-arrow svg {
+    fill: black !important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+ul li {
+    @apply px-5 my-2 hover:bg-lightgray cursor-pointer;
+}
+
+:host {
+    ::ng-deep .mat-menu-panel {
+        max-width: none !important;
+        overflow: unset !important;
+    }
+
+    ::ng-deep .mat-horizontal-stepper-header {
+        pointer-events: none !important;
+    }
+
+    ::ng-deep .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:last-child)::after,
+    ::ng-deep .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:first-child)::before,
+    ::ng-deep .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:last-child)::after {
+        background-color: #46D0E5;
+        height: 5px;
+        border: 0;
+        top: calc(calc((var(--mat-stepper-header-height) - 24px) / 2) + 58px);
+        width: calc(50% - 17px);
+    }
+
+    ::ng-deep .mat-stepper-label-position-bottom .mat-horizontal-stepper-header .mat-step-icon {
+        height: 35px;
+        width: 35px;
+        border: #46D0E5 5px solid;
+        border-radius: 9999px;
+        background-color: white;
+        color: #46D0E5;
+    }
+
+    ::ng-deep .mat-stepper-label-position-bottom .mat-horizontal-stepper-header .mat-step-icon-selected {
+        border: #17A0B5;
+        background-color: #17A0B5;
+        color: white;
+    }
+
+    ::ng-deep .mat-stepper-label-position-bottom .mat-horizontal-stepper-header {
+        flex-direction: column-reverse;
+        background-color: white;
+    }
+
+    ::ng-deep .mat-step-header:hover:not([aria-disabled]) {
+        background-color: white;
+    }
+
+    ::ng-deep .mat-stepper-label-position-bottom .mat-horizontal-stepper-header .mat-step-label {
+        color: #A0A0A0;
+        font-weight: 700;
+        font-size: 18px;
+    }
+
+    ::ng-deep .mat-stepper-label-position-bottom .mat-horizontal-stepper-header .mat-step-label.mat-step-label-selected,
+    ::ng-deep .mat-stepper-label-position-bottom .mat-horizontal-stepper-header .mat-step-label.mat-step-label-active {
+        color: black;
+    }
+
+    ::ng-deep .select-client-input::placeholder {
+        color: black;
+    }
+
+    textarea::-webkit-input-placeholder {
+        text-align: center;
+        line-height: 200px;
+    }
+
+    textarea:-moz-placeholder {
+        text-align: center;
+        line-height: 200px;
+    }
+
+    textarea::-moz-placeholder {
+        text-align: center;
+        line-height: 200px;
+    }
+
+    textarea:-ms-input-placeholder {
+        text-align: center;
+        line-height: 200px;
+    }
+
+
+}
+
+
+::ng-deep div.mat-mdc-select-panel {
+    scrollbar-width: none;
+    padding: 8px !important;
+}

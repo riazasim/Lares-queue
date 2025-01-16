@@ -1,0 +1,173 @@
+﻿<!--<mat-stepper labelPosition="bottom" [linear]="isLinear" #stepper selectedIndex="0" (selectionChange)="handleSelectionChange($event)">
+  <mat-step [stepControl]="firstFormGroup" label="Scheduling" [completed]="stepOne">
+    <app-loader *ngIf="(isLoading$ | async)" [isContainer]="true" [fullScreen]="false"></app-loader>
+    <div *ngIf="!(isLoading$ | async)">
+      <div class="flex flex-col">
+        <form [formGroup]="schedulingForm">
+          <div class="pt-3 pb-20 min-xl:px-[360px] min-md:px-[180px]">
+            <searchbar>
+              <fa-icon [icon]="['fas', 'caret-down']"></fa-icon>
+              <input #inputName [matMenuTriggerFor]="menu" readonly input class="rounded cursor-pointer" type="text" placeholder="Select client">
+              <mat-menu #menu="matMenu">
+                <div iconic-input-wrapper class="px-4" leftIcon="search">
+                  <input (click)="$event.stopPropagation();" inputRef type="text" placeholder="Search" [(ngModel)]="search" [ngModelOptions]="{ standalone: true }">
+                </div>
+                <ul class="overflow-auto max-h-[300px]">
+                  <li class="py-2" (click)="selectCustomer(customer, inputName)" *ngFor="let customer of customers | callback: filterName">{{customer.fullName}} <fa-icon *ngIf="customer.status" [icon]="['fas', 'star']" class="text-primary pl-4" size="lg"></fa-icon></li>
+                  <li *ngIf="!(customers | callback: filterName).length">No customer found.</li>
+                </ul>
+              </mat-menu>
+            </searchbar>
+          </div>
+          <div class="col-span-2 grid grid-cols-2 gap-x-10 gap-y-4 px-[50px]">
+            <div class="flex flex-col gap-x-10 gap-y-4 px-[50px]">
+              <timepicker [isMinutes]="true" placeholder="Timeslot start" (modelChange)="handleTimeSlotChange($event, 'start')"></timepicker>
+              <div iconic-select-wrapper leftIcon="truck-ramp-box" >
+                <select inputRef name="dock" formControlName="dock">
+                  <option value="null" disabled>Select dock</option>
+                  <option *ngFor="let dock of docks" [value]="dock.id">{{dock.name}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="flex flex-col gap-x-10 gap-y-4 px-[50px]">
+              <timepicker [isMinutes]="true" placeholder="Timeslot end" (modelChange)="handleTimeSlotChange($event, 'end')"></timepicker>
+              <div iconic-select-wrapper leftIcon="clock" >
+                <select inputRef name="warehouse" id="warehouse" formControlName="warehouse">
+                  <option value="null" disabled>Select building</option>
+                  <option *ngFor="let building of buildings" [value]="building.id">{{building.name}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="flex justify-end py-3">
+        <button [disabled]="!schedulingForm.get('customer')?.value" (click)="stepOne = true" type="button" class="btn btn-primary" matStepperNext>Next</button>
+      </div>
+    </div>
+  </mat-step>
+  <mat-step [stepControl]="firstFormGroup" label="Transport Data" [completed]="stepTwo">
+    <app-loader *ngIf="(isLoading$ | async)" [isContainer]="true" [fullScreen]="false"></app-loader>
+    <form *ngIf="!(isLoading$ | async)" [formGroup]="schedulingForm">
+      <div class="grid min-lg:grid-cols-2 grid-cols-1 gap-x-10 gap-y-4 pt-[100px] px-[50px]">
+        <div class="flex flex-col gap-x-10 gap-y-4 px-[50px]">
+          <p class="text-columnCell font-bold">Transport data</p>
+          &lt;!&ndash; <div iconic-input-wrapper leftIcon="calendar-days"> &ndash;&gt;
+          &lt;!&ndash; <input inputRef type="date" placeholder="Scheduling date" formControlName="schedulingDate"> &ndash;&gt;
+          <div>
+            <datepicker placeholder="Scheduling date" [formGroup]="schedulingForm" [field]="'schedulingDate'"></datepicker>
+            <div [style.visibility]="'hidden'" [style.height.px]="21"></div>
+          </div>
+          &lt;!&ndash; </div> &ndash;&gt;
+          <div iconic-select-wrapper leftIcon="grid-2" >
+            <select inputRef name="operation" id="operation" formControlName="operation">
+              <option value="null" disabled>Operation type</option>
+              <option *ngFor="let operation of operations" [value]="operation.id">{{operation.name}}</option>
+            </select>
+          </div>
+          <div iconic-select-wrapper leftIcon="id-card" >
+            <select inputRef name="customer" id="customer" formControlName="customer">
+              <option value="null" disabled>Customer</option>
+              <option *ngFor="let customer of customers" [value]="customer.id">{{customer.fullName}}</option>
+            </select>
+          </div>
+          <div iconic-input-wrapper leftIcon="user">
+            <input inputRef type="text" placeholder="Destination" formControlName="destination">
+          </div>
+          <div iconic-input-wrapper leftIcon="location-dot">
+            <input inputRef type="text" placeholder="Loading address" formControlName="loadingAddress">
+          </div>
+        </div>
+        <div class="flex flex-col gap-x-10 gap-y-4 px-[50px]">
+          <p>&nbsp;</p>
+          <div iconic-input-wrapper leftSvg="assets/images/license_plates.svg">
+            <input inputRef type="text" placeholder="Truck license plate front" formControlName="truckLicensePlateFront">
+          </div>
+          <div iconic-input-wrapper leftIcon="trailer">
+            <input inputRef type="text" placeholder="Truck license plate back" formControlName="truckLicensePlateBack">
+          </div>
+          <div iconic-input-wrapper leftSvg="assets/images/license_plates.svg">
+            <input inputRef type="text" placeholder="Driver name" formControlName="driverName">
+          </div>
+          <div iconic-input-wrapper leftSvg="assets/images/license_plates.svg">
+            <input inputRef type="text" placeholder="Driver ID" formControlName="driverId">
+          </div>
+          <div iconic-input-wrapper leftSvg="assets/images/license_plates.svg">
+            <input inputRef type="text" placeholder="Driver mobile phone" formControlName="driverContactNumber">
+          </div>
+        </div>
+      </div>
+      <div class="px-[100px]">
+        <p class="pb-3 text-columnCell font-bold">Custom Fields</p>
+        <div *ngIf="transportData" class="grid min-lg:grid-cols-2 grid-cols-1 gap-y-4 gap-x-40">
+          <div *ngFor="let input of transportData;">
+            <ng-container [ngSwitch]="input.type">
+              <ng-container *ngSwitchCase="'text'">
+                <label *ngIf="input.label">{{input.label}}</label>
+                <div iconic-input-wrapper>
+                  <input inputRef type="text" [placeholder]="input.placeholder" [required]="input.required"
+                         (keyup)="updateCustomFieldTransport(input.id, input.type, $event.target)">
+                </div>
+              </ng-container>
+              <ng-container *ngSwitchCase="'radio'">
+                <label *ngIf="input.label">{{input.label}}</label>
+                <div class="flex items-center gap-4">
+                  <div class="flex items-center gap-2" *ngFor="let field of input.customFieldLists">
+                    <label *ngIf="field.label">{{field.label}}</label>
+                    <input type="radio" [name]="input.name" [value]="field.value"
+                           (change)="updateCustomFieldTransport(input.id, input.type, { value: field.value, checked: $any($event.target)?.checked })">
+                  </div>
+                </div>
+              </ng-container>
+              <ng-container *ngSwitchCase="'checkbox'">
+                <label *ngIf="input.label">{{input.label}}</label>
+                <div class="flex items-center gap-4">
+                  <div class="flex items-center gap-2" *ngFor="let field of input.customFieldLists">
+                    <label *ngIf="field.label">{{field.label}}</label>
+                    <input type="checkbox" [name]="input.name" [value]="field.value"
+                           (change)="updateCustomFieldTransport(input.id, input.type, { value: field.value, checked: $any($event.target)?.checked })">
+                  </div>
+                </div>
+              </ng-container>
+              <ng-container *ngSwitchCase="'date'">
+                <label *ngIf="input.label">{{input.label}}</label>
+                <div iconic-input-wrapper>
+                  <input inputRef type="date" [placeholder]="input.placeholder" [required]="input.required"
+                         (change)="updateCustomFieldCargo(input.id, input.type, $event.target)">
+                </div>
+              </ng-container>
+              <ng-container *ngSwitchCase="'time'">
+                <label *ngIf="input.label">{{input.label}}</label>
+                <div iconic-input-wrapper>
+                  <input inputRef type="time" [placeholder]="input.placeholder" [required]="input.required"
+                         (change)="updateCustomFieldCargo(input.id, input.type, $event.target)">
+                </div>
+              </ng-container>
+              <ng-container *ngSwitchCase="'textarea'">
+                <label *ngIf="input.label">{{input.label}}</label>
+                <div textarea-wrapper>
+                    <textarea inputRef type="textarea" [placeholder]="input.placeholder" [required]="input.required"
+                              (keyup)="updateCustomFieldAdditional(input.id, input.type, $event.target)"></textarea>
+                </div>
+              </ng-container>
+              <ng-container *ngSwitchCase="'select'">
+                <label *ngIf="input.label">{{input.label}}</label>
+                <div iconic-select-wrapper >
+                  <select class="w-full" [required]="input.required" inputRef (change)="updateCustomFieldAdditional(input.id, input.type, $event.target)">
+                    <option value="">{{input.placeholder}}</option>
+                    <option *ngFor="let field of input.customFieldLists" [value]="field.value">{{field.label}}</option>
+                  </select>
+                </div>
+              </ng-container>
+            </ng-container>
+          </div>
+        </div>
+        <p *ngIf="!transportData || !transportData.length">There're no transport data custom fields.</p>
+      </div>
+      <div class="flex gap-2 justify-end py-3">
+        <button type="button" class="btn btn-primary" matStepperPrevious>Back</button>
+        <button type="button" class="btn btn-primary" (click)="stepTwo = true" matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+</mat-stepper>-->

@@ -1,0 +1,38 @@
+<material-panel-table [showHeader]="false">
+    <div table class="w-full overflow-hidden">
+        <ng-scrollbar track="horizontal" [autoHeightDisabled]="false" style="scrollbar-width: none;">
+            <table class="material-table no-wrap overflow-hidden">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <!-- <th>No.</th> -->
+                        <th *ngFor="let Header of Headers;">{{Header}}</th>
+                        <th>Action</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr *ngFor="let row of rows; let i = index;">
+                        <!-- <td>
+                            {{row}}
+                        </td> -->
+                        <td></td>
+                        <td *ngFor="let Header of Headers;">
+                            <input matInput class="text-center"/>
+                        </td>
+                        <td>
+                            <a (click)="removeRow(i)" class="text-danger cursor-pointer">Delete</a>
+                        </td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </ng-scrollbar>
+        <button type="button" class="text-primary font-bold py-5" (click)="addRow()">
+            <fa-icon icon="circle-plus"></fa-icon> Add access point
+        </button>
+    </div>
+</material-panel-table>
+<div class="mt-6 text-right">
+    <button type="button" (click)="next()" class="btn text-white bg-[#3498DB] w-[160px]">Next</button>
+  </div>

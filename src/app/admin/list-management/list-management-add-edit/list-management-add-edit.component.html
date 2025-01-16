@@ -1,0 +1,42 @@
+<edit-container headerTitle="Add List">
+  <app-loader *ngIf="isLoading" [isContainer]="true" [fullScreen]="false"></app-loader>
+  <form [formGroup]="listForm" *ngIf="!isLoading">
+    <div class="flex flex-col mx-auto my-auto max-w-[440px] gap-5">
+      <div iconic-input-wrapper>
+        <input inputRef
+               type="text"
+               placeholder="List name"
+               [matAutocomplete]="auto"
+               formControlName="name">
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="updateListId($event)">
+          <mat-option *ngFor="let list of lists" [value]="list">
+            {{list.name}}
+          </mat-option>
+        </mat-autocomplete>
+      </div>
+      <div class="gap-5 rounded border-primary my-3">
+          <select style="width: 100%" inputRef formControlName="type">
+            <option value="User defined">User defined</option>
+            <option value="System defined">System defined</option>
+          </select>
+      </div>
+      <div>
+        <div iconic-input-wrapper>
+          <input style="height: 40px" inputRef type="color" formControlName="color">
+        </div>
+      </div>
+      <div>
+        <div iconic-input-wrapper>
+          <input inputRef type="text" placeholder="List description" formControlName="description">
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-end pt-5">
+      <div class="flex gap-4">
+        <button [routerLink]="id ? '../../list' : '../list'" class="btn btn-outline-primary" type="button">Cancel</button>
+        <button class="btn btn-primary" type="button" (click)="saveList()">Save</button>
+      </div>
+    </div>
+  </form>
+</edit-container>

@@ -1,0 +1,181 @@
+﻿<section>
+    <section *ngIf="(isTableLoading$ | async) || originalSource.length; else empty">
+        <material-panel-table [showSearchbar]="false" [showHeader]="false" microService>
+            <div table class="w-full overflow-hidden">
+                <ng-scrollbar track="horizontal" [autoHeightDisabled]="false" style="scrollbar-width: none;">
+                    <table class="material-table no-wrap overflow-hidden" matSort (matSortChange)="sortData($event)"
+                        [class.loading]="isTableLoading$ | async" aria-label="Usage Table" cdk-table
+                        [dataSource]="dataSource">
+
+                        <ng-container cdkColumnDef="rId">
+                            <th cdk-header-cell *cdkHeaderCellDef scope="col" class="max-w-40">
+                                <section class="flex flex-col gap-4">
+                                    <div mat-sort-header="rId">RID</div>
+                                </section>
+                            </th>
+                            <td cdk-cell *cdkCellDef="let row">
+                                {{row?.planningRailway?.rId || '-'}}
+                            </td>
+                            <td cdk-footer-cell *cdkFooterCellDef [colSpan]="displayedColumns.length"
+                                class="py-4 font-bold text-center">
+                                {{'messages.there-no-more-items' | translate}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container cdkColumnDef="sId">
+                            <th cdk-header-cell *cdkHeaderCellDef scope="col" class="max-w-40">
+                                <section class="flex flex-col gap-4">
+                                    <div mat-sort-header="sId">SID</div>
+                                </section>
+                            </th>
+                            <td cdk-cell *cdkCellDef="let row">
+                                {{row?.sId || '-'}}
+                            </td>
+                            <td cdk-footer-cell *cdkFooterCellDef [colSpan]="displayedColumns.length"
+                                class="py-4 font-bold text-center">
+                                {{'messages.there-no-more-items' | translate}}
+                            </td>
+                        </ng-container>
+                         <ng-container cdkColumnDef="pickUpPoint">
+                            <th cdk-header-cell *cdkHeaderCellDef scope="col" class="max-w-40">
+                                <section class="flex flex-col gap-4">
+                                    <div mat-sort-header="pickUpPoint">
+                                        Pick-Up Point
+                                    </div>
+                                </section>
+                            </th>
+                            <td cdk-cell *cdkCellDef="let row">
+                                {{ row?.pickUpPoint?.station?.name || "-" }}
+                            </td>
+                        </ng-container>
+                        <ng-container cdkColumnDef="deliverPoint">
+                            <th cdk-header-cell *cdkHeaderCellDef scope="col" class="max-w-40">
+                                <section class="flex flex-col gap-4">
+                                    <div mat-sort-header="deliverPoint">
+                                        Delivery point
+                                    </div>
+                                </section>
+                            </th>
+                            <td cdk-cell *cdkCellDef="let row;">
+                                {{ row?.deliverPoint?.station?.name || "-" }}
+                            </td>
+                        </ng-container>
+                        <ng-container cdkColumnDef="estimatedTimePickUp">
+                            <th cdk-header-cell *cdkHeaderCellDef scope="col" class="max-w-20">
+                                <section class="flex flex-col gap-4">
+                                    <div mat-sort-header="estimatedTimePickUp">
+                                        ETA
+                                    </div>
+                                </section>
+                            </th>
+                            <td cdk-cell *cdkCellDef="let row">
+                                {{ row?.estimatedTimePickUp || "-" }}
+                            </td>
+                        </ng-container>
+                        <ng-container cdkColumnDef="estimatedTimeDeliver">
+                            <th cdk-header-cell *cdkHeaderCellDef scope="col" class="max-w-20">
+                                <section class="flex flex-col gap-4">
+                                    <div mat-sort-header="estimatedTimeDeliver">
+                                        RTA
+                                    </div>
+                                </section>
+                            </th>
+                            <td cdk-cell *cdkCellDef="let row">
+                                {{ row?.estimatedTimeDeliver || "-" }}
+                            </td>
+                        </ng-container>
+                        <ng-container cdkColumnDef="delay">
+                            <th cdk-header-cell *cdkHeaderCellDef scope="col" class="max-w-20">
+                                <section class="flex flex-col gap-4">
+                                    <div mat-sort-header="delay">
+                                        Delay
+                                    </div>
+                                </section>
+                            </th>
+                            <td cdk-cell *cdkCellDef="let row">
+                                {{ row?.planningRailway?.delay || "-" }}
+                            </td>
+                        </ng-container>
+                        <ng-container cdkColumnDef="coordinates">
+                            <th cdk-header-cell *cdkHeaderCellDef scope="col" class="max-w-40">
+                                <section class="flex flex-col gap-4">
+                                    <div mat-sort-header="coordinates">
+                                        Coordinates
+                                    </div>
+                                </section>
+                            </th>
+                            <td cdk-cell *cdkCellDef="let row">
+                                {{ row?.sidCoordinates || "-" }}
+                            </td>
+                        </ng-container>
+                        <ng-container cdkColumnDef="shipmentStatus">
+                            <th cdk-header-cell *cdkHeaderCellDef scope="col" class="max-w-20">
+                                <section class="flex flex-col gap-4">
+                                    <div mat-sort-header="shipmentStatus">
+                                        Shipment Status
+                                    </div>
+                                </section>
+                            </th>
+                            <td cdk-cell  *cdkCellDef="let row">
+                                <mat-chip [ngStyle]="{'background-color': row?.planningRailwayShipmentStatus?.color}">
+                                    {{ row?.planningRailwayShipmentStatus?.name }}
+                                </mat-chip>
+                            </td>
+                        </ng-container>
+
+                        <ng-container cdkColumnDef="actions">
+                            <th cdk-header-cell *cdkHeaderCellDef scope="col" class="min-w-40">
+                                <section class="flex flex-col gap-4">
+                                    <div mat-sort-header="actions">Actions</div>
+                                </section>
+                            </th>
+                            <td cdk-cell *cdkCellDef="let row" class="flex justify-center gap-4 w-max-content">
+                                <div class="flex gap-4">
+                                    <a class="text-primary" href="javascript:void(0)"
+                                        (click)="OnEmit(row , 'transfer')"><img
+                                            src="assets/images/left-right-list-icon.png" alt="icon"
+                                            class="cursor-pointer"></a>
+                                    <fa-icon icon="xmark" class="text-[#17A0B5] cursor-pointer" size="lg"
+                                        *ngIf="userRole === 'ROLE_USER_TRANSPORT'"
+                                        (click)="openDeleteModal(row.id)"></fa-icon>
+                                </div>
+                                <div class="flex gap-4">
+                                    <fa-icon icon="eye" class="text-[#17A0B5] cursor-pointer" size="lg"
+                                        *ngIf="userRole === 'ROLE_USER_TRANSPORT'"
+                                        [routerLink]="['../edit', row?.id]"></fa-icon>
+                                    <a class="text-primary" href="javascript:void(0)"
+                                        (click)="OnEmit(row , 'shipment')"><img
+                                            src="assets/images/rotate-left-list-icon.svg" alt="icon"
+                                            class="cursor-pointer"></a>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <!-- Header and Row Declarations -->
+                        <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+                        <tr cdk-row *cdkRowDef="let row; columns: displayedColumns"></tr>
+                        <tr *cdkNoDataRow>
+                            <td [colSpan]="displayedColumns.length">
+                                <span *ngIf="(isTableLoading$ | async)">
+                                    <app-loader *ngIf="(isTableLoading$ | async)" [isContainer]="true"
+                                        [fullScreen]="false"></app-loader>
+                                </span>
+                                <span *ngIf="dataSource.length === 0 && !(isTableLoading$ | async)">No results
+                                    found</span>
+                                <span *ngIf="dataSource.length > 0  && !(isTableLoading$ | async)">Nicio înregistrare nu
+                                    corespunde criteriilor de căutare</span>
+                            </td>
+                        </tr>
+                    </table>
+                </ng-scrollbar>
+                <mat-paginator [class.!hidden]="dataSource.length === 0" [pageSizeOptions]="pageSizeOptions"
+                    [length]="length" [pageIndex]="pageIndex" (page)="onPaginateChange($event)" [pageSize]="pageSize"
+                    showFirstLastButtons>
+                </mat-paginator>
+            </div>
+        </material-panel-table>
+    </section>
+    <ng-template #empty class="mt-12">
+        <no-scheduling [userRole]="userRole" [transportMode]="transportMode"></no-scheduling>
+    </ng-template>
+</section>

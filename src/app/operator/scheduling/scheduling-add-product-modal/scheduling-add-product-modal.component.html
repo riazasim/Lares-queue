@@ -1,0 +1,54 @@
+<div class="max-w-lg px-4 py-4">
+    <h2 mat-dialog-title>Add product</h2>
+    <div mat-dialog-content class="whitespace-pre-line mb-8 ">
+        <div class="flex gap-2">
+            <div class="w-full">
+                <div iconic-select-wrapper >
+                    <select [disabled]="!!product" inputRef name="product" id="product" (change)="setProduct($event)" [(ngModel)]="productId">
+                        <option [value]="null" selected disabled>Select product</option>
+                        <option *ngFor="let product of data.products" [value]="product.id">{{product.name}}</option>
+                    </select>
+                </div>
+            </div>
+            <div inputRef class="flex items-center h-[53px]">
+                <button *ngIf="product" type="button" (click)="resetProduct()"><fa-icon class="text-danger font-bold" icon="close"></fa-icon></button>
+            </div>
+        </div>
+        <div class="flex flex-col gap-4" *ngIf="product">
+            <div>
+                <p class="text-columnCell font-bold pb-3">Product details</p>
+                <div>
+                    <div iconic-input-wrapper>
+                        <input inputRef type="text" placeholder="Product name" [(ngModel)]="product.name">
+                    </div>
+                </div>
+                <div>
+                    <div iconic-input-wrapper>
+                        <input inputRef type="text" placeholder="Size" [(ngModel)]="product.size">
+                    </div>
+                </div>
+                <div>
+                    <div iconic-input-wrapper>
+                        <input inputRef type="text" placeholder="Brand" [(ngModel)]="product.brand">
+                    </div>
+                </div>
+                <div>
+                    <div iconic-input-wrapper>
+                        <input inputRef type="number" placeholder="Amount" [(ngModel)]="product.amount">
+                    </div>
+                </div>
+                <div>
+                    <div iconic-input-wrapper>
+                        <input inputRef type="number" placeholder="Weight" [(ngModel)]="product.weight">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div mat-dialog-actions class="flex justify-around flex-wrap-reverse gap-4">
+        <button tabIndex="-1" (click)="cancel()" class="btn btn-outline-primary min-w-[130px]">Cancel</button>
+        <button [disabled]="!product" tabIndex="-1" (click)="confirm()" class="btn btn-primary min-w-[130px]">Add</button>
+    </div>
+</div>

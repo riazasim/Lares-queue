@@ -1,0 +1,83 @@
+<section *ngIf="(isLoading$ | async) || dataSource.length; else empty">
+    <material-panel-table [showSearchbar]="false" [showHeader]="true" tableTitle="Manage picklists"
+        [showButton]="false">
+        <div table class="w-full shadow-lg">
+            <ng-scrollbar track="horizontal" [autoHeightDisabled]="false">
+                <table class="material-table no-wrap overflow-hidden" [class.loading]="(isLoading$ | async)"
+                    aria-label="Usage Table" cdk-table [dataSource]="dataSource">
+
+                    <ng-container cdkColumnDef="name">
+                        <th cdk-header-cell *cdkHeaderCellDef scope="col">
+                            <section class="flex flex-col">
+                                <div>List Name</div>
+                            </section>
+                        </th>
+                        <td cdk-cell *cdkCellDef="let row; let i = index" class="cursor-pointer">
+                            <ng-container [ngSwitch]="true">
+                                <span *ngSwitchCase="row.name.toLowerCase().includes('sid')" class="text-primary"
+                                    routerLink="../sid-status">{{row.name}}</span>
+                                <span *ngSwitchCase="row.name.toLowerCase().includes('goods')" class="text-primary"
+                                    routerLink="../goods-status">{{row.name}}</span>
+                                <span *ngSwitchCase="row.name.toLowerCase().includes('timeslot')" class="text-primary"
+                                    routerLink="../timeslot-status">{{row.name}}</span>
+                            </ng-container>
+                        </td>
+                    </ng-container>
+
+                    <ng-container cdkColumnDef="type">
+                        <th cdk-header-cell *cdkHeaderCellDef scope="col">
+                            <section class="flex flex-col">
+                                <div>Type of List</div>
+                            </section>
+                        </th>
+                        <td [routerLink]="" cdk-cell *cdkCellDef="let row">{{row.type}}</td>
+                    </ng-container>
+
+                    <ng-container cdkColumnDef="description">
+                        <th cdk-header-cell *cdkHeaderCellDef scope="col">
+                            <section class="flex flex-col">
+                                <div>Description</div>
+                            </section>
+                        </th>
+                        <td cdk-cell *cdkCellDef="let row">{{row.description || '-'}}</td>
+                    </ng-container>
+
+                    <ng-container cdkColumnDef="actions">
+                        <th cdk-header-cell *cdkHeaderCellDef scope="col">
+                            <section class="flex flex-col"></section>
+                        </th>
+                        <td cdk-cell *cdkCellDef="let row; let i = index" class="flex gap-4">
+                            <ng-container [ngSwitch]="true">
+                                <fa-icon *ngSwitchCase="row.name.toLowerCase().includes('timeslot')" icon="eye"
+                                    class="text-primary cursor-pointer" size="lg"
+                                    routerLink="../timeslot-status"></fa-icon>
+                                <fa-icon *ngSwitchCase="row.name.toLowerCase().includes('sid')" icon="eye"
+                                    class="text-primary cursor-pointer" size="lg" routerLink="../sid-status"></fa-icon>
+                                <fa-icon *ngSwitchCase="row.name.toLowerCase().includes('goods')" icon="eye"
+                                    class="text-primary cursor-pointer" size="lg"
+                                    routerLink="../goods-status"></fa-icon>
+                            </ng-container>
+                            <!-- <fa-icon icon="trash-can" class="text-primary cursor-pointer" size="lg" (click)="openDeleteModal(row.id)"></fa-icon> -->
+                        </td>
+                    </ng-container>
+
+                    <!-- Header and Row Declarations -->
+                    <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+                    <tr cdk-row *cdkRowDef="let row; columns: displayedColumns"></tr>
+                    <tr *cdkNoDataRow>
+                        <td [colSpan]="displayedColumns.length">
+                            <app-loader *ngIf="(isLoading$ | async)" [isContainer]="true"
+                                [fullScreen]="false"></app-loader>
+                            <span *ngIf="dataSource.length === 0 && !(isLoading$ | async)">No results found</span>
+                            <span *ngIf="dataSource.length > 0  && !(isLoading$ | async)">Nicio înregistrare nu
+                                corespunde criteriilor de căutare</span>
+                        </td>
+                    </tr>
+                </table>
+            </ng-scrollbar>
+        </div>
+    </material-panel-table>
+</section>
+<ng-template #empty>
+    <no-list-management></no-list-management>
+</ng-template>

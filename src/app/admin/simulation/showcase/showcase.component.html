@@ -1,0 +1,15 @@
+<div class="p-6 bg-white rounded-lg">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Simulation</h2>
+  <p class="text-lightGray mb-4">
+    Now that parameters were set and queues generated, you can start the 24 hours simulation.<br />
+    You can set the simulation speed or skip directly to reports.
+  </p>
+<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+    <mat-tab *ngFor="let tabData of tabsData">
+        <ng-template mat-tab-label>
+            {{tabData.tabName}}
+        </ng-template>
+        <app-showcase-tab [Headers]=tabData.tabHeaders.Headers ></app-showcase-tab>
+    </mat-tab>
+</mat-tab-group>
+</div>

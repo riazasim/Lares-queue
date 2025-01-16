@@ -1,0 +1,114 @@
+<ng-container *ngIf="!isLoading">
+    <ng-container *ngIf="formGroup; else simple">
+        <form [formGroup]="formGroup">
+            <div class="iconic-layout-wrapper relative" [class.loading]="loading">
+                <div class="loader absolute top-0 right-0 left-0 bottom-0 hidden z-10"></div>
+                <div class="input-container" [class.!hidden]="loading">
+                    <fa-icon icon="clock" size="lg" class="icon"></fa-icon>
+                    <input #inputTrigger="matMenuTrigger"
+                            type="text"
+                            [matMenuTriggerFor]="menu"
+                            [placeholder]="placeholder"
+                            [formControlName]="field"
+                            onkeydown="return false">
+                    <fa-icon (click)="formGroup.get(field)?.patchValue(null)" *ngIf="formGroup.get(field)?.value" icon="close" size="lg" class="icon cursor-pointer"></fa-icon>
+                    <mat-menu #menu="matMenu">
+                        <p (click) = "$event.stopPropagation()" class="font-bold p-2">Pick a time (HH:mm:ss):</p>
+                        <div class="flex p-2 gap-2 items-center" (click) = "$event.stopPropagation()">
+                            <div class="flex flex-col items-center">
+                                <fa-icon (click) = "increment($event, 'h1')" icon="angle-up" class="cursor-pointer font-bold"></fa-icon>
+                                <input (click) = "$event.stopPropagation()" type="number" class="w-[35px] border text-center" maxlength="1" min="0" max="2" [(ngModel)]="hourModel.h1" [ngModelOptions]="{ standalone: true }">
+                                <fa-icon (click) = "decrement($event, 'h1')" icon="angle-down" class="cursor-pointer font-bold"></fa-icon>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <fa-icon (click) = "increment($event, 'h2')" icon="angle-up" class="cursor-pointer font-bold"></fa-icon>
+                                <input (click) = "$event.stopPropagation()" type="number" class="w-[35px] border text-center" maxlength="1" min="0" max="9" [(ngModel)]="hourModel.h2" [ngModelOptions]="{ standalone: true }">
+                                <fa-icon (click) = "decrement($event, 'h2')" icon="angle-down" class="cursor-pointer font-bold"></fa-icon>
+                            </div>
+                            :
+                            <div class="flex flex-col items-center">
+                                <fa-icon (click) = "increment($event, 'm1')" icon="angle-up" class="cursor-pointer font-bold"></fa-icon>
+                                <input (click) = "$event.stopPropagation()" type="number" class="w-[35px] border text-center" maxlength="1" min="0" max="5" [(ngModel)]="hourModel.m1" [ngModelOptions]="{ standalone: true }">
+                                <fa-icon (click) = "decrement($event, 'm1')" icon="angle-down" class="cursor-pointer font-bold"></fa-icon>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <fa-icon (click) = "increment($event, 'm2')" icon="angle-up" class="cursor-pointer font-bold"></fa-icon>
+                                <input (click) = "$event.stopPropagation()" type="number" class="w-[35px] border text-center" maxlength="1" min="0" max="9" [(ngModel)]="hourModel.m2" [ngModelOptions]="{ standalone: true }">
+                                <fa-icon (click) = "decrement($event, 'm2')" icon="angle-down" class="cursor-pointer font-bold"></fa-icon>
+                            </div>
+                            :
+                            <div *ngIf="!isMinutes" class="flex flex-col items-center">
+                                <fa-icon (click) = "increment($event, 's1')" icon="angle-up" class="cursor-pointer font-bold"></fa-icon>
+                                <input (click) = "$event.stopPropagation()" type="number" class="w-[35px] border text-center" maxlength="1" min="0" max="5" [(ngModel)]="hourModel.s1" [ngModelOptions]="{ standalone: true }">
+                                <fa-icon (click) = "decrement($event, 's1')" icon="angle-down" class="cursor-pointer font-bold"></fa-icon>
+                            </div>
+                            <div *ngIf="!isMinutes" class="flex flex-col items-center">
+                                <fa-icon (click) = "increment($event, 's2')" icon="angle-up" class="cursor-pointer font-bold"></fa-icon>
+                                <input (click) = "$event.stopPropagation()" type="number" class="w-[35px] border text-center" maxlength="1" min="0" max="9" [(ngModel)]="hourModel.s2" [ngModelOptions]="{ standalone: true }">
+                                <fa-icon (click) = "decrement($event, 's2')" icon="angle-down" class="cursor-pointer font-bold"></fa-icon>
+                            </div>
+                        </div>
+                        <div class="flex justify-center" (click) = "$event.stopPropagation()">
+                            <button class="btn btn-primary z-10" (click)="save($event)">Save</button>
+                        </div>
+                    </mat-menu>
+                </div>
+            </div>
+        </form>
+    </ng-container>
+    <ng-template #simple>
+        <div [class.loading]="loading"  class="iconic-layout-wrapper relative">
+            <div class="loader absolute top-0 right-0 left-0 bottom-0 hidden z-10"></div>
+            <div class="input-container" [class.!hidden]="loading">
+                <fa-icon icon="clock" size="lg" class="icon"></fa-icon>
+                <input onkeydown="return false"
+                        type="text"
+                        #inputTrigger="matMenuTrigger"
+                        [placeholder]="placeholder"
+                        [(ngModel)]="model"
+                        [matMenuTriggerFor]="menu">
+                <fa-icon (click)="model = ''" *ngIf="model" icon="close" size="lg" class="icon cursor-pointer"></fa-icon>
+                <mat-menu #menu="matMenu">
+                    <p (click) = "$event.stopPropagation()" class="font-bold p-2">Pick a time (HH:mm:ss):</p>
+                    <div class="flex p-2 gap-2 items-center" (click) = "$event.stopPropagation()">
+                        <div class="flex flex-col items-center">
+                            <fa-icon (click) = "increment($event, 'h1')" icon="angle-up" class="cursor-pointer font-bold"></fa-icon>
+                            <input (click) = "$event.stopPropagation()" type="number" class="w-[35px] border text-center" maxlength="1" min="0" max="2" [(ngModel)]="hourModel.h1">
+                            <fa-icon (click) = "decrement($event, 'h1')" icon="angle-down" class="cursor-pointer font-bold"></fa-icon>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <fa-icon (click) = "increment($event, 'h2')" icon="angle-up" class="cursor-pointer font-bold"></fa-icon>
+                            <input (click) = "$event.stopPropagation()" type="number" class="w-[35px] border text-center" maxlength="1" min="0" max="9" [(ngModel)]="hourModel.h2">
+                            <fa-icon (click) = "decrement($event, 'h2')" icon="angle-down" class="cursor-pointer font-bold"></fa-icon>
+                        </div>
+                        :
+                        <div class="flex flex-col items-center">
+                            <fa-icon (click) = "increment($event, 'm1')" icon="angle-up" class="cursor-pointer font-bold"></fa-icon>
+                            <input (click) = "$event.stopPropagation()" type="number" class="w-[35px] border text-center" maxlength="1" min="0" max="5" [(ngModel)]="hourModel.m1">
+                            <fa-icon (click) = "decrement($event, 'm1')" icon="angle-down" class="cursor-pointer font-bold"></fa-icon>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <fa-icon (click) = "increment($event, 'm2')" icon="angle-up" class="cursor-pointer font-bold"></fa-icon>
+                            <input (click) = "$event.stopPropagation()" type="number" class="w-[35px] border text-center" maxlength="1" min="0" max="9" [(ngModel)]="hourModel.m2">
+                            <fa-icon (click) = "decrement($event, 'm2')" icon="angle-down" class="cursor-pointer font-bold"></fa-icon>
+                        </div>
+                        :
+                        <div *ngIf="!isMinutes" class="flex flex-col items-center">
+                            <fa-icon (click) = "increment($event, 's1')" icon="angle-up" class="cursor-pointer font-bold"></fa-icon>
+                            <input (click) = "$event.stopPropagation()" type="number" class="w-[35px] border text-center" maxlength="1" min="0" max="5" [(ngModel)]="hourModel.s1">
+                            <fa-icon (click) = "decrement($event, 's1')" icon="angle-down" class="cursor-pointer font-bold"></fa-icon>
+                        </div>
+                        <div *ngIf="!isMinutes" class="flex flex-col items-center">
+                            <fa-icon (click) = "increment($event, 's2')" icon="angle-up" class="cursor-pointer font-bold"></fa-icon>
+                            <input (click) = "$event.stopPropagation()" type="number" class="w-[35px] border text-center" maxlength="1" min="0" max="9" [(ngModel)]="hourModel.s2">
+                            <fa-icon (click) = "decrement($event, 's2')" icon="angle-down" class="cursor-pointer font-bold"></fa-icon>
+                        </div>
+                    </div>
+                    <div class="flex justify-center" (click) = "$event.stopPropagation()">
+                        <button class="btn btn-primary z-10" (click)="save($event)">Save</button>
+                    </div>
+                </mat-menu>
+            </div>
+        </div>
+    </ng-template>
+</ng-container>

@@ -1,0 +1,53 @@
+
+<header class="layout-wrapper">
+  <app-loader class="m-auto flex-grow" *ngIf="(isLoading$ | async)" [fullScreen]="false"></app-loader>
+  <mat-button-toggle-group
+      name="favoriteColor"
+      aria-label="Favorite Color"
+      (change)="changeTransportMode($event)"
+      [value]="transportModeId"
+    >
+    <mat-button-toggle value="1">Road</mat-button-toggle>
+    <mat-button-toggle value="2">Train</mat-button-toggle>
+    <mat-button-toggle value="3">Water</mat-button-toggle>
+    </mat-button-toggle-group>
+  <div *ngIf="!(isLoading$ | async)" class="flex flex-grow justify-center items-center gap-2">
+    <!-- <fa-icon (click)="openChangeLocationModal()" icon="location-dot" class="text-primary cursor-pointer text-3xl font-bold"></fa-icon> -->
+    <span class="text-3xl font-bold">{{companyName$}}</span>
+  </div>
+  <div class="logo-container" *ngIf="logoSrc" [routerLink]="logoRedirect" [relativeTo]="activatedRoute.parent">
+    <img [src]="logoSrc" alt="logo">
+  </div>
+
+  
+    
+  
+  
+  <!-- <div class="current-location-container">
+     <h2 class="heading-4 current-location">
+      <span [matMenuTriggerFor]="menu" #trigger="matMenuTrigger"
+      [ngClass]="{'fi-gb': (language$ | async) === 'en', 'fi-ro': (language$ | async) === 'ro'}"
+      class="fi cursor-pointer"></span>
+      <mat-menu #menu="matMenu" class="!bg-white">
+        <menu mat-menu-item (click)="localizeService.changeLanguage('ro')"><div class="flex gap-3"><span class="fi fi-ro"></span> Română</div></menu>
+        <menu mat-menu-item (click)="localizeService.changeLanguage('en')"><div class="flex gap-3"><span class="fi fi-gb"></span> English</div></menu>
+      </mat-menu>
+    </h2>
+   </div> -->
+
+  <button class="expand-btn" (click)="isMenuClosed = false">
+    <fa-icon [icon]="expandBtnIcon" size="lg"></fa-icon>
+  </button>
+
+  <div [class.closed]="isMenuClosed"
+    class="menu-container">
+    <div class="title-row">
+      <h4>{{optionsTitle}}</h4>
+      <fa-icon [icon]="closeBtnIcon" size="lg" role="button" (click)="isMenuClosed = true"></fa-icon>
+    </div>
+    <div class="menu-row">
+      <ng-content select="[menu]"></ng-content>
+    </div>
+
+  </div>
+</header>

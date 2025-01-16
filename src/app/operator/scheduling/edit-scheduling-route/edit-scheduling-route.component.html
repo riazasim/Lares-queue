@@ -1,0 +1,200 @@
+<section class="bg-white w-full">
+    <app-loader *ngIf="isLoading$ | async" [isContainer]="true" [fullScreen]="false"></app-loader>
+    <form [formGroup]="planningForm">
+        <div class="grid min-lg:grid-cols-2 grid-cols-1 gap-x-10 min-3xl:gap-x-20 gap-y-4 pt-[100px] min-xl:px-[50px]">
+            <div class="flex flex-col gap-y-4 min-xl:px-[50px]">
+                <div [loading]="(isPortsLoading$ | async)" iconic-input-wrapper leftIcon="user">
+                    <input inputRef type="text" placeholder="Convoy Type" formControlName="convoyType" />
+                </div>
+                <div class="grid grid-cols-2 gap-x-8 gap-y-4 mb-5">
+                    <datepicker [loading]="(isPortsLoading$ | async)" matTooltipClass="drop-shadow-lg"
+                        matTooltipPosition="above" [matTooltip]="'Pick ETA date' | translate" [model]="filterDate"
+                        [isHeaderPosition]="true" [height]="52" (dateChanged)="OnDateChange($event)">
+                    </datepicker>
+                    <timepicker [loading]="(isPortsLoading$ | async)" matTooltipClass="drop-shadow-lg"
+                        matTooltipPosition="above" [matTooltip]="'Pick ETA time' | translate" [height]="52"
+                        [model]="filterTime" (modelChange)="OnTimeChange($event)"></timepicker>
+                </div>
+                <!-- <div [loading]="(isPortsLoading$ | async)" iconic-input-wrapper leftIcon="location-dot">
+                    <input inputRef type="text" placeholder="Location Port" formControlName="locationPort" />
+                </div> -->
+                <div [loading]="(isPortsLoading$ | async)" iconic-select-wrapper
+                leftSvg="assets/images/scheduling_ship_type.svg"  (change)="onDeparturePortChange($event)">
+                <select spAccessInputRef name="departurePort" id="departurePort"
+                    formControlName="departurePort">
+                    <option disabled value="">
+                        Departure Port
+                    </option>
+                    <option *ngFor="let departurePort of ports" [value]="departurePort.id">
+                        {{ departurePort.name }}
+                    </option>
+                </select>
+            </div>
+                <div [loading]="(isPortsLoading$ | async)" iconic-select-wrapper
+                    leftSvg="assets/images/scheduling_map_location.svg" >
+                    <select spAccessInputRef name="zone" id="zone" (change)="onDepartureZone($event)" formControlName="departureZone">
+                        <option disabled value="">
+                            Departure Zone
+                        </option>
+                        <option *ngFor="let zone of departureZone" [value]="zone.name">
+                            {{ zone.name }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex flex-col gap-y-4 min-xl:px-[50px]">
+            <div [loading]="(isPortsLoading$ | async)" iconic-select-wrapper
+                leftSvg="assets/images/scheduling_arrival_port.svg"  (change)="onArrivalPortChange($event)">
+                <select spAccessInputRef name="arrivalPort" id="arrivalPort" formControlName="arrivalPort">
+                    <option disabled value="">Arival Port</option>
+                    <option *ngFor="let arivalPort of ports" [value]="arivalPort.id">
+                        {{ arivalPort.name }}
+                    </option>
+                </select>
+            </div>
+            <div [loading]="(isPortsLoading$ | async)" iconic-select-wrapper
+                leftSvg="assets/images/scheduling_map_location.svg" >
+                <select spAccessInputRef name="zone" id="zone" (change)="onArrivalZone($event)" formControlName="arrivalZone">
+                    <option disabled value="">
+                        Arrival Zone
+                    </option>
+                    <option *ngFor="let zone of arrivalZone" [value]="zone.name">
+                        {{ zone.name }}
+                    </option>
+                </select>
+            </div>
+            <div [loading]="(isPortsLoading$ | async) || (isPortChangeLoading$ | async)" iconic-select-wrapper
+            leftIcon="grid-2" >
+                <select spAccessInputRef name="company" id="company" (change)="onCompaniesChange($event)" formControlName="company">
+                    <option disabled value="">Company</option>
+                    <option *ngFor="let company of companies" [value]="company.id">
+                        {{ company.name }}
+                    </option>
+                </select>
+            </div>
+                <div [loading]="(isPortsLoading$ | async)" iconic-input-wrapper
+                    leftSvg="assets/images/scheduling_port.svg">
+                    <input inputRef type="text" placeholder="Pilot Company" formControlName="pilotCompany" />
+                </div>
+            </div>
+            <!-- <div class="flex flex-col gap-y-4 min-xl:px-[50px]">
+                <div [loading]="(isPortsLoading$ | async) || (isRoutesLoading$ | async) || (isCompaniesLoading$ | async)"
+                    iconic-input-wrapper leftIcon="user">
+                    <input inputRef type="text" placeholder="Convoy Type" formControlName="convoyType" />
+                </div>
+                <div class="grid grid-cols-2 gap-x-8 gap-y-4 mb-5">
+                    <datepicker
+                        [loading]="(isPortsLoading$ | async) || (isRoutesLoading$ | async) || (isCompaniesLoading$ | async)"
+                        matTooltipClass="drop-shadow-lg" matTooltipPosition="above"
+                        [matTooltip]="'Pick ETA date' | translate" [model]="dateModal" [isHeaderPosition]="true"
+                        [height]="52" (dateChanged)="OnDateChange($event)">
+                    </datepicker>
+                    <timepicker
+                        [loading]="(isPortsLoading$ | async) || (isRoutesLoading$ | async) || (isCompaniesLoading$ | async)"
+                        matTooltipClass="drop-shadow-lg" matTooltipPosition="above"
+                        [matTooltip]="'Pick ETA time' | translate" [height]="52" [model]="timeVal"
+                        (modelChange)="OnTimeChange($event)"></timepicker>
+                </div>
+                <div [loading]="(isPortsLoading$ | async) || (isRoutesLoading$ | async) || (isCompaniesLoading$ | async)"
+                    iconic-input-wrapper leftIcon="location-dot">
+                    <input inputRef type="text" placeholder="Location Port" formControlName="locationPort" />
+                </div>
+                <div [loading]="(isPortsLoading$ | async) || (isRoutesLoading$ | async) || (isCompaniesLoading$ | async)"
+                    iconic-select-wrapper leftSvg="assets/images/scheduling_map_location.svg"
+                    >
+                    <select spAccessInputRef name="zone" id="zone" formControlName="zone">
+                        <option disabled value="">
+                            Zone
+                        </option>
+                        <option *ngFor="let zone of zone" [value]="zone.id">
+                            {{ zone.name }}
+                        </option>
+                    </select>
+                </div>
+                <div [loading]="(isPortsLoading$ | async) || (isRoutesLoading$ | async) || (isCompaniesLoading$ | async)"
+                    iconic-select-wrapper leftSvg="assets/images/scheduling_ship_type.svg"
+                    >
+                    <select spAccessInputRef name="departurePort" id="departurePort" formControlName="departurePort"
+                        (change)="onPortChange($event)">
+                        <option disabled value="">
+                            Departure Port
+                        </option>
+                        <option *ngFor="let departurePort of ports" [value]="departurePort.id">
+                            {{ departurePort.name }}
+                        </option>
+                    </select>
+                </div>
+                <div [loading]="(isPortsLoading$ | async) || (isRoutesLoading$ | async) || (isCompaniesLoading$ | async)"
+                    iconic-select-wrapper leftSvg="assets/images/scheduling_arrival_port.svg"
+                    >
+                    <select spAccessInputRef name="arrivalPort" id="arrivalPort" formControlName="arrivalPort">
+                        <option disabled value="">Arival Port</option>
+                        <option *ngFor="let arivalPort of ports" [value]="arivalPort.id">
+                            {{ arivalPort.name }}
+                        </option>
+                    </select>
+                </div>
+                <div [loading]="(isPortsLoading$ | async) || (isPortChangeLoading$ | async) || (isRoutesLoading$ | async) || (isCompaniesLoading$ | async)" iconic-select-wrapper leftSvg="assets/images/scheduling_ship_type.svg"
+                    >
+                    <select spAccessInputRef name="company" id="company" formControlName="company">
+                        <option disabled selected>Companies</option>
+                        <option *ngFor="let company of companies" [value]="company.id">
+                            {{ company.name }}
+                        </option>
+                    </select>
+                </div>
+
+            </div>
+            <div class="flex flex-col gap-y-4 min-xl:px-[50px]">
+                <div [loading]="(isPortsLoading$ | async) || (isRoutesLoading$ | async) || (isCompaniesLoading$ | async)"
+                    iconic-input-wrapper leftSvg="assets/images/scheduling_port.svg">
+                    <input inputRef type="text" placeholder="Pilot Company" formControlName="pilotCompany" />
+                </div>
+                <div [loading]="(isPortsLoading$ | async) || (isRoutesLoading$ | async) || (isCompaniesLoading$ | async)"
+                    iconic-input-wrapper leftSvg="assets/images/scheduling_length.svg">
+                    <input inputRef type="number" placeholder="Length (m)*" formControlName="length" />
+                </div>
+                <div [loading]="(isPortsLoading$ | async) || (isRoutesLoading$ | async) || (isCompaniesLoading$ | async)"
+                    iconic-input-wrapper leftSvg="assets/images/scheduling_width.svg">
+                    <input inputRef type="number" placeholder="Width (m)*" formControlName="width" />
+                </div>
+                <div [loading]="(isPortsLoading$ | async) || (isRoutesLoading$ | async) || (isCompaniesLoading$ | async)"
+                    iconic-input-wrapper leftSvg="assets/images/scheduling_depth.svg">
+                    <input inputRef type="number" placeholder="Max Draft" formControlName="maxDraft" />
+                </div>
+                <div [loading]="(isPortsLoading$ | async) || (isRoutesLoading$ | async) || (isCompaniesLoading$ | async)"
+                    iconic-input-wrapper leftSvg="assets/images/scheduling_convoy.svg">
+                    <input inputRef type="number" placeholder="Aerial Guage (M)*" formControlName="arrivalGauge" />
+                </div>
+                <div [loading]="(isPortsLoading$ | async) || (isRoutesLoading$ | async) || (isCompaniesLoading$ | async)"
+                    iconic-input-wrapper leftSvg="assets/images/scheduling_weight.svg">
+                    <input inputRef type="number" placeholder="Capacity max (m)*" formControlName="maxCapacity" />
+                </div>
+                <div [loading]="(isPortsLoading$ | async) || (isRoutesLoading$ | async) || (isCompaniesLoading$ | async)"
+                    iconic-select-wrapper leftSvg="assets/images/scheduling_lock.svg"
+                    >
+                    <select spAccessInputRef name="typeOfLock" id="typeOfLock" formControlName="lockType">
+                        <option disabled value="">Type of lock</option>
+                        <option *ngFor="let typeOfLock of typeOfLock" [value]="typeOfLock.id">
+                            {{ typeOfLock.name }}
+                        </option>
+                    </select>
+                </div>
+            </div> -->
+        </div>
+        <div class="min-xl:px-[50px] grid min-lg:grid-cols-2 grid-cols-1 gap-x-10 min-3xl:gap-x-20 mt-4">
+            <div class="gap-y-4 mb-5 min-xl:px-[50px]">
+                <button type="button" class="btn btn-outline-primary w-full min-h-[50px] !text-[18px]"
+                    routerLink="../../">
+                    {{ "Cancel" | translate }}
+                </button>
+            </div>
+            <div class="gap-y-4 mb-5 min-xl:px-[50px]">
+                <button type="button" class="btn btn-primary w-full min-h-[50px] !text-[18px]"
+                    [disabled]="!planningForm.valid" (click)="updateRoutingDetails()">
+                    {{ "Update" | translate }}
+                </button>
+            </div>
+        </div>
+    </form>
+</section>

@@ -1,0 +1,34 @@
+<div class="p-6 bg-white rounded-lg">
+  <h2 class="text-2xl font-semibold text-gray-800 mb-4">Queue</h2>
+  <p class="text-lightGray mb-4">
+    You are now ready to generate your queues.<br>
+    Based on the parameters set at the previous step, the app will now generate the queues to be used in the simulation.
+  </p>
+  <div class="p-3 my-2 w-full border border-[#E4E7EC] rounded-lg">
+    <span class="text-sm text-gray-600">Most probable scenario</span>
+    <div class="flex gap-2 justify-between items-center my-2">
+      <mat-progress-bar
+      mode="determinate"
+      [value]="value"
+      class="custom-progress-bar">
+    </mat-progress-bar>
+      <span class="text-sm text-gray-600">{{ value }}%</span>
+    </div>
+    
+  </div>
+  <div class="p-3 my-2 w-full border border-[#E4E7EC] rounded-lg">
+    <span class="text-sm text-gray-600 mb-2">Worst case scenario</span>
+    <div class="flex gap-2 justify-between items-center my-2">
+      <mat-progress-bar
+      mode="determinate"
+      [value]="30"
+      class="custom-progress-bar">
+    </mat-progress-bar>
+    <span class="text-sm text-gray-600">30%</span>
+    </div>
+    
+  </div>
+    <div class="mt-6 text-right">
+      <button type="button" (click)="next()" class="btn text-white bg-[#3498DB] w-[160px]">Next</button>
+    </div>
+</div>

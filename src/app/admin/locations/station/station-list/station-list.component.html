@@ -1,0 +1,182 @@
+<section *ngIf="(isLoading$ | async) || originalSource.length; else empty">
+  <material-panel-table microService [showSearchbar]="false" [showHeader]="true" buttonLabel="Add Station"
+      tableTitle="Stations list" (buttonClicked)="redirectAddStation()">
+      <div table class="w-full shadow-lg mat-elevation-z8">
+          <ng-scrollbar track="horizontal" [autoHeightDisabled]="false">
+              <table class="material-table no-wrap overflow-hidden" matSort (matSortChange)="sortData($event)"
+                  [class.loading]="(isLoading$ | async)" aria-label="Usage Table" cdk-table [dataSource]="dataSource">
+
+                  <ng-container cdkColumnDef="name">
+                      <th cdk-header-cell *cdkHeaderCellDef scope="col">
+                          <section class="flex flex-col">
+                              <div mat-sort-header="name">Name</div>
+                              <searchbar>
+                                  <fa-icon icon="search"></fa-icon>
+                                  <input #searchName input type="text"
+                                      (keyup)="applyFilter($event.target, 'name')">
+                                  <div *ngIf="searchName.value" close
+                                      (click)="searchName.value=''; applyFilter({ value: '' }, 'name')">
+                                      <fa-icon icon="close"></fa-icon>
+                                  </div>
+                              </searchbar>
+                          </section>
+                      </th>
+                      <td cdk-cell *cdkCellDef="let row">{{row.name}}</td>
+                  </ng-container>
+                  
+
+                  <ng-container cdkColumnDef="type">
+                      <th cdk-header-cell *cdkHeaderCellDef scope="col">
+                          <section class="flex flex-col">
+                              <div mat-sort-header="type">Type</div>
+                              <select (change)="filterByType($event)" filter-select>
+                                  <option value="" selected>Select</option>
+                                  <option value="PUBLIC">Public</option>
+                                  <option value="PRIVATE">Private</option>
+                              </select>
+                          </section>
+                      </th>
+                      <td cdk-cell *cdkCellDef="let row">
+                          <!-- <mat-chip [ngStyle]="{'background-color': row?.type === PUBLIC ? 'green' : 'red'}"> -->
+                              {{ row?.type === 'PUBLIC' ? 'Public' : 'Private'}}
+                          <!-- </mat-chip> -->
+                      </td>
+                  </ng-container>
+                  <ng-container cdkColumnDef="addrCounty">
+                    <th cdk-header-cell *cdkHeaderCellDef scope="col">
+                        <section class="flex flex-col">
+                            <div mat-sort-header="addrCounty">County</div>
+                            <searchbar>
+                                <fa-icon icon="search"></fa-icon>
+                                <input #searchCounty input type="text"
+                                    (keyup)="applyFilter($event.target, 'addrCounty')">
+                                <div *ngIf="searchCounty.value" close
+                                    (click)="searchCounty.value=''; applyFilter({ value: '' }, 'addrCounty')">
+                                    <fa-icon icon="close"></fa-icon>
+                                </div>
+                            </searchbar>
+                        </section>
+                    </th>
+                    <td cdk-cell *cdkCellDef="let row">{{row.addrCounty}}</td>
+                </ng-container>
+                  <ng-container cdkColumnDef="addrCity">
+                    <th cdk-header-cell *cdkHeaderCellDef scope="col">
+                        <section class="flex flex-col">
+                            <div mat-sort-header="addrCity">City</div>
+                            <searchbar>
+                                <fa-icon icon="search"></fa-icon>
+                                <input #searchCity input type="text"
+                                    (keyup)="applyFilter($event.target, 'addrCity')">
+                                <div *ngIf="searchCity.value" close
+                                    (click)="searchCity.value=''; applyFilter({ value: '' }, 'addrCity')">
+                                    <fa-icon icon="close"></fa-icon>
+                                </div>
+                            </searchbar>
+                        </section>
+                    </th>
+                    <td cdk-cell *cdkCellDef="let row">{{row.addrCity}}</td>
+                </ng-container>
+                  <ng-container cdkColumnDef="addrCountry">
+                    <th cdk-header-cell *cdkHeaderCellDef scope="col">
+                        <section class="flex flex-col">
+                            <div mat-sort-header="addrCountry">Country</div>
+                            <searchbar>
+                                <fa-icon icon="search"></fa-icon>
+                                <input #searchCountry input type="text"
+                                    (keyup)="applyFilter($event.target, 'addrCountry')">
+                                <div *ngIf="searchCountry.value" close
+                                    (click)="searchCountry.value=''; applyFilter({ value: '' }, 'addrCountry')">
+                                    <fa-icon icon="close"></fa-icon>
+                                </div>
+                            </searchbar>
+                        </section>
+                    </th>
+                    <td cdk-cell *cdkCellDef="let row">{{row.addrCountry}}</td>
+                </ng-container>
+                  <ng-container cdkColumnDef="addrZipCode">
+                    <th cdk-header-cell *cdkHeaderCellDef scope="col">
+                        <section class="flex flex-col">
+                            <div mat-sort-header="addrZipCode">ZipCode</div>
+                            <searchbar>
+                                <fa-icon icon="search"></fa-icon>
+                                <input #searchZipCode input type="text"
+                                    (keyup)="applyFilter($event.target, 'addrZipCode')">
+                                <div *ngIf="searchZipCode.value" close
+                                    (click)="searchZipCode.value=''; applyFilter({ value: '' }, 'addrZipCode')">
+                                    <fa-icon icon="close"></fa-icon>
+                                </div>
+                            </searchbar>
+                        </section>
+                    </th>
+                    <td cdk-cell *cdkCellDef="let row">{{row.addrZipCode}}</td>
+                </ng-container>
+
+                <ng-container cdkColumnDef="contact">
+                    <th cdk-header-cell *cdkHeaderCellDef scope="col">
+                        <section class="flex flex-col">
+                            <div>Contact</div>
+                            <searchbar >
+                                <fa-icon icon="search"></fa-icon>
+                                <input #searchContact input type="text"
+                                    (keyup)="applyFilter($event.target, 'contact', true)">
+                                <div [style.visibility]="searchContact.value ? 'visible': 'hidden'" close
+                                    (click)="searchContact.value=''; applyFilter({ value: '' }, 'contact', true)">
+                                    <fa-icon icon="close"></fa-icon>
+                                </div>
+                            </searchbar>
+                        </section>
+                    </th>
+                    <td cdk-cell *cdkCellDef="let row">
+                        <div class="flex flex-col">
+                            <div class="text-left pl-10">{{row.contactFirstName}} {{row.contactLastName}}
+                            </div>
+                            <div class="text-left pl-10">{{row.contactPhoneRegionCode}}-{{row.contactPhone}}
+                            </div>
+                            <div class="text-left pl-10">{{row.contactEmail}}</div>
+                        </div>
+                    </td>
+                </ng-container>
+
+                  <ng-container cdkColumnDef="actions">
+                      <th cdk-header-cell *cdkHeaderCellDef scope="col">
+                          <section class="flex flex-col">
+                              <div>Actions</div>
+                              <button type="button" class="btn btn-outline-primary">Mass update</button>
+                          </section>
+                      </th>
+                      <td cdk-cell *cdkCellDef="let row" class="flex gap-4"><fa-icon icon="eye"
+                              class="text-primary cursor-pointer" size="lg"
+                              [routerLink]="['../edit', row.id]"></fa-icon>
+                          <fa-icon icon="trash-can" class="text-primary cursor-pointer" size="lg"
+                              (click)="openDeleteModal(row.id)"
+                              ></fa-icon>
+                      </td>
+                  </ng-container>
+
+                  <!-- Header and Row Declarations -->
+                  <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+                  <tr cdk-row *cdkRowDef="let row; columns: displayedColumns"></tr>
+                  <tr *cdkNoDataRow>
+                      <td [colSpan]="displayedColumns.length">
+                          <span *ngIf="(isLoading$ | async)">
+                              <app-loader *ngIf="(isLoading$ | async)" [isContainer]="true"
+                                  [fullScreen]="false"></app-loader>
+                          </span>
+                          <span *ngIf="dataSource.length === 0 && !(isLoading$ | async)">No results found</span>
+                          <span *ngIf="dataSource.length > 0  && !(isLoading$ | async)">Nicio înregistrare nu
+                              corespunde criteriilor de căutare</span>
+                      </td>
+                  </tr>
+              </table>
+          </ng-scrollbar>
+
+          <mat-paginator [class.!hidden]="dataSource.length === 0" [pageSizeOptions]="pageSizeOptions"
+              [length]="length" [pageIndex]="pageIndex" (page)="onPaginateChange($event)" [pageSize]="pageSize"
+              showFirstLastButtons>
+          </mat-paginator>
+      </div>
+  </material-panel-table>
+</section>
+<ng-template #empty>
+  <no-station></no-station>
+</ng-template>

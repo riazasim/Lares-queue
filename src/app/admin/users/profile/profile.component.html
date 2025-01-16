@@ -1,0 +1,26 @@
+<edit-container [headerTitle]="id ?  'Edit Profile details':'Add Profile details'">
+    <app-loader *ngIf="(isLoading$ | async)" [isContainer]="true" [fullScreen]="false"></app-loader>
+    <form [formGroup]="profileForm" *ngIf="!(isLoading$ | async)">
+        <div class="flex flex-col mx-auto max-w-[440px] gap-5">
+            <div>
+                <div iconic-input-wrapper >
+                    <input inputRef type="file" placeholder="Image Logo" formControlName="imgLogo">
+                </div>
+            </div>
+            <div>
+                <div iconic-input-wrapper >
+                    <input inputRef type="file" name="Image Cover" placeholder="imgCover" formControlName="imgCover">
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-end pt-5">
+            <div class="flex gap-4">
+                <button [routerLink]="id ? '../../list' : '../list'" class="btn btn-outline-primary"
+                    type="button">Cancel</button>
+                <button [disabled]="profileForm.invalid ||(isLoading$ | async)" class="btn btn-primary" type="button"
+                    (click)="saveProfile()">Save</button>
+            </div>
+        </div>
+    </form>
+</edit-container>

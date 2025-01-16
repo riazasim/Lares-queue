@@ -1,0 +1,16 @@
+<div class="flex justify-between">
+    <div class="flex">
+        <div class="circle">
+            <fa-icon *ngIf="icon" [icon]="icon" size="lg"></fa-icon>
+        </div>
+        <div class="ml-2">
+            <div class="font-bold">Operation Type: {{shipmentLog.operationType || '-'}}</div>
+            <div><span class="font-bold">User</span> {{shipmentLog.userFullName || '-'}}</div>
+            <div class="max-w-[500px]"><span class="font-bold">Details</span> {{shipmentLog.message || '-'}}</div>
+        </div>
+    </div>
+    <div class="text-gray italic">
+        {{(shipmentLog.createdAt | date : 'dd.MM.yyyy h:mm a') || '-'}}
+    </div>
+</div>
+<div *ngIf="!isEnd" class="bar"></div>

@@ -1,0 +1,113 @@
+<!--<edit-container headerTitle="Add user - users details">-->
+<edit-container [headerTitle]="id ? 'Edit Users Details' : 'Add Users Details'">
+    <app-loader *ngIf="(isLoading$ | async)" [isContainer]="true" [fullScreen]="false"></app-loader>
+    <form [formGroup]="userForm" *ngIf="!(isLoading$ | async)">
+        <div class="flex flex-col mx-auto max-w-[440px] gap-5">
+            <div [formGroup]="userSetting">
+                <div iconic-input-wrapper leftIcon="user">
+                    <input inputRef type="text" id="firstName" placeholder="First Name" formControlName="firstName" />
+                </div>
+            </div>
+            <div [formGroup]="userSetting">
+                <div iconic-input-wrapper leftIcon="user">
+                    <input inputRef type="text" id="lastName" placeholder="Last Name" formControlName="lastName" />
+                </div>
+            </div>
+            <div formGroupName="user" [hidden]="this.userForm.get('userId')?.value">
+                <div iconic-input-wrapper leftIcon="envelope">
+                    <input inputRef type="text" id="email" placeholder="Email" formControlName="email" />
+                </div>
+            </div>
+            <div formGroupName="user">
+                <div iconic-select-wrapper leftIcon="id-card">
+                    <select spAccessInputRef name="userRole" id="userRole" formControlName="userRole"
+                        (change)="onRoleChange($event)">
+                        <option value="" disabled>Select User Role</option>
+                        <option value="ROLE_USER_CAPTAIN">CAPTAIN</option>
+                        <option value="ROLE_USER_CONDUCTOR">CONDUCTOR</option>
+                        <option value="ROLE_USER_DRIVER">DRIVER</option>
+                        <option value="ROLE_USER_OPERATOR">OPERATOR</option>
+                    </select>
+                </div>
+            </div>
+            <div formGroupName="user">
+                <div iconic-select-wrapper leftIcon="envelope">
+                    <select spAccessInputRef name="status" id="status" formControlName="status">
+                        <option value="" disabled>Select Status</option>
+                        <option [value]="status.value" *ngFor="let status of status">{{status.name}}</option>
+                        <!-- <option [value] = 'false'>Inactive</option> -->
+                    </select>
+                </div>
+            </div>
+            <!-- <div formGroupName="userSetting">
+                <div iconic-select-wrapper leftIcon="eye">
+                    <select spAccessInputRef name="timezone" id="timezone" formControlName="timezone">
+                        <option value="" disabled>Select Timezone</option>
+                        <option value="Europe/Bucharest">
+                            Europe/Bucharest
+                        </option>
+                        <option value="Asia/Karachi">Asia/Karachi</option>
+                    </select>
+                </div>
+            </div> -->
+            <!-- <div formGroupName="userSetting">
+                <div iconic-select-wrapper leftIcon="eye" >
+                    <select spAccessInputRef name="language" id="language" formControlName="language">
+                        <option value="" disabled>Select Language</option>
+                        <option value="EN">EN</option>
+                        <option value="RO">RO</option>
+                    </select>
+                </div>
+            </div> -->
+            <!-- <div formGroupName="userSetting">
+                <div iconic-input-wrapper leftIcon="phone">
+                    <input inputRef type="text" id="phone" placeholder="Phone" minlength="7" maxlength="17" formControlName="phone" />
+                </div>
+            </div> -->
+            <!-- <phonenumber [formGroup]="userSetting" /> -->
+
+            <phonenumber [buttonPlaceholder]="'button.select' | translate" [loading]="isPhoneLoading$"
+                [placeholder]="'contact.phone-nr' | translate" containerClass="tw-w-[140px]" [formGroup]="userSetting"
+                buttonField="phoneRegionCode" [selectedPhoneRegionCode]="selectedPhoneRegionCode" field="phone" (doneInit)="phoneDone($event)">
+            </phonenumber>
+
+            <!-- <div formGroupName="userSetting">
+                <div iconic-input-wrapper leftIcon="phone">
+                    <input inputRef type="text" maxlength="4" id="phoneRegionCode" placeholder="Phone Region Code"
+                        formControlName="phoneRegionCode" />
+                </div>
+            </div> -->
+
+            <!-- <div formGroupName="userSetting" *ngIf="(selectedRole$ | async) === 'DRIVER'">
+                <div iconic-select-wrapper leftIcon="eye" >
+                    <select spAccessInputRef name="identityDocumentType" id="identityDocumentType"
+                        formControlName="identityDocumentType">
+                        <option value="" disabled>
+                            Select Identity Document Type
+                        </option>
+                        <option value="New">New</option>
+                        <option value="Old">Old</option>
+                    </select>
+                </div>
+            </div>
+
+            <div formGroupName="userSetting" *ngIf="(selectedRole$ | async) === 'DRIVER'">
+                <div iconic-input-wrapper leftIcon="phone">
+                    <input spAccessInputRef type="text" id="idNumber" placeholder="ID Number" formControlName="idNumber" />
+                </div>
+            </div> -->
+        </div>
+
+        <div class="flex justify-end pt-5">
+            <div class="flex gap-4">
+                <button [routerLink]="id ? '../../list' : '../list'" class="btn btn-outline-primary" type="button">
+                    Cancel
+                </button>
+                <button class="btn btn-primary" type="button" (click)="saveUser()"
+                    [disabled]="userForm.invalid || (isLoading$ | async)">
+                    Save
+                </button>
+            </div>
+        </div>
+    </form>
+</edit-container>

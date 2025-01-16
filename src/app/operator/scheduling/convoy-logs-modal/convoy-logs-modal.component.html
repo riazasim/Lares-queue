@@ -1,0 +1,45 @@
+<section class="bg-white max-md:min-w-100 min-lg:min-w-[850px] h-full p-[50px] overflow-auto" id="content">
+    <app-loader class="m-auto flex-grow" *ngIf="(isLoading$ | async)" [fullScreen]="false"></app-loader>
+    <div *ngIf="!(isLoading$ | async) &&  modal === 'shipment'">
+        <div class=" flex justify-between min-lg:items-center max-lg:flex-col">
+            <div>
+                <h2 class="heading-2 font-bold text-primary">Shipment ID - {{planning?.sId}}</h2>
+            </div>
+            <div class="non-printable flex gap-10">
+                <fa-icon (click)="printPage()" icon="print" class="text-primary text-[35px] cursor-pointer"></fa-icon>
+                <fa-icon (click)="convertToPDF()" icon="file-pdf" class="text-primary text-[35px] cursor-pointer"></fa-icon>
+                <fa-icon icon="envelope" class="text-primary text-[35px] cursor-pointer"></fa-icon>
+            </div>
+        </div>
+        <div class="flex h-24 mt-3">
+            <div class="flex flex-col justify-center items-center w-[25%]" [ngStyle]="{'background-color': planning?.planningConvoyStatus?.color}">
+                <div class="flex flex-row">{{planning?.planningConvoyStatus?.name}}</div>
+                <div class="flex flex-row">Time</div>
+            </div>
+            <div class="flex flex-col justify-center items-center flex-1 bg-[#EFEFEF]">{{planning?.planningConvoyStatus?.description}}</div>
+        </div>
+        <div class="py-8">
+            <div class="flex min-lg:justify-between min-lg:items-center max-lg:flex-col">
+                <div>
+                    <h4 class="heading-4 text-primary">Shipment Details</h4>
+                </div>
+            </div>
+            <div class="grid min-lg:grid-rows-3 min-lg:grid-cols-2 max-md:grid-rows-8 max-md:grid-cols-1 py-2">
+                <div><span class="font-bold">Vessel ID: </span>-</div>
+                <div><span class="font-bold">Coordinates: </span>{{planning?.sidCoordinates}}</div>
+                <div><span class="font-bold">numar aprobare manevra: </span>-
+                    {{planning?.planningConvoys?.maneuvering}}
+                </div>
+                <div><span class="font-bold">ETA: </span>- {{planning?.estimatedTimeArrival}}</div>
+                <div><span class="font-bold">Products: </span>- {{planning?.planningProducts}}</div>
+                <div><span class="font-bold">RTA: </span>- {{planning?.relativeTimeArrival}}</div>
+                <div><span class="font-bold">Dock: </span>- </div>
+                <div><span class="font-bold">Delay: </span>- {{planning?.delay}}</div>
+            </div>
+        </div>
+        <div>
+            <h4 class="heading-4 font-bold text-primary mb-3">Shipment Log</h4>  
+            <h3  class="heading-3 font-bold text-center py-2">There're no shipment logs.</h3>
+        </div>
+    </div>
+</section>

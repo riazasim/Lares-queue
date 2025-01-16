@@ -1,0 +1,262 @@
+<div class="overlay-content">
+    <div class="card">
+        <div class="left">
+            <div class="bg-[#FFFFFF] rounded-full w-[36px] h-[36px]">
+                <img src="assets/images/circum_filter.svg" alt="" class="translate-x-[6px] translate-y-[8px]" />
+            </div>
+        </div>
+        <div class="right">
+            <div class="top">
+                <form [formGroup]="companiesFilterForm" *ngIf="isActive === 1"
+                    class="w-[198px] flex flex-col gap-2 relative h-full">
+                    <div class="flex justify-between">
+                        <h2 class="text-[#000000] text-sm font-normal heading-6">
+                            Filter by company
+                        </h2>
+                        <fa-icon icon="xmark" class="text-[#17A0B5] cursor-pointer" size="lg"
+                            *ngIf="companiesFilterForm.valid" (click)="onCompaniesChange($event, 'delete')"></fa-icon>
+                    </div>
+                    <!-- <app-loader *ngIf="isPortsLoading$ | async"></app-loader> -->
+                    <app-search-select [formGroup]="companiesFilterForm"
+                        formControlName="companyId" (searchQuery)="retriveCompanines($event)" [search]="companyQuery"
+                        [dashboardInp]="true" [showValidation]="false"
+                        [contentLoading]="isContentLoading$"
+                        (selected)="onCompaniesChange($event)"
+                        [items]="companies | async" placeholder="Companies"
+                         ngDefaultControl></app-search-select>
+                    <!-- <div iconic-select-wrapper [dashboardInp]="true" [showValidation]="false"
+                        [loading]="(isCompaniesLoading$ | async)" >
+                        <select spAccessInputRef name="company" id="company" (change)="onCompaniesChange($event)"
+                            formControlName="companyId">
+                            <option value="" disabled selected>company</option>
+                            <option [value]="company?.id" *ngFor="let company of companies">{{company?.name}}</option>
+                        </select>
+                    </div> -->
+                    <!-- <div iconic-select-wrapper [dashboardInp]="true" [showValidation]="false"
+                        [class.hidden]="isCompaniesLoading$ | async" >
+                        <select spAccessInputRef name="company" id="company" (change)="onCompaniesChange($event)"
+                            formControlName="companyId">
+                            <option value="" disabled selected>Company</option>
+                            <option [value]="company?.id" *ngFor="let company of companies">{{company?.name}}</option>
+                        </select>
+                    </div> -->
+                </form>
+                <div *ngIf="isActive === 2" class="w-[198px]">
+                    <div class="flex justify-between">
+                        <h2 class="text-[#000000] text-sm font-normal mb-4 heading-6">
+                            Filter by Status
+                        </h2>
+                        <fa-icon icon="xmark" class="text-[#17A0B5] cursor-pointer mb-4" size="lg"
+                            *ngIf="statusFilters.length > 0" (click)="OnStatusChange(null, 'delete')"></fa-icon>
+                    </div>
+                    <div class="grid grid-cols-2">
+                        <div class="flex gap-1 items-center w-[100px] px-5">
+                            <input type="checkbox" id="1" value="id" name="Port" class="h-4 w-4 border-[#CCCCCC]"
+                                (click)="OnStatusChange(1)" [checked]="statusFilters.includes(1)" />
+                            <label for="Port" class="text-[#354050] text-sm font-normal">Port</label>
+                        </div>
+                        <div class="flex gap-1 items-center w-[100px] pl-5">
+                            <input type="checkbox" id="2" value="id" name="Checked-In" class="h-4 w-4 border-[#CCCCCC]"
+                                (click)="OnStatusChange(2)" [checked]="statusFilters.includes(2)" />
+                            <label for="Checked-In" class="text-[#354050] text-sm font-normal">Checked-In</label>
+                        </div>
+                    </div>
+                    <div class="flex flex-row mt-4">
+                        <div class="flex items-center w-[100px] px-5">
+                            <input type="checkbox" id="5" value="id" name="Berth" class="h-4 w-4 border-[#CCCCCC]"
+                                (click)="OnStatusChange(5)" [checked]="statusFilters.includes(5)" />&nbsp;
+                            <label for="Berth" class="text-[#354050] text-sm font-normal">Berth</label>
+                        </div>
+                        <div class="flex items-center w-[100px] px-5">
+                            <input type="checkbox" id="7" value="id" name="Exit" class="h-4 w-4 border-[#CCCCCC]"
+                                (click)="OnStatusChange(7)" [checked]="statusFilters.includes(7)" />&nbsp;
+                            <label for="Exit" class="text-[#354050] text-sm font-normal">Exit</label>
+                        </div>
+                    </div>
+                </div>
+                <form [formGroup]="timeFilterForm" *ngIf="isActive === 3" class="w-[198px] flex flex-col gap-1">
+                    <div class="flex justify-between">
+                        <h2 class="text-[#000000] text-sm font-normal mb-1 heading-6">
+                            Filter by Time
+                        </h2>
+                        <fa-icon icon="xmark" class="text-[#17A0B5] cursor-pointer" size="lg"
+                            *ngIf="timeFilterForm.valid" (click)="OnTimeChange('delete')"></fa-icon>
+                    </div>
+                    <div iconic-select-wrapper [dashboardInp]="true" [showValidation]="false"
+                        >
+                        <select spAccessInputRef name="companyId" id="companyId" formControlName="filterByTime"
+                            (change)="OnTimeChange()">
+                            <option value="" disabled selected>Total Time</option>
+                            <option *ngFor="let item of timeOptions" value="{{item.value}}">{{item.name}}</option>
+                        </select>
+                    </div>
+                    <div class="flex justify-between items-center w-[195px]">
+                        <div class="flex gap-1 items-center">
+                            <input type="radio" id="between" name="clauseBy" value="between" checked
+                                class="h-3 w-3 border-[#CCCCCC]" formControlName="clauseBy" (change)="OnTimeChange()" />
+                            <label for="between" class="text-xs mt-1 text-[#354050]">Between</label>
+                        </div>
+                        <div class="flex gap-1 items-center">
+                            <input type="radio" id="greaterThan" name="clauseBy" value="greaterThan"
+                                class="h-3 w-3 border-[#CCCCCC]" formControlName="clauseBy" (change)="OnTimeChange()" />
+                            <label for="greaterThan" class="text-xs mt-1 text-[#354050]">More than</label>
+                        </div>
+                        <div class="flex gap-1 items-center">
+                            <input type="radio" id="lessThan" name="clauseBy" value="lessThan"
+                                class="h-3 w-3 border-[#CCCCCC]" formControlName="clauseBy" (change)="OnTimeChange()" />
+                            <label for="lessThan" class="text-xs mt-1 text-[#354050]">Less than</label>
+                        </div>
+                    </div>
+                    <div class="flex gap-2 w-full">
+                        <div iconic-input-wrapper [dashboardInp]="true" [showValidation]="false" class="w-[25%]"
+                            *ngIf="timeFilterForm.controls['clauseBy'].value !== 'greaterThan'">
+                            <input inputRef type="number" placeholder="Value" formControlName="lessThanVal"
+                                (change)="OnTimeChange()" />
+                        </div>
+                        <div iconic-input-wrapper [dashboardInp]="true" [showValidation]="false" class="w-[25%]"
+                            *ngIf="timeFilterForm.controls['clauseBy'].value !== 'lessThan'">
+                            <input inputRef type="number" placeholder="Value" formControlName="greaterThanVal"
+                                (change)="OnTimeChange()" />
+                        </div>
+                        <div iconic-select-wrapper [dashboardInp]="true" [showValidation]="false"
+                             class="w-[50%]">
+                            <select spAccessInputRef formControlName="searchBy" (change)="OnTimeChange()">
+                                <option value="" disabled>Search By</option>
+                                <option value="mm">Minutes</option>
+                                <option value="hh">Hours</option>
+                                <option value="dd">Days</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+                <form [formGroup]="sidFilterForm" class="flex flex-col gap-2 w-[198px]" *ngIf="isActive === 4">
+                    <div class="flex justify-between">
+                        <h2 class="text-[#000000] text-sm font-normal mb-1 heading-6">
+                            Filter by SID
+                        </h2>
+                        <fa-icon icon="xmark" class="text-[#17A0B5] cursor-pointer" size="lg"
+                            *ngIf="sidFilterForm.valid" (click)="onSIDChange($event,'none','delete')"></fa-icon>
+                    </div>
+                    <div>
+                        <datepicker matTooltipClass="drop-shadow-lg" matTooltipPosition="above"
+                            [matTooltip]="'Pick ETA date' | translate" [model]="dateModal" [isHeaderPosition]="true"
+                            [height]="26" (dateChanged)="OnDateChange($event)">
+                        </datepicker>
+                    </div>
+
+                    <app-search-select [formGroup]="sidFilterForm" [loading]="(isPortsLoading$ | async)"
+                        formControlName="departurePort" (searchQuery)="retrivePorts($event)" [search]="portQuery"
+                        [contentLoading]="isContentLoading$"
+                        (selected)="onSIDChange($event, 'dp')"
+                        [items]="departurePorts | async" placeholder="Departure Port"
+                         ngDefaultControl></app-search-select>
+                    <!-- <div [loading]="(isPortsLoading$ | async)" iconic-select-wrapper [dashboardInp]="true"
+                        [showValidation]="false" >
+                        <select spAccessInputRef formControlName="departurePort" (change)="onSIDChange($event , 'dp')">
+                            <option value="" disabled selected>
+                                Departure port
+                            </option>
+                            <option [value]="port?.id" *ngFor="let port of ports">{{port?.name}}</option>
+                        </select>
+                    </div> -->
+                    <app-search-select [formGroup]="sidFilterForm" [loading]="(isPortsLoading$ | async)"
+                        formControlName="arrivalPort" (searchQuery)="retrivePorts($event)" [search]="portQuery"
+                         [contentLoading]="isContentLoading$"
+                         (selected)="onSIDChange($event, 'ap' )"
+                        [items]="arrivalPorts | async" placeholder="Arrival Port"
+                         ngDefaultControl></app-search-select>
+                    <!-- <div [loading]="(isPortsLoading$ | async)" iconic-select-wrapper [dashboardInp]="true"
+                        [showValidation]="false" >
+                        <select spAccessInputRef formControlName="arrivalPort" (change)="onSIDChange($event, 'ap')">
+                            <option value="" disabled selected>Arival port</option>
+                            <option [value]="port?.id" *ngFor="let port of ports">{{port?.name}}</option>
+                        </select>
+                    </div> -->
+                    <!-- <div iconic-input-wrapper [dashboardInp]="true" [showValidation]="false">
+                        <input placeholder="Agent Company" inputRef type="text" />
+                    </div> -->
+                </form>
+            </div>
+            <div class="flex justify-center">
+                <hr class="text-[#CCCCCC] w-[194px]" />
+            </div>
+            <div class="bottom content-center">
+                <div class="flex-col mt-2 w-25">
+                    <img [src]="
+                            isActive === 1
+                                ? 'assets/images/cardBuilding2.svg'
+                                : 'assets/images/cardBuilding.svg'
+                        " alt="" (click)="onImgClick(1)" />
+                </div>
+                <span class="vl"></span>
+                <div class="flex-col mt-2 w-25">
+                    <img [src]="
+                            isActive === 2
+                                ? 'assets/images/cardChain2.svg'
+                                : 'assets/images/cardChain.svg'
+                        " alt="" (click)="onImgClick(2)" />
+                </div>
+                <span class="vl"></span>
+                <div class="flex-col mt-2 w-25">
+                    <img [src]="
+                            isActive === 3
+                                ? 'assets/images/cardClock2.svg'
+                                : 'assets/images/cardClock.svg'
+                        " alt="" (click)="onImgClick(3)" />
+                </div>
+                <span class="vl"></span>
+                <div class="flex-col mt-2 w-25">
+                    <img [src]="
+                            isActive === 4
+                                ? 'assets/images/cardBoat2.svg'
+                                : 'assets/images/cardBoat.svg'
+                        " alt="" (click)="onImgClick(4)" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5">
+        <section class="result-container mat-elevation-z8" tabindex="0">
+            <table mat-table [class.cardLoading]="isLoading$ | async" [dataSource]="resultsArray">
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef class="tbl-header flex justify-between items-center h-[58px]">
+                        <span *ngIf="length === 0">No results found</span>
+                        <span *ngIf="(length > 0 && length <= 5)">Results ({{length}})</span>
+                        <span *ngIf="(length > 5)">Results</span>
+                        <mat-paginator class="{{length <= 5 ? '!hidden' : ''}}" [hidePageSize]="true" [length]="length"
+                            [disabled]="isLoading$ | async" (page)="onPaginateChange($event)" [pageSize]="5"
+                            showFirstLastButtons>
+                        </mat-paginator>
+                    </th>
+                    <td class="bg-white" mat-cell *matCellDef="let element">
+                        <div class="flex justify-between px-2">
+                            <div class="flex flex-col gap-1">
+                                <div class="">
+                                    <span class="text-lg font-normal">
+                                        <!-- {{element | json}} -->
+                                         {{element?.planningRailway?.locomotive?.name}} ({{element?.sId}})
+                                    </span>
+                                </div>
+                                <div class="flex gap-1 items-baseline">
+                                    <div class="rounded-full h-2 w-2" [ngStyle]="{'background-color': element?.planningConvoyStatus?.color}">
+                                    </div>
+                                    <span class="text-sm font-normal">
+                                        {{element?.planningRailwayShipmentStatus?.name}}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="">
+                                <a class="text-[#1B9FE8] text-xs font-semibold cursor-pointer">
+                                    Details
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </section>
+    </div>
+</div>

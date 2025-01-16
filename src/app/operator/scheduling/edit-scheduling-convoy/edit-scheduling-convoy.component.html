@@ -1,0 +1,179 @@
+<mat-sidenav-container [ngClass]="{ '!absolute top-0 bottom-0 left-0 right-0': sidenav.opened }" autosize>
+    <mat-sidenav #sidenav mode="over" position="end" fullscreen>
+        <ng-container [ngSwitch]="componentName$ | async">
+            <!-- <scheduling-edit-plan *ngSwitchCase="'edit'" [sidenav]="sidenav" [isLoading]="!!(isLoading$ | async)"
+                [planning$]="editPlanning$" (triggerUpdatePlanning)="openPlanEditModal($event)"
+                [filterDate]="filterDate" (triggerFetchPlannings)="handleDateChange($event)"></scheduling-edit-plan> -->
+            <!-- <scheduling-view-modal [planning$]="editPlanning$" [id]="logId" *ngSwitchCase="'view'" [modal]="logModal"
+                [sidenav]="sidenav"></scheduling-view-modal> -->
+                <convoy-logs-modal [planning$]="editPlanning$" [id]="logId" *ngSwitchCase="'view'" [modal]="logModal"
+                [sidenav]="sidenav"></convoy-logs-modal>
+            <!-- <scheduling-send-message [planning$]="editPlanning$" *ngSwitchCase="'mess'" [sidenav]="sidenav"
+                (triggerPlanUpgradeWarning)="handleOpenPlanUpgradeWarning()"></scheduling-send-message> -->
+        </ng-container>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <section *ngIf="(isLoading$ | async) || originalSource.length; else empty">
+            <material-panel-table [showSearchbar]="false" [showHeader]="true" tableTitle="RID-{{headerTitle}}"
+                microService>
+                <div table class="w-full overflow-hidden">
+                    <ng-scrollbar track="horizontal" [autoHeightDisabled]="false" style="scrollbar-width: none;">
+                        <table class="material-table no-wrap overflow-hidden" [class.loading]="isLoading$ | async"
+                            aria-label="Usage Table" cdk-table [dataSource]="dataSource">
+
+                            <ng-container cdkColumnDef="id">
+                                <th cdk-header-cell *cdkHeaderCellDef scope="col" class="max-w-40">
+                                    <section class="flex flex-col gap-4">
+                                        <div mat-header="id">SID</div>
+                                    </section>
+                                </th>
+                                <td cdk-cell *cdkCellDef="let row">{{ row?.sId}}</td>
+                            </ng-container>
+                            <ng-container cdkColumnDef="manevure">
+                                <th cdk-header-cell *cdkHeaderCellDef scope="col" class="max-w-20">
+                                    <section class="flex flex-col gap-4">
+                                        <div mat-header="manevure">Manevure</div>
+                                    </section>
+                                </th>
+                                <td cdk-cell *cdkCellDef="let row">
+                                    {{ row?.manevure || "-" }}
+                                </td>
+                            </ng-container>
+
+
+                            <ng-container cdkColumnDef="ship">
+                                <th cdk-header-cell *cdkHeaderCellDef scope="col" class="max-w-20">
+                                    <section class="flex flex-col gap-4">
+                                        <div mat-header="ship">
+                                            Ship
+                                        </div>
+                                    </section>
+                                </th>
+                                <td cdk-cell *cdkCellDef="let row">
+                                    {{ row?.ship?.name || "-" }}
+                                </td>
+                            </ng-container>
+                            <ng-container cdkColumnDef="operator">
+                                <th cdk-header-cell *cdkHeaderCellDef scope="col" class="max-w-20">
+                                    <section class="flex flex-col gap-4">
+                                        <div mat-header="operator">
+                                            Operator
+                                        </div>
+                                    </section>
+                                </th>
+                                <td cdk-cell *cdkCellDef="let row">
+                                    {{ row?.operator || "-" }}
+                                </td>
+                            </ng-container>
+                            <ng-container cdkColumnDef="destination">
+                                <th cdk-header-cell *cdkHeaderCellDef scope="col" class="max-w-20">
+                                    <section class="flex flex-col gap-4">
+                                        <div mat-header="Destination">
+                                            Destination
+                                        </div>
+                                    </section>
+                                </th>
+                                <td cdk-cell *cdkCellDef="let row">
+                                    {{ row?.destination || "-" }}
+                                </td>
+                            </ng-container>
+                            <ng-container cdkColumnDef="navigationType">
+                                <th cdk-header-cell *cdkHeaderCellDef scope="col" class="max-w-20">
+                                    <section class="flex flex-col gap-4">
+                                        <div mat-header="Navigation Type">
+                                            Navigation Type
+                                        </div>
+                                    </section>
+                                </th>
+                                <td cdk-cell *cdkCellDef="let row">
+                                    {{ row?.navigationType || "-" }}
+                                </td>
+                            </ng-container>
+                            <ng-container cdkColumnDef="sidCoordinates">
+                                <th cdk-header-cell *cdkHeaderCellDef scope="col" class="max-w-20">
+                                    <section class="flex flex-col gap-4">
+                                        <div mat-header="Navigation Type">
+                                            SID Coordinates
+
+                                        </div>
+                                    </section>
+                                </th>
+                                <td cdk-cell *cdkCellDef="let row">
+                                    {{ row?.sidCoordinates || "-" }}
+                                </td>
+                            </ng-container>
+                            <ng-container cdkColumnDef="sidStatus">
+                                <th cdk-header-cell *cdkHeaderCellDef scope="col" class="max-w-20">
+                                    <section class="flex flex-col gap-4">
+                                        <div mat-header="Status">
+                                            Status
+                                        </div>
+                                    </section>
+                                </th>
+                                <td cdk-cell *cdkCellDef="let row">
+                                    <mat-chip [ngStyle]="{'background-color': row?.planningConvoyStatus?.color}">
+                                        {{row?.planningConvoyStatus?.name}}
+                                    </mat-chip>
+                                </td>
+                            </ng-container>
+
+                            <ng-container cdkColumnDef="actions">
+                                <th cdk-header-cell *cdkHeaderCellDef scope="col" class="min-w-40">
+                                    <section class="flex flex-col gap-4">
+                                        <div mat-header="actions">Actions</div>
+                                    </section>
+                                </th>
+                                <td cdk-cell *cdkCellDef="let row" class="flex justify-center gap-8 w-max-content">
+                                    <fa-icon icon="eye" class="text-[#17A0B5] cursor-pointer" size="lg"
+                                        [routerLink]="[row.id]"></fa-icon>
+                                    <fa-icon icon="xmark" class="text-[#17A0B5] cursor-pointer" size="lg"
+                                        (click)="openDeleteModal(row.id)"></fa-icon>
+                                    <a class="text-primary" href="javascript:void(0)"
+                                        (click)="toggleSidenav({ view: 'view', id: row.id, planning: row, modal: 'shipment' })">
+                                        <img src="assets/images/rotate-left-list-icon.svg" alt="icon"
+                                            class="cursor-pointer">
+                                    </a>
+                                </td>
+                            </ng-container>
+
+
+                            <!-- Header and Row Declarations -->
+                            <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+                            <tr cdk-row *cdkRowDef="let row; columns: displayedColumns"></tr>
+                            <tr *cdkNoDataRow>
+                                <td [colSpan]="displayedColumns.length">
+                                    <span *ngIf="isLoading$ | async">
+                                        <app-loader *ngIf="isLoading$ | async" [isContainer]="true"
+                                            [fullScreen]="false"></app-loader>
+                                    </span>
+                                    <span *ngIf="
+                                                dataSource.length === 0 &&
+                                                !(isLoading$ | async)
+                                            ">No results found</span>
+                                    <span *ngIf="
+                                                dataSource.length > 0 &&
+                                                !(isLoading$ | async)
+                                            ">Nicio înregistrare nu corespunde criteriilor de
+                                        căutare</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </ng-scrollbar>
+                </div>
+            </material-panel-table>
+
+        </section>
+
+        <ng-template #empty>
+            <full-empty-container>
+                <div class="flex justify-center">
+                    <fa-icon icon="comment-lines" class="text-primary text-[160px]"></fa-icon>
+                </div>
+
+                <div class="mt-10">
+                    <h4 class="heading-4 text-center pb-10">{{'There are no convoys' | translate}}</h4>
+                </div>
+            </full-empty-container>
+        </ng-template>
+    </mat-sidenav-content>
+</mat-sidenav-container>

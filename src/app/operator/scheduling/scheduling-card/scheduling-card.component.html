@@ -1,0 +1,109 @@
+<div class="rounded-lg mb-2 overflow-hidden shadow-lg bg-white p-5 min-h-[203px] border-l-[8px] cursor-pointer items-center flex justify-center"
+    [ngClass]="{ 'max-w-[400px]': !isMaxWidth, 'w-full': isMaxWidth  }"
+    [ngStyle]="{borderColor: planning?.planning?.planningStatus?.color }">
+    <app-loader [isContainer]="false" *ngIf="(isloading | async)" [fullScreen]="false"></app-loader>
+
+    <div class="grid grid-rows-9 gap-2 h-full w-full" *ngIf="!(isloading | async)">
+        <div class="grid grid-cols-3 gap-2 border-b mb-2 border-lightgray">
+            <div class="col-span-2">
+                <h5 matTooltipClass="drop-shadow-lg" matTooltipPosition="above"
+                    [matTooltip]="'booking.drag-drop-to-right' | translate" class="heading-5 text-primary font-bold">
+                    SID - {{ planning.planning.rId }}
+                </h5>
+            </div>
+            <div class="flex gap-2 justify-end">
+                <fa-icon matTooltipClass="drop-shadow-lg" matTooltipPosition="above" [matTooltip]="'Send message'"
+                    icon="message-lines" size="lg" (click)="setComponentName('mess')"></fa-icon>
+                <fa-icon matTooltipClass="drop-shadow-lg" matTooltipPosition="above" [matTooltip]="'Edit'" icon="eye"
+                    *ngIf="userRole === 'ROLE_USER_TRANSPORT'" size="lg"
+                    [routerLink]="['../', 'edit', planning?.planning?.id]"></fa-icon>
+                <fa-icon matTooltipClass="drop-shadow-lg" matTooltipPosition="above" [matTooltip]="'Plan'" icon="notes"
+                    size="lg" (click)="setComponentName('copy')"></fa-icon>
+                <fa-icon matTooltipClass="drop-shadow-lg" matTooltipPosition="above"
+                    *ngIf="userRole === 'ROLE_USER_TRANSPORT'" [matTooltip]="'button.delete' | translate" icon="trash"
+                    size="lg" (click)="openDeleteModal(planning?.planning?.id)"></fa-icon>
+            </div>
+        </div>
+        <div class="grid grid-cols-3 gap-2">
+            <div class="col-span-3 heading-6">
+                <div class="flex justify-between">
+                    <div>
+                        <p>
+                            <span class="font-bold">Vessel Id:</span>
+                            <span class="pl-2">{{
+                                "-"
+                                }}</span>
+                        </p>
+                    </div>
+                    <div>
+                        <mat-chip [ngStyle]="{'background-color': planning?.planning?.planningStatus?.color}">
+                            {{ planning?.planning?.planningStatus?.name }}
+                        </mat-chip>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-between">
+            <div>
+                <span class="font-bold">Berth:</span>
+                <span class="pl-2">{{ "-" }}</span>
+            </div>
+            <div class="pl-2 flex justify-around gap-2">
+                <a class="text-primary" href="javascript:void(0)" (click)="OnEmit(planning , 'transfer')" class="flex gap-2">
+                    <ng-container class="flex gap-2">
+                        <span><b>Assign</b></span>
+                        <span><img src="assets/images/mingcute_transfer.svg" alt="icon" class="cursor-pointer"></span>
+                    </ng-container>
+                </a>
+
+                <span *ngIf="userRole === 'ROLE_USER_TRANSPORT'">|</span>
+                <ng-container *ngIf="userRole === 'ROLE_USER_TRANSPORT'">
+                    <fa-icon (click)="openDeleteModal(planning.planning.id)" class="text-color" icon="xmark"
+                        size="lg"></fa-icon>
+                    <span><b (click)="openDeleteModal(planning.planning.id)">Cancel</b></span>
+                </ng-container>
+            </div>
+        </div>
+        <div>
+            <span class="font-bold">Numar aprobare manevra:</span>
+            <span class="pl-2">{{
+                "-"
+                }}</span>
+        </div>
+
+        <div>
+            <span class="font-bold">Products:</span>
+            <span class="pl-2">{{
+                "-"
+                }}</span>
+            <!-- <span class="pl-2">
+                <span *ngIf="planning.products && planning.goodsName"
+                    >{{ planning.products }}, {{ planning.goodsName }}</span
+                >
+                <span *ngIf="planning.products && !planning.goodsName">{{
+                    planning.products
+                }}</span>
+                <span *ngIf="!planning.products && planning.goodsName">{{
+                    planning.goodsName
+                }}</span>
+                <span *ngIf="!planning.products && !planning.goodsName">-</span>
+            </span> -->
+        </div>
+        <div>
+            <span class="font-bold">ETA:</span>
+            <span class="pl-2">{{ planning.planning.estimatedTimeArrival || "-" }}</span>
+        </div>
+        <div>
+            <span class="font-bold">Created by:</span>
+            <span class="pl-2">{{ planning.planning.relativeTimeArrival || "-" }}</span>
+        </div>
+        <div>
+            <span class="font-bold">Delay:</span>
+            <span class="pl-2">{{planning.planning.delay || "-" }}</span>
+        </div>
+        <div>
+            <span class="font-bold">Coordinates:</span>
+            <span class="pl-2">{{ "-" }}</span>
+        </div>
+    </div>
+</div>

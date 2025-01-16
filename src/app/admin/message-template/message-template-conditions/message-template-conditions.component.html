@@ -1,0 +1,221 @@
+<success-container headerTitle="Add message - automation">
+  <div class="gap-8 flex max-xl:flex-col">
+    <div class="flex flex-col">
+      <div class="flex">
+        <div class="flex">
+          <div class="circle">When</div>
+          <div class="bar-horizontal" [style.marginTop.px]="50" [style.marginLeft.px]="7" [style.marginRight.px]="7"></div>
+        </div>
+        <div class="min-2xl:min-w-[776px] flex flex-col">
+          <div *ngIf="(automationType | async) !== automationTypeEnum.timeBased" class="shadow-lg rounded-lg p-5">
+            <p class="text-panelColor">Choose the module and the action that will trigger this automation.</p>
+            <div>
+              <select [disabled]="whereQuery.length > 0" class="rounded border-primary my-3"
+                      [(ngModel)]="messageAutomationEvent">
+                <option value="" disabled selected>Select</option>
+                <option value="SID-CREATED">SID Create</option>
+                <option value="SID-EDITED">SID Edit</option>
+                <option value="SID-DELETED">SID Delete</option>
+                <option value="TRUCK-PLANNED">Truck status planned</option>
+                <option value="TRUCK-BUFFER">Truck status buffer</option>
+                <option value="TRUCK-PARKING">Truck status parking</option>
+                <option value="TRUCK-CHECKEDIN">Truck status Checked-In</option>
+                <option value="TRUCK-CHECKEDOUT">Truck status Checked-Out</option>
+              </select>
+            </div>
+          </div>
+          <div *ngIf="(automationType | async) === automationTypeEnum.timeBased" class="shadow-lg rounded-lg p-5">
+            <p class="text-panelColor">Set the time for the message automation</p>
+            <div class="flex flex-col">
+              <div class="flex gap-4">
+                <div iconic-input-wrapper leftIcon="clock">
+                  <input inputRef type="text" placeholder="2023-10-23" (keyup)="handleChangeDateTime($event, 'date')">
+                </div>
+                <div iconic-input-wrapper leftIcon="clock">
+                  <input inputRef type="text" placeholder="10:15" (keyup)="handleChangeDateTime($event, 'time')">
+                </div>
+              </div>
+              <div>
+                <div iconic-select-wrapper leftIcon="clock" >
+                  <select inputRef [(ngModel)]="repeatOption"  [ngModelOptions]="{ standalone: true }">
+                      <option value="0">Doesn't repeat</option>
+                      <option value="1">Daily</option>
+                      <option value="2">Weekly on Saturday</option>
+                      <option value="3">Monthly on the third Saturday</option>
+                      <option value="4">Annually on April 15</option>
+                      <option value="5">Every weekday (Monday to Friday)</option>
+                      <option value="6" disabled>Custom</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="messageAutomationEvent || (automationType | async) === automationTypeEnum.timeBased" class="pt-4 flex justify-around w-[400px]">
+            <button class="hover:text-primary font-bold cursor-pointer text-panelColor" (click)="add()">
+              ADD CONDITION
+            </button>
+            <button class="hover:text-primary font-bold cursor-pointer text-panelColor" (click)="isWaiting = true">
+              WAIT
+            </button>
+          </div>
+        </div>
+      </div>
+      <div #currentEl class="flex slide-in-bottom" *ngFor="let query of whereQuery; let i = index">
+        <div>
+          <div *ngIf="(automationType | async) !== automationTypeEnum.timeBased" class="bar-vertical"></div>
+          <div *ngIf="(automationType | async) == automationTypeEnum.timeBased" class="bar-vertical"
+                      [style.marginTop.px]="-120"
+                      [style.marginBottom.px]="-120"
+                      [style.marginLeft.px]="47"
+                      [style.marginRight.px]="47"
+                      [style.height.px]="341" ></div>
+          <div class="romb">
+            <span>Condition</span>
+          </div>
+        </div>
+        <div class="bar-horizontal" [style.marginTop.px]="182" [style.marginLeft.px]="7" [style.marginRight.px]="7"></div>
+        <div class="flex flex-col">
+          <div class="shadow-lg rounded-lg p-5" [style.marginBottom]="'auto'" [style.marginTop.px]="105">
+            <p class="text-panelColor">Condition to be checked</p>
+            <!-- <div *ngIf="!getQueries(query.key)?.length; else multiple" class="min-2xl:min-w-[776px] flex gap-4"
+                 [ngClass]="{'justify-between': query.query[0].condition}">
+              <div class="flex flex-col justify-center">
+                <select class="rounded border-primary my-3" [(ngModel)]="query.key">
+                  <option value="" selected disabled>Select</option>
+                  <option value="date">Date</option>
+                  <option value="truck_license_plate_front">License Plate Front</option>
+                  <option value="truck_license_plate_back">License Plate Back</option>
+                  <option value="schedule">Schedule</option>
+                  <option value="scheduling_date">Scheduling Date</option>
+                  <option value="docks">Docks</option>
+                  <option value="destination">Destination</option>
+                  <option value="customer">Customer</option>
+                  <option value="driver_contact_number">Driver contact number</option>
+                </select>
+              </div>
+              <div class="flex flex-col justify-center">
+                <select *ngIf="query.key" class="rounded border-primary my-3"
+                        [(ngModel)]="query.query[0].condition">
+                  <option value="" selected disabled>Select</option>
+                  <option value="IS GREATHER THAN">IS GREATHER THAN</option>
+                  <option value="IS BEFORE">IS BEFORE</option>
+                  <option value="IS">IS</option>
+                  <option value="CONTAINS">CONTAINS</option>
+                  <option value="IS BETWEEN">BETWEEN</option>
+                  <option value="IS NOT EMPTY">IS NOT EMPTY</option>
+                </select>
+              </div>
+              <div class="flex flex-col justify-center">
+                <input *ngIf="['IS', 'CONTAINS', 'IS GREATHER THAN', 'IS BEFORE']
+                        .includes(query.query[0].condition)"
+                       class="border-primary rounded h-[37px]" type="text" placeholder="ABC">
+              </div>
+              <div *ngIf="query.query[0].condition === 'IS BETWEEN'" class="flex flex-col gap-2">
+                <input class="border-primary rounded h-[37px]" type="time">
+                <input class="border-primary rounded h-[37px]" type="time">
+              </div>
+            </div> -->
+            <!-- <ng-template #multiple> -->
+              <div *ngFor="let sameQuery of whereQuery[i]?.query; let j = index" class="min-2xl:min-w-[776px] flex gap-4"
+                   [ngClass]="{'justify-between': sameQuery.condition}">
+                <div class="flex flex-col justify-center">
+                  <select *ngIf="j === 0; else conditions" class="rounded border-primary my-3"
+                          [(ngModel)]="whereQuery[i].key">
+                    <option value="" selected disabled>Select</option>
+                    <option value="date">Date</option>
+                    <option value="truck_license_plate_front">License Plate Front</option>
+                    <option value="truck_license_plate_back">License Plate Back</option>
+                    <option value="schedule">Schedule</option>
+                    <option value="scheduling_date">Scheduling Date</option>
+                    <option value="docks">Docks</option>
+                    <option value="destination">Destination</option>
+                    <option value="customer">Customer</option>
+                    <option value="driver_contact_number">Driver contact number</option>
+                  </select>
+                  <ng-template #conditions>
+                    <span class="hover:text-primary font-bold cursor-pointer text-panelColor min-w-[180px]"
+                          (click)="removeSubQuery(i, j)">DELETE</span>
+                  </ng-template>
+                </div>
+                <div class="flex flex-col justify-center">
+                  <select *ngIf="whereQuery[i]?.key" class="rounded border-primary my-3"
+                          [(ngModel)]="sameQuery.condition">
+                    <option value="" selected disabled>Select</option>
+                    <option value="IS GREATHER THAN">IS GREATHER THAN</option>
+                    <option value="IS BEFORE">IS BEFORE</option>
+                    <option value="IS">IS</option>
+                    <option value="CONTAINS">CONTAINS</option>
+                    <option value="IS BETWEEN">BETWEEN</option>
+                    <option value="IS NOT EMPTY">IS NOT EMPTY</option>
+                  </select>
+                </div>
+                <div class="flex flex-col justify-center">
+                  <input *ngIf="['IS', 'CONTAINS', 'IS GREATHER THAN', 'IS BEFORE']
+                         .includes(sameQuery.condition)"
+                         [(ngModel)]="sameQuery.value"
+                         class="border-primary rounded h-[37px]" type="text" placeholder="ABC">
+                </div>
+                <div *ngIf="sameQuery.condition === 'IS BETWEEN'" class="flex flex-col gap-2">
+                  <input [(ngModel)]="sameQuery.startValue" class="border-primary rounded h-[37px]" type="time">
+                  <input [(ngModel)]="sameQuery.endValue" class="border-primary rounded h-[37px]" type="time">
+                </div>
+              </div>
+            <!-- </ng-template> -->
+
+
+            <div class="flex justify-between">
+              <div class="flex gap-2">
+                <!-- <span class="hover:text-primary font-bold cursor-pointer text-panelColor">AND</span> -->
+                <span *ngIf="whereQuery[i].key" class="hover:text-primary font-bold cursor-pointer text-panelColor" (click)="addSubQuery(i)">OR</span>
+              </div>
+              <div>
+                <span class="hover:text-primary font-bold cursor-pointer text-panelColor" (click)="removeQuery(i)">DELETE CONDITION</span>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="!isWaiting && !whereQuery[i + 1]" class="pt-4 flex justify-around w-[400px]">
+            <button [disabled]="!messageAutomationEvent && automationType.value !== automationTypeEnum.timeBased"
+                    class="hover:text-primary font-bold cursor-pointer text-panelColor"
+                    (click)="add()">
+              ADD CONDITION
+            </button>
+            <button [disabled]="!messageAutomationEvent && automationType.value !== automationTypeEnum.timeBased"
+                    (click)="isWaiting = true"
+                    class="hover:text-primary font-bold cursor-pointer text-panelColor">
+              WAIT
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="isWaiting" class="flex slide-in-bottom" >
+        <div>
+          <div class="bar-vertical"></div>
+          <div class="rectangle">
+            <span>Wait</span>
+          </div>
+        </div>
+
+        <div class="bar-horizontal" [style.marginTop.px]="162" [style.marginLeft.px]="7" [style.marginRight.px]="7"></div>
+        <div class="flex flex-col">
+          <div class="shadow-lg rounded-lg p-5" [style.marginBottom]="'auto'" [style.marginTop.px]="105">
+            <p class="text-panelColor">Choose the waiting period before sending the message</p>
+
+            <div class="flex justify-between mt-6">
+              <div class="flex">
+                <input class="border-primary rounded h-[37px]" type="number" [(ngModel)]="waitingPeriod" placeholder="0">
+                <p class="ml-2 pt-2">Minutes</p>
+              </div>
+
+              <!-- <button [disabled]="!messageAutomationEvent" class="hover:text-primary font-bold cursor-pointer
+              text-panelColor" (click)="finish(w_time.value)">
+                Finish
+              </button> -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</success-container>

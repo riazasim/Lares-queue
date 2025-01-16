@@ -1,0 +1,107 @@
+<section>
+  <div class="flex-grow flex flex-col gap-8">
+    <div class="flex min-lg:justify-between sm:justify-center lg:flex-row max-lg:flex-col gap-4">
+      <div class="w-full flex gap-4 max-lg:flex-col items-center justify-between">
+        <div class="flex gap-8 w-full">
+          <h3 class="min-xl:block max-xl:hidden heading-4 mr-5 min-w-[250px]">Integration List</h3>
+          <searchbar class="min-xl:min-w-[600px]">
+            <fa-icon leftIcon icon="search"></fa-icon>
+            <input #searchIntegrationName input type="text" (keyup)="applyFilter($event.target, 'name')" placeholder="Search Integration Name">
+            <div [style.visibility]="searchIntegrationName.value ? 'visible': 'hidden'" close (click)="searchIntegrationName.value=''; applyFilter({ value: '' }, 'name')">
+              <fa-icon icon="close"></fa-icon>
+            </div>
+        </searchbar>
+        </div>
+        <div>
+            <button type="button" class="btn btn-primary min-w-[130px]" routerLink="../add">Add Integration</button>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="(isLoading$ | async) || originalSource.length; else empty">
+        <div table class="w-full shadow-lg bg-white">
+            <ng-scrollbar track="vertical" class="min-h-[calc(100vh-200px)]">
+              <table class="material-table no-wrap overflow-hidden"
+                    [class.loading]="(isLoading$ | async)" aria-label="Usage Table"
+                    cdk-table [dataSource]="dataSource">
+                    
+                <!-- <ng-container cdkColumnDef="type">
+                  <th cdk-header-cell *cdkHeaderCellDef scope="col">
+                    <div>{{'integrations.integrations-type' | translate}}</div>
+                  </th>
+                  <td cdk-cell *cdkCellDef="let row">{{row.type || 'Yard'}}</td>
+                </ng-container> -->
+
+                <ng-container cdkColumnDef="name">
+                  <th cdk-header-cell *cdkHeaderCellDef scope="col">
+                    <div>Name</div>
+                  </th>
+                  <td cdk-cell *cdkCellDef="let row">{{row.name}}</td>
+                </ng-container>
+          
+                <!-- <ng-container cdkColumnDef="partner">
+                  <th cdk-header-cell *cdkHeaderCellDef scope="col">
+                    <div>{{'generics.partner' | translate}}</div>
+                  </th>
+                  <td cdk-cell *cdkCellDef="let row">{{row.partner || '-'}}</td>
+                </ng-container> -->
+          
+                <ng-container cdkColumnDef="portName">
+                  <th cdk-header-cell *cdkHeaderCellDef scope="col">
+                    <div>Port</div>
+                  </th>
+                  <td cdk-cell *cdkCellDef="let row">{{row.portName}}</td>
+                </ng-container>
+          
+                <ng-container cdkColumnDef="apiKey">
+                  <th cdk-header-cell *cdkHeaderCellDef scope="col">
+                    <div>Api Key</div>
+                  </th>
+                  <td cdk-cell *cdkCellDef="let row">
+                    <span class="text-transparent text-blur">{{row.apiKey | slice: 0 : (row.apiKey.length / 1.5)}}</span>
+                    <span>{{row.apiKey | slice: (row.apiKey.length / 1.5) : row.apiKey.length }}</span>
+                    
+                  </td>
+                </ng-container>
+  
+                <!-- <ng-container cdkColumnDef="status">
+                  <th cdk-header-cell *cdkHeaderCellDef scope="col">
+                    <div>{{'generics.status' | translate }}</div>
+                  </th>
+                  <td cdk-cell *cdkCellDef="let row">-</td>
+                </ng-container> -->
+          
+                <ng-container cdkColumnDef="actions">
+                  <th cdk-header-cell *cdkHeaderCellDef scope="col">
+                    <div>{{'generics.actions' | translate}}</div>
+                  </th>
+                  <td cdk-cell *cdkCellDef="let row" class="flex gap-4 justify-center">
+                    <fa-icon matTooltipClass="drop-shadow-lg" matTooltipPosition="above" [matTooltip]="'Copy'"
+                    icon="notes" class="text-primary cursor-pointer" (cdkCopyToClipboardCopied)="showNotificationAPIKey()" [cdkCopyToClipboard]="row.apiKey"></fa-icon>
+                    <fa-icon matTooltipClass="drop-shadow-lg" matTooltipPosition="above" [matTooltip]="'Edit'" 
+                             icon="eye" class="text-primary cursor-pointer" size="lg" [routerLink]="['../edit', row.id]"></fa-icon>
+                    <fa-icon matTooltipClass="drop-shadow-lg" matTooltipPosition="above" [matTooltip]="'Delete'" 
+                             icon="xmark" class="text-primary cursor-pointer" size="lg" (click)="openDeleteModal(row)"></fa-icon>
+                  </td>
+                </ng-container>
+          
+                <!-- Header and Row Declarations -->
+                <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+                <tr cdk-row *cdkRowDef="let row; columns: displayedColumns"></tr>
+                <tr *cdkNoDataRow>
+                  <td [colSpan]="displayedColumns.length">
+                    <app-loader *ngIf="(isLoading$ | async)" [isContainer]="true" [fullScreen]="false"></app-loader>
+                    <span
+                      *ngIf="dataSource.length === 0 && !(isLoading$ | async)">There are no records.</span>
+                  </td>
+                </tr>
+              </table>
+            </ng-scrollbar>
+          </div>
+    </div>  
+  </div>
+
+</section>
+
+<ng-template #empty>
+  <no-integration></no-integration>
+</ng-template>

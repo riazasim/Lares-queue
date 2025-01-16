@@ -1,0 +1,112 @@
+<section class="bg-white w-full">
+    <app-loader *ngIf="isRoutesLoading$ | async" [isContainer]="true" [fullScreen]="false"></app-loader>
+    <form *ngIf="!(isRoutesLoading$ | async)" [formGroup]="planningForm">
+        <div class="grid min-lg:grid-cols-2 grid-cols-1 gap-x-10 min-3xl:gap-x-20 gap-y-4 pt-[50px] min-xl:px-[50px]">
+            <div class="flex flex-col gap-y-4 min-xl:px-[50px]">
+                <h4 class="font-bold">Locomotive and conductor</h4>
+                <div iconic-select-wrapper leftSvg="assets/images/carbon-train-speed.svg"
+                    (change)="onLocomotiveSelected($event)">
+                    <select spAccessInputRef name="locomotive" id="locomotive" formControlName="locomotiveId">
+                        <option disabled selected value="">
+                            Locomotive registration number
+                        </option>
+                        <option *ngFor="let locomotive of locomotives" [value]="locomotive.id">
+                            {{ locomotive.registrationNumber + '(' + locomotive.name + ')' }}
+                        </option>
+                    </select>
+                </div>
+                <div iconic-input-wrapper leftSvg="assets/images/carbon-train-speed.svg">
+                    <input readonly inputRef type="text" placeholder="Locomotive type" [value]="locomotiveType" />
+                </div>
+
+            </div>
+            <div class="flex flex-col gap-y-4 min-xl:px-[50px]">
+                <p>&nbsp;</p>
+                <div class="flex w-full flex-col h-[76px]">
+                    <h2 class="text-[#696969] ">Conductor</h2>
+                    <div class="flex justify-between">
+                        <div class="flex justify-center items-center gap-1">
+                            <input type="radio" name="conductorType" id="conductor" value="With Laras Conductor App"
+                            (click)="hideEmail(true)"   formControlName="conductorType" class="focus:!shadow-none checked:!bg-none">
+                            <label (click)="hideEmail(true)" for="conductor">With Lares Conductor app</label>
+                        </div>
+                        <div class="flex justify-center items-center gap-1">
+                            <input type="radio" name="conductorType" id="withoutconductor" (click)="hideEmail(false)"
+                                value="Without Laras Conductor App" formControlName="conductorType"
+                                class="focus:!shadow-none checked:!bg-none">
+                            <label (click)="hideEmail(false)" for="withoutconductor">Without Lares Conductor app</label>
+                        </div>
+                    </div>
+                </div>
+                <div iconic-input-wrapper leftIcon="envelope" *ngIf="hideEmail$ | async">
+                    <input inputRef type="email" placeholder="User email" formControlName="userEmail" />
+                </div>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 gap-x-10 gap-y-4 p-[100px] py-[30px] ">
+            <h4 class="font-bold">Route details</h4>
+            <table class="table border border-lightgray">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Point type</th>
+                        <th>Station</th>
+                        <th>Station type</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody formArrayName="planningRailwayRoutingDetails">
+                    @for(point of points.controls;track point){
+                    <tr [formGroupName]="$index">
+                        <td class="flex gap-2 items-center h-[64px]">
+                            <!-- <img src="assets/images/tdesign_move.svg" alt="Flag"> -->
+                            {{$index + 1}}
+                        </td>
+                        <td>
+                            <input class="text-center"
+                                [value]="points.controls.indexOf(point) === 0 ? 'Start point' : points.controls.indexOf(point) === (points.controls.length - 1) ? 'End point' : 'Touch point'"
+                                readonly />
+                        </td>
+                        <td>
+                            <select formControlName="station" [disabled]="true">
+                                <option disabled selected value="">Station</option>
+                                <option *ngFor="let station of stations[$index]" [value]="station.id" disabled>
+                                    {{ station.name }}
+                                </option>
+                            </select>
+                        </td>
+                        <td>
+                            <input readonly formControlName="stationType" />
+                        </td>
+                        <td>
+                            <a (click)="openDeleteModal(point , $index)">
+                                <fa-icon icon="trash" class="text-primary cursor-pointer"></fa-icon>
+                            </a>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+
+            </table>
+            <!-- <div>
+                <button type="button" class="flex text-primary font-bold py-5" (click)="addPoints()">
+                    <fa-icon class="mt-[1px]" icon="circle-plus"></fa-icon>&nbsp; Add point
+                </button>
+            </div> -->
+
+        </div>
+        <div class="min-xl:px-[50px] grid min-lg:grid-cols-2 grid-cols-1 gap-x-10 min-3xl:gap-x-20 mt-4">
+            <div class="gap-y-4 mb-5 min-xl:px-[50px]">
+                <button type="button" class="btn btn-primary w-full min-h-[50px] !text-[18px]" routerLink="../../">
+                    {{ "button.back" | translate }}
+                </button>
+            </div>
+            <div class="gap-y-4 mb-5 min-xl:px-[50px]">
+                <button type="button" class="btn btn-primary w-full min-h-[50px] !text-[18px]"
+                    [disabled]="!planningForm.valid" (click)="updateRoutingDetails()">
+                    {{ "Update" | translate }}
+                </button>
+            </div>
+        </div>
+    </form>
+</section>

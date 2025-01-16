@@ -1,0 +1,88 @@
+<section *ngIf="!isOptionSelected && !id">
+    <header class="flex min-md:flex-row flex-col justify-between pb-2">
+        <h3 class="heading-3 font-bold">Select Product Type</h3>
+    </header>
+</section>
+<div *ngIf="!isOptionSelected && !id" class="flex justify-center mt-10 max-md:grid gap-8 min-lg:columns-2 max-md:columns-1">
+    <div class="slide-in-bottom max-w-[300px] rounded-lg overflow-hidden shadow-lg bg-white p-20 min-h-[400px] cursor-pointer" (click)="selectOption('Bulk')">
+        <div class="flex justify-center p-10 border border-gray rounded-full h-[150px] w-[150px] items-center m-auto">
+            <img src="assets/images/bulk.svg" alt="Flag">
+        </div>
+        <div class="flex justify-center pt-5 pb-10">
+            <h4 class="heading-4 text-gray">Bulk</h4>
+        </div>
+        <p class="heading-6 text-center text-gray">
+            Add products such as liquids, grains or minerals.<br>
+        </p>
+    </div>
+
+    <div class="slide-in-bottom max-w-[300px] rounded-lg overflow-hidden shadow-lg bg-white p-20 min-h-[400px] cursor-pointer" (click)="selectOption('Unit')">
+        <div class="flex justify-center p-10 border border-gray rounded-full h-[150px] w-[150px] items-center m-auto">
+            <img src="assets/images/unit.svg" alt="Flag">
+        </div>
+        <div class="flex justify-center pt-5 pb-10">
+            <h4 class="heading-4 text-gray">Unit</h4>
+        </div>
+        <p class="heading-6 text-center text-gray">
+            Add products such as containers, pallets or bonds.<br>
+        </p>
+    </div>
+</div>
+
+<edit-container *ngIf="isOptionSelected || id" [headerTitle]="id ? 'Edit product Details' : 'Add Product Details'">
+    <app-loader *ngIf="isLoading$ | async" [isContainer]="true" [fullScreen]="false"></app-loader>
+    <form [formGroup]="productForm" class="p-7" *ngIf="!(isLoading$ | async)">
+        <div class="flex flex-col mx-auto max-w-[440px] gap-5">
+            <div iconic-input-wrapper leftSvg="assets/images/pname.svg">
+                <input inputRef type="text" formControlName="name" placeholder="Product Name"/>
+            </div>
+            <div iconic-input-wrapper leftSvg="assets/images/pcode.svg">
+                <input inputRef type="text" formControlName="productCode" placeholder="Product Code"/>
+            </div>
+            <app-search-select [formGroup]="productForm" formControlName="categoryId" leftSvg="assets/images/pcategory.svg"
+                    (searchQuery)="retrieveCategories($event)" [search]="categoryQuery" (selected)="onCategoryChange($event)" [contentLoading]="isContentLoading$"
+                    [items]="category | async" placeholder="Category" (keyup)="onInputChange($event)"
+                    (scrollChange)="retrieveCategories(categoryQuery,$event)" ngDefaultControl></app-search-select>
+            <!-- <div iconic-select-wrapper leftSvg="assets/images/pcategory.svg"  (change)="onCategoryChange($event)">
+                <select spAccessInputRef name="category" id="category" formControlName="categoryId">
+                    <option selected disabled value="">Category</option>
+                    <option *ngFor="let category of category" [value]="category.id">{{ category.name}}</option>
+                </select>
+            </div> -->
+            <!-- <mat-select class="mb-6" formControlName="categoryId" placeholder="Category">
+                <searchbar>
+                    <fa-icon icon="search" leftIcon></fa-icon>
+                    <input input type="text" (keyup)="onInputChange($event)">
+                </searchbar>
+                <hr class="my-1 ">
+                <mat-option *ngFor="let item of (category | filter: search : 'name'); let i = index;"
+                    [value]="item.id">
+                    {{item.name}}
+                </mat-option>
+                <div class="w-full" *ngIf="(category | filter: search : 'name').length === 0">
+                    <p class="text-center text-columnCell">No Item Found</p>
+                </div>
+            </mat-select> -->
+            <div iconic-select-wrapper leftSvg="assets/images/psubcategory.svg" >
+                <select spAccessInputRef name="subCategory" id="subCategory" formControlName="subCategoryId">
+                    <option selected disabled value="">Sub Category</option>
+                    <option *ngFor="let subCategory of subCategory" [value]="subCategory.id">{{ subCategory.name }}</option>
+                </select>
+            </div>
+            <div iconic-select-wrapper leftIcon="eye">
+                <select spAccessInputRef name="status" id="status" formControlName="status">
+                    <option selected disabled value="">Status</option>
+                    <option *ngFor="let status of status" [value]="status.value">{{ status.name }}</option>
+                </select>
+            </div>
+        </div>
+        <div class="min-xl:px-[50px] grid min-lg:grid-cols-2 grid-cols-1 gap-x-10 min-3xl:gap-x-20 mt-7">
+            <div class="gap-y-4 mb-5 min-xl:px-[50px]">
+                <button type="button" class="btn btn-outline-primary w-full min-h-[50px] !text-[18px]" [routerLink]="id ? '../../list' : '../list'">Cancel</button>
+            </div>
+            <div class="gap-y-4 mb-5 min-xl:px-[50px]">
+                <button type="button" (click)="saveProduct()" class="btn btn-primary w-full min-h-[50px] !text-[18px]">Save</button>
+            </div>
+        </div>
+    </form>
+</edit-container>

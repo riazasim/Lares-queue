@@ -1,0 +1,45 @@
+<app-loader class="m-auto flex-grow" *ngIf="(isLoading$ | async)" [isContainer]="true" [fullScreen]="false"></app-loader>
+<div *ngIf="!(isLoading$ | async)" class="overflow-x-auto max-h-[calc(100vh-190px)]">
+    <table class="table table table-fixed">
+        <thead [style.backgroundColor]="'white'">
+            <tr>
+                <th></th>
+                <th *ngFor="let i of hours">{{i < 10 ? '0'+ i+':00' : i+':00'}}</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white">
+            <tr *ngFor="let dock of assignedHours">
+                <td class="dock-name"><h6 class="font-bold text-lg">{{dock.name}}</h6></td>
+
+                <td *ngFor="let j of hours" cdkDropList
+                    [cdkDropListData]="{index: j, dock: dock.id, statusListStatus: dock.statusListStatus }"
+                    (cdkDropListDropped)="onDrop.emit($event)">
+                    <div
+                    customToolTip [contentTemplate]="template"
+                    [ngClass]="{
+                        'free': !isBreak(j, dock) && isAvailableHour(j, dock),
+                        'planned': !isBreak(j, dock) && hasHours(j, dock) && dock.status !== dockStatusEnum.Service,
+                        'service': !isBreak(j, dock) && isService(j, dock),
+                        'break': isBreak(j, dock),
+                        'occupied': isOccupied(j, dock),
+                        'cursor-pointer': !isBreak(j, dock) && isToggleOpened
+                    }" class="square" (click)="handleSchedule({index: j, name: dock.name, dock: dock.id, statusListStatus: dock?.statusListStatus })">
+                    <ng-template #template>
+                        <div style="display: flex; flex-direction: column">
+                         <span>Dock: {{dockStatus[dock.status]}}</span>
+                         <span>Status: {{isBreak(j, dock)? 'Break' :
+                                        !isBreak(j, dock) && isService(j, dock) ? 'Service' :
+                                        !isBreak(j, dock) && hasHours(j, dock) && dock.status !== dockStatusEnum.Service ? 'Filled some' :
+                                        isOccupied(j, dock) ? 'Full planned' :
+                                        !isBreak(j, dock) && isAvailableHour(j, dock) ? 'Available for planning' : 'Idle'}}</span>
+                         <span>Remaining time: {{getRemainingTime(j, dock)}} minutes</span>
+                         <span>Allocated time: {{getAllocatedTime(j, dock)}} minutes</span>
+                        </div>
+                      </ng-template>
+                </div>
+                </td>
+            </tr>
+          </tbody>
+    </table>
+    <h3 *ngIf="!(isLoading$ | async) && !assignedHours?.length" class="heading-3 font-bold text-center py-2">There're no docks with working hours attached.</h3>
+</div>

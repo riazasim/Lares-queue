@@ -1,0 +1,40 @@
+::ng-deep .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) .mdc-evolution-chip__text-label {
+    color: white !important;
+}
+
+:host {
+    ::ng-deep div[scrollviewport] {
+        @apply flex flex-col gap-4;
+    }
+}
+
+.square {
+    height: 50px;
+    width: 60px;
+    border: 1px solid black;
+}
+
+.mat-drawer.mat-drawer-end {
+    @media screen and (max-width: 992px) {
+        left: 0;
+    }
+}
+
+.card-container {
+    max-height: calc(100vh - 190px);
+    overflow: auto;
+
+    ::ng-deep {
+        div[droplistscroller] {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+    }
+}
+
+::ng-deep .mat-drawer-backdrop.mat-drawer-shown {
+    background-color: rgba(255, 255, 255, 0.6);
+    // filter: blur(1.5rem);
+    backdrop-filter: blur(1.5rem);
+}

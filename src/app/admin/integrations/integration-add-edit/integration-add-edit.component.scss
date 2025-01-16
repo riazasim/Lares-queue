@@ -1,0 +1,24 @@
+:host {
+    ::ng-deep {
+        .mat-horizontal-stepper-header-container {
+            display: none;
+        }
+
+    }
+}
+
+.selected-location {
+    border: 2px solid #17A0B5;
+}
+
+.card {
+    width: 100%;;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    padding: 20px 32px;
+    cursor: pointer;
+
+}

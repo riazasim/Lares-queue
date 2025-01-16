@@ -1,0 +1,513 @@
+<mat-stepper labelPosition="bottom" [linear]="isLinear" #stepper>
+    <mat-step label="Route Details" [stepControl]="stepOneForm">
+        <app-loader *ngIf="isLoading$ | async" [isContainer]="true" [fullScreen]="false"></app-loader>
+        <form [formGroup]="stepOneForm" *ngIf="!(isLoading$ | async)">
+            <div
+                class="grid min-lg:grid-cols-2 grid-cols-1 gap-x-10 min-3xl:gap-x-20 gap-y-4 pt-[50px] min-xl:px-[50px]">
+                <div class="flex flex-col gap-y-4 min-xl:px-[50px]">
+                    <h4 class="font-bold">Locomotive and conductor</h4>
+                    <div iconic-select-wrapper leftSvg="assets/images/carbon-train-speed.svg"
+                        [matTooltip]="'Locomotive Registration Number'" matTooltipClass="drop-shadow-lg"
+                        matTooltipPosition="above" (change)="onLocomotiveSelected($event)">
+                        <select spAccessInputRef name="locomotiveId" id="locomotiveId" formControlName="locomotiveId">
+                            <option disabled selected value="">
+                                Locomotive Registration Number
+                            </option>
+                            <option *ngFor="let locomotive of locomotives" [value]="locomotive.id">
+                                {{
+                                locomotive.registrationNumber +
+                                "(" +
+                                locomotive.name +
+                                ")"
+                                }}
+                            </option>
+                        </select>
+                    </div>
+                    <div iconic-input-wrapper [matTooltip]="'Locomotive Type'" matTooltipClass="drop-shadow-lg"
+                        matTooltipPosition="above" leftSvg="assets/images/carbon-train-speed.svg">
+                        <input readonly inputRef type="text" placeholder="Locomotive Type" [value]="locomotiveType" />
+                    </div>
+                </div>
+                <div class="flex flex-col gap-y-4 min-xl:px-[50px]">
+                    <p>&nbsp;</p>
+                    <div class="flex w-full flex-col h-[76px]">
+                        <h2 class="text-[#696969]">Conductor</h2>
+                        <div class="flex justify-between">
+                            <div class="flex justify-center items-center gap-1">
+                                <input type="radio" name="conductorType" id="conductor" value="With Laras Conductor App"
+                                    (click)="hideEmail(true)" formControlName="conductorType"
+                                    class="focus:!shadow-none checked:!bg-none" />
+                                <label for="conductor">With Lares Conductor app</label>
+                            </div>
+                            <div class="flex justify-center items-center gap-1">
+                                <input type="radio" name="conductorType" id="withoutconductor"
+                                    (click)="hideEmail(false)" value="Without Laras Conductor App"
+                                    formControlName="conductorType" class="focus:!shadow-none checked:!bg-none" />
+                                <label for="withoutconductor">Without Lares Conductor app</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div iconic-input-wrapper [matTooltip]="'User Email'" matTooltipClass="drop-shadow-lg"
+                        matTooltipPosition="above" leftIcon="envelope" *ngIf="hideEmail$ | async">
+                        <input inputRef type="email" placeholder="User email" formControlName="userEmail" />
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 gap-x-10 gap-y-4 p-[100px] py-[30px]">
+                <h4 class="font-bold">Route details</h4>
+                <table class="table border border-lightgray">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Point type</th>
+                            <th>Station</th>
+                            <th>Station type</th>
+                            <th *ngIf="!(isEdit$ | async)"></th>
+                        </tr>
+                    </thead>
+                    <!-- <tbody cdkDropList (cdkDropListDropped)="drop($event)">
+
+                            @for (row of rows; track row) {
+                            <tr cdkDrag>
+                                <td class="flex gap-2 items-center h-[64px]">
+                                    <img src="assets/images/tdesign_move.svg" alt="Flag">
+                                    {{$index + 1}}
+                                </td>
+                                <td>
+                                    <input class="text-center" readonly
+                                        [value]="rows.indexOf(row) === 0 ? 'Start point' : rows.indexOf(row) === (rows.length - 1) ? 'End point' : 'Touch point ' + '( ' + $index + ' )'" />
+                                </td>
+                                <td>
+                                    <a (click)="onRowDelete($index)"><fa-icon icon="trash"
+                                            class="text-primary cursor-pointer"></fa-icon></a>
+                                </td>
+                            </tr>
+                            }
+                        </tbody> -->
+                    <tbody formArrayName="planningRailwayRoutingDetails" cdkDropList
+                        (cdkDropListDropped)="drop($event)">
+                        @for(point of points.controls;track point){
+                        <tr [formGroupName]="$index" cdkDrag>
+                            <td class="flex gap-2 items-center h-[84px]">
+                                <img src="assets/images/tdesign_move.svg" alt="Flag" />
+                                {{ $index + 1 }}
+                            </td>
+                            <td>
+                                <!-- <div iconic-input-wrapper [showValidation]="false">
+                                    <input class="text-center" inputRef
+                                        [value]="points.controls.indexOf(point) === 0 ? 'Start point' : points.controls.indexOf(point) === (points.controls.length - 1) ? 'End point' : 'Touch point'"
+                                        readonly />
+                                </div> -->
+                                <input class="text-center" [value]="
+                                        points.controls.indexOf(point) === 0
+                                            ? 'Start point'
+                                            : points.controls.indexOf(point) ===
+                                              points.controls.length - 1
+                                            ? 'End point'
+                                            : 'Touch point'
+                                    " readonly />
+                            </td>
+                            <td>
+                                <div [isTable]="true" iconic-select-wrapper [showValidationMessageDiv]="false">
+                                    <select formControlName="station" spAccessInputRef (change)="
+                                            OnStationChange($event, $index)
+                                        ">
+                                        <option disabled selected value="">
+                                            Station
+                                        </option>
+                                        <option *ngFor="let station of stations" [value]="station.id">
+                                            {{ station.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <input class="text-center" [value]="
+                                        stationTypes[$index] || 'Station Type'
+                                    " readonly />
+                            </td>
+                            <td *ngIf="!(isEdit$ | async)">
+                                <a (click)="onRowDelete($index)">
+                                    <fa-icon icon="trash" class="text-primary cursor-pointer"></fa-icon>
+                                </a>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+                <div *ngIf="!(isEdit$ | async)">
+                    <button type="button" class="flex text-primary font-bold py-5" (click)="addPoints()">
+                        <fa-icon class="mt-[1px]" icon="circle-plus"></fa-icon>&nbsp; Add point
+                    </button>
+                </div>
+            </div>
+            <div class="min-xl:px-[50px] grid min-lg:grid-cols-2 grid-cols-1 gap-x-10 min-3xl:gap-x-20 mt-4">
+                <div class="gap-y-4 mb-5 min-xl:px-[50px]">
+                    <button type="button" class="btn btn-primary w-full min-h-[50px] !text-[18px]"
+                        [routerLink]="id ? '../../' : '../'">
+                        {{ "button.back" | translate }}
+                    </button>
+                </div>
+                <div class="gap-y-4 mb-5 min-xl:px-[50px]">
+                    <button type="button" class="btn btn-primary w-full min-h-[50px] !text-[18px]" (click)="next(1)"
+                        [disabled]="!stepOneForm.valid && !(isEdit$ | async)">
+                        {{ "button.next" | translate }}
+                    </button>
+                </div>
+            </div>
+        </form>
+    </mat-step>
+    <mat-step label="Wagons" [stepControl]="stepTwoForm">
+        <app-loader *ngIf="isLoading$ | async" [isContainer]="true" [fullScreen]="false"></app-loader>
+        <form [formGroup]="stepTwoForm" *ngIf="!(isLoading$ | async)">
+            <div
+                class="grid min-lg:grid-cols-2 grid-cols-1 gap-x-10 min-3xl:gap-x-20 gap-y-4 pt-[50px] min-xl:px-[50px]">
+                <div class="flex flex-col gap-y-4 min-xl:px-[50px]">
+                    <h4 class="font-bold">ShipmentID Details</h4>
+
+                    <div iconic-select-wrapper [matTooltip]="'Pick-up from company'" matTooltipClass="drop-shadow-lg"
+                        matTooltipPosition="above" leftSvg="assets/images/bi_building-down.svg">
+                        <select spAccessInputRef name="pickUpFromCompany" id="pickUpFromCompany"
+                            formControlName="pickUpFromCompany">
+                            <option disabled selected value="">
+                                Pick-up from company
+                            </option>
+                            <option *ngFor="let company of companiesList" [value]="company.id">
+                                {{ company.name }}
+                            </option>
+                        </select>
+                    </div>
+                    <div iconic-select-wrapper [matTooltip]="'Pick-up Point'" matTooltipClass="drop-shadow-lg"
+                        matTooltipPosition="above" leftSvg="assets/images/location_on_black_24dp.svg">
+                        <select spAccessInputRef name="pickUpPoint" id="pickUpPoint" formControlName="pickUpPoint">
+                            <option disabled selected value="">
+                                Pick-up Point
+                            </option>
+                            <option *ngFor="let point of pickupPoints" [value]="point.pointType">
+                                {{ point.pointType }}
+                            </option>
+                        </select>
+                        <!-- <select spAccessInputRef name="pickupPoint" id="pickupPoint" formControlName="pickUpPoint">
+                            <option disabled selected value="">
+                                Select Pickup Point
+                            </option>
+                            <option *ngFor="let point of pickupPoints; index as i" [value]="i + ':' + point.pointType">
+                                {{ point.pointType }}
+                            </option>
+                        </select> -->
+                    </div>
+                    <div class="grid grid-cols-2 gap-x-8 gap-y-4 mb-5">
+                        <datepicker matTooltipClass="drop-shadow-lg" matTooltipPosition="above"
+                            [matTooltip]="'Pick-up date' | translate" [model]="etpDateModal" [isHeaderPosition]="true"
+                            [height]="52" (dateChanged)="OnETPDateChange($event)">
+                        </datepicker>
+                        <timepicker matTooltipClass="drop-shadow-lg" matTooltipPosition="above"
+                            [matTooltip]="'Pick-up time' | translate" [height]="52" [model]="etpTimeVal"
+                            (modelChange)="OnETPTimeChange($event)"></timepicker>
+                    </div>
+                    <div (change)="onOperationSelected($event)" iconic-select-wrapper [matTooltip]="'Operation'"
+                        matTooltipClass="drop-shadow-lg" matTooltipPosition="above"
+                        leftSvg="assets/images/scheduling_operation_type.svg">
+                        <select spAccessInputRef name="operationType" id="operationType" formControlName="operation">
+                            <option disabled value="">Operation</option>
+                            <option *ngFor="let operationType of operationType" [value]="operationType.id">
+                                {{ operationType.name }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-y-4 min-xl:px-[50px]">
+                    <p>&nbsp;</p>
+                    <div iconic-select-wrapper [matTooltip]="'Deliver to Company'" matTooltipClass="drop-shadow-lg"
+                        matTooltipPosition="above" leftSvg="assets/images/bi_building-up.svg">
+                        <select spAccessInputRef name="deliveryToCompany" id="deliveryToCompany"
+                            formControlName="deliverToCompany">
+                            <option disabled selected value="">
+                                Deliver to Company
+                            </option>
+                            <option *ngFor="let company of companiesList" [value]="company.id">
+                                {{ company.name }}
+                            </option>
+                        </select>
+                    </div>
+                    <div iconic-select-wrapper [matTooltip]="'Delivery Point'" matTooltipClass="drop-shadow-lg"
+                        matTooltipPosition="above" leftSvg="assets/images/location_on_black_24dp.svg">
+                        <select spAccessInputRef name="deliveryPoint" id="deliveryPoint" formControlName="deliverPoint">
+                            <option disabled selected value="">
+                                Delivery Point
+                            </option>
+                            <option *ngFor="let point of deliveryPoints" [value]="point.pointType">
+                                {{ point.pointType }}
+                            </option>
+                        </select>
+                        <!-- <select spAccessInputRef name="deliveryPoint" id="deliveryPoint" formControlName="deliverPoint">
+                            <option disabled selected value="">
+                                Select Delivery Point
+                            </option>
+                            <option *ngFor="let point of deliveryPoints; index as i" [value]="i + ':' + point.pointType">
+                                {{ point.pointType }}
+                            </option>
+                        </select> -->
+                    </div>
+                    <div class="grid grid-cols-2 gap-x-8 gap-y-4 mb-5">
+                        <datepicker matTooltipClass="drop-shadow-lg" matTooltipPosition="above"
+                            [matTooltip]="'Delivery date' | translate" [model]="etdDateModal" [isHeaderPosition]="true"
+                            [height]="52" (dateChanged)="OnETDDateChange($event)">
+                        </datepicker>
+                        <timepicker matTooltipClass="drop-shadow-lg" matTooltipPosition="above"
+                            [matTooltip]="'Delivery time' | translate" [height]="52" [model]="etdTimeVal"
+                            (modelChange)="OnETDTimeChange($event)"></timepicker>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 gap-x-10 gap-y-4 p-[100px] py-[30px]">
+                <table class="table border border-lightgray">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Wagons</th>
+                            <th class="min-w-[150px]">Category</th>
+                            <th class="min-w-[150px]">Subcategory</th>
+                            <th>Brutto</th>
+                            <th>Tara</th>
+                            <th>Netto</th>
+                            <th>Seals</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody formArrayName="planningRailwayShipmentWagons">
+                        <tr *ngFor="let wagon of wagons.controls; let i = index" [formGroupName]="i">
+                            <td>
+                                {{ i + 1 }}
+                            </td>
+                            <td>
+                                <div iconic-input-wrapper [isTable]="true" [showValidationMessageDiv]="false">
+                                    <input inputRef type="number" class="text-center" formControlName="wagon" />
+                                </div>
+                            </td>
+                            <td>
+                                <app-search-select [isTable]="true" (searchQuery)="retrieveCategories($event)"
+                                    [showValidationMessageDiv]="false" [search]="categoryQuery"
+                                    (selected)="onCategoryChange($event,i)" [contentLoading]="isContentLoading$"
+                                    [items]="category | async" placeholder="Category" [formGroup]="wagon"
+                                    formControlName="category" (keyup)="onInputChange($event)"
+                                    ngDefaultControl></app-search-select>
+                            </td>
+                            <td>
+                                <div [isTable]="true" iconic-select-wrapper [showValidationMessageDiv]="false">
+                                    <select spAccessInputRef name="subCategory" id="subCategory"
+                                        formControlName="subCategory">
+                                        <option disabled value="">
+                                            Subcategory
+                                        </option>
+                                        <option *ngFor="
+                                                let subCategory of subCategoryLists[i] || []
+                                            " [value]="subCategory.id">
+                                            {{ subCategory.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div iconic-input-wrapper [isTable]="true" [showValidationMessageDiv]="false">
+                                    <input inputRef type="number" class="text-center" formControlName="grossWeight" />
+                                </div>
+                            </td>
+                            <td>
+                                <div iconic-input-wrapper [isTable]="true" [showValidationMessageDiv]="false">
+                                    <input inputRef type="number" class="text-center" formControlName="taraWeight" />
+                                </div>
+                            </td>
+                            <td>
+                                <div iconic-input-wrapper [isTable]="true" [showValidationMessageDiv]="false">
+                                    <input inputRef type="number" class="text-center" formControlName="netWeight" />
+                                </div>
+                            </td>
+                            <td>
+                                <div iconic-input-wrapper [isTable]="true" [showValidationMessageDiv]="false">
+                                    <input inputRef type="text" class="text-center" formControlName="seals" />
+                                </div>
+                            </td>
+                            <td>
+                                <fa-icon icon="trash" class="text-primary cursor-pointer mr-2"
+                                    (click)="removeWagon(i)"></fa-icon>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div>
+                    <button type="button" class="flex text-primary font-bold py-5" (click)="addWagons()">
+                        <fa-icon icon="circle-plus"></fa-icon>&nbsp; Add wagon
+                    </button>
+                </div>
+            </div>
+            <div class="min-xl:px-[50px] grid min-lg:grid-cols-2 grid-cols-1 gap-x-10 min-3xl:gap-x-20 mt-4">
+                <div class="gap-y-4 mb-5 min-xl:px-[50px]">
+                    <button type="button" class="btn btn-primary w-full min-h-[50px] !text-[18px]" matStepperPrevious
+                        *ngIf="!(areRouteDetailsDone | async)">
+                        {{ "button.back" | translate }}
+                    </button>
+                </div>
+                <div class="gap-y-4 mb-5 min-xl:px-[50px]">
+                    <button type="button" class="btn btn-primary w-full min-h-[50px] !text-[18px]" (click)="next(2)"
+                        [disabled]="!stepTwoForm.valid">
+                        {{ "button.next" | translate }}
+                    </button>
+                </div>
+            </div>
+        </form>
+    </mat-step>
+    <mat-step label="Additional Data" [stepControl]="stepThreeForm">
+        <app-loader *ngIf="isLoading$ | async" [isContainer]="true" [fullScreen]="false"></app-loader>
+        <div *ngIf="!(isLoading$ | async)">
+            <div class="pt-[100px] min-xl:px-[50px]">
+                <form class="grid min-lg:grid-cols-2 grid-cols-1 gap-x-10 min-3xl:gap-x-20 gap-y-4"
+                    [formGroup]="stepThreeForm">
+                    <div class="flex flex-col gap-y-4 min-xl:px-[50px]">
+                        <div iconic-input-wrapper leftIcon="user">
+                            <input inputRef type="text" placeholder="Operator" formControlName="additionalOperator"
+                                class="text-center" />
+                        </div>
+                        <mat-button-toggle-group class="flex w-full justify-end items-center mb-[21px]">
+                            <button
+                                class="min-h-[53px] min-md:min-w-[53px] max-sm:w-full rounded-l-[10px] border-y border-l border-borderColor rounded-r-none">
+                                <fa-icon icon="file-lines" size="lg" class="mx-2 cursor-pointer">
+                                </fa-icon>
+                            </button>
+                            <input
+                                class="text-center w-full outline-0 shadow-none bw ring-offset-0 focus:ring-offset-0 focus:shadow-none focus:ring-0 min-h-[53px] border-x-0 border-borderColor rounded-x-0"
+                                type="text" [value]="file1Text$ | async" (click)="file1.click()" readonly
+                                placeholder="Choose file" />
+                            <input #file1 hidden type="file" (change)="
+                                    patchFile($any($event.target).files[0], 0)
+                                " />
+                            <button (click)="file1.click()"
+                                class="bg-primary text-white hover:bg-primary-dark min-h-[53px] min-md:min-w-[60px] max-sm:w-full rounded">
+                                <fa-icon icon="upload" size="2x" class="mx-2 cursor-pointer text-white">
+                                </fa-icon>
+                            </button>
+                        </mat-button-toggle-group>
+                        <mat-button-toggle-group class="flex w-full justify-end items-center mb-[21px]">
+                            <button
+                                class="min-h-[53px] min-md:min-w-[53px] max-sm:w-full rounded-l-[10px] border-y border-l border-borderColor rounded-r-none">
+                                <fa-icon icon="file-lines" size="lg" class="mx-2 cursor-pointer">
+                                </fa-icon>
+                            </button>
+                            <input
+                                class="text-center w-full outline-0 shadow-none bw ring-offset-0 focus:ring-offset-0 focus:shadow-none focus:ring-0 min-h-[53px] border-x-0 border-borderColor rounded-x-0"
+                                type="text" [value]="file2Text$ | async" (click)="file2.click()" readonly
+                                placeholder="Choose file" />
+                            <input #file2 hidden type="file" (change)="
+                                    patchFile($any($event.target).files[0], 1)
+                                " />
+                            <button (click)="file2.click()"
+                                class="bg-primary text-white hover:bg-primary-dark min-h-[53px] min-md:min-w-[60px] max-sm:w-full rounded">
+                                <fa-icon icon="upload" size="2x" class="mx-2 cursor-pointer text-white">
+                                </fa-icon>
+                            </button>
+                        </mat-button-toggle-group>
+                        <mat-button-toggle-group *ngIf="showFileThree$ | async"
+                            class="flex w-full justify-end items-center mb-[21px]">
+                            <button
+                                class="min-h-[53px] min-md:min-w-[53px] max-sm:w-full rounded-l-[10px] border-y border-l border-borderColor rounded-r-none">
+                                <fa-icon icon="file-lines" size="lg" class="mx-2 cursor-pointer">
+                                </fa-icon>
+                            </button>
+                            <input
+                                class="text-center w-full outline-0 shadow-none bw ring-offset-0 focus:ring-offset-0 focus:shadow-none focus:ring-0 min-h-[53px] border-x-0 border-borderColor rounded-x-0"
+                                type="text" [value]="file3Text$ | async" (click)="file3.click()" readonly
+                                placeholder="Choose file" />
+                            <input #file3 hidden type="file" (change)="
+                                    patchFile($any($event.target).files[0], 2)
+                                " />
+                            <button (click)="file3.click()"
+                                class="bg-primary text-white hover:bg-primary-dark min-h-[53px] min-md:min-w-[60px] max-sm:w-full rounded">
+                                <fa-icon icon="upload" size="2x" class="mx-2 cursor-pointer text-white">
+                                </fa-icon>
+                            </button>
+                        </mat-button-toggle-group>
+                        <button *ngIf="!(showFileThree$ | async)" type="button" class="text-primary font-bold mr-auto"
+                            (click)="showFileThree$.next(true)">
+                            <fa-icon icon="circle-plus"></fa-icon> Add New
+                            Document
+                        </button>
+                    </div>
+                    <div class="grid grid-rows-2 gap-y-4 min-xl:px-[50px]">
+                        <div textarea-wrapper leftIcon="user" [isFullHeight]="true">
+                            <textarea class="break-words whitespace-pre-wrap resize-none" inputRef
+                                placeholder="Client's comments:" rows="10" cols="1"
+                                formControlName="clientComments"></textarea>
+                        </div>
+                        <div textarea-wrapper leftIcon="id-card" [isFullHeight]="true">
+                            <textarea class="break-words whitespace-pre-wrap resize-none" inputRef
+                                placeholder="Operator's comments" rows="10" cols="1"
+                                formControlName="operatorComments"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="min-xl:px-[50px] mt-8 grid min-lg:grid-cols-2 grid-cols-1 gap-x-10 min-3xl:gap-x-20">
+                <div class="gap-y-4 mb-5 min-xl:px-[50px]">
+                    <button type="button" class="btn btn-primary w-full min-h-[50px] !text-[18px]" matStepperPrevious>
+                        {{ "button.back" | translate }}
+                    </button>
+                </div>
+                <div class="gap-y-4 mb-5 min-xl:px-[50px]">
+                    <button type="button" class="btn btn-primary w-full min-h-[50px] !text-[18px]" (click)="next(3)"
+                        [disabled]="!stepThreeForm.valid">
+                        {{
+                        (isEdit$ | async) ? "Update" : ("button.next" | translate)
+                        }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </mat-step>
+    <mat-step label="Save or Extend" *ngIf="!(isEdit$ | async)">
+        <app-loader *ngIf="isLoading$ | async" [isContainer]="true" [fullScreen]="false"></app-loader>
+        <div class="flex flex-col justify-center" *ngIf="!(isLoading$ | async)">
+            <div class="flex-1 flex justify-center gap-10 w-full max-lg:flex-col cursor-pointer">
+                <div (click)="saveScheduling()"
+                    class="flex min-lg:flex-col gap-5 items-center justify-evenly w-full min-lg:w-[400px] h-[520px] rounded-[10px] border border-transparent shadow-md cursor-pointer">
+                    <div class="flex flex-col gap-2 items-center cursor-pointer">
+                        <div
+                            class="border border-[#B7B7B7] rounded-full flex justify-center items-center w-[155px] h-[155px] cursor-pointer">
+                            <img src="assets/images/scheduling_flag.svg" alt="Flag" />
+                        </div>
+                        <h2 class="text-4xl text-[#696969] font-bold cursor-pointer">
+                            Train ended
+                        </h2>
+                    </div>
+                    <div class="w-[335px] mx-[auto] text-center cursor-pointer">
+                        <p class="text-3xl text-[#696969] font-normal cursor-pointer">
+                            Click this button if you added all the wagons of the
+                            train.
+                        </p>
+                    </div>
+                </div>
+                <div (click)="addPlanning()" *ngIf="addNewWagon$ | async"
+                    class="flex min-lg:flex-col justify-evenly gap-5 items-center w-full min-lg:w-[400px] h-[520px] rounded-[10px] border border-transparent shadow-md cursor-pointer">
+                    <div class="flex flex-col gap-2 items-center cursor-pointer">
+                        <div
+                            class="border border-[#B7B7B7] rounded-full flex justify-center items-center w-[155px] h-[155px] cursor-pointer">
+                            <img src="assets/images/carbon_train-speed-1.svg" alt="Flag" />
+                        </div>
+                        <h2 class="text-4xl text-[#696969] font-bold cursor-pointer">
+                            Add wagonr to train
+                        </h2>
+                    </div>
+                    <div class="w-[335px] mx-[auto] text-center cursor-pointer">
+                        <p class="text-3xl text-[#696969] font-normal cursor-pointer">
+                            Click this button to add a new wagonr to the train.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-center mt-8">
+                <button type="button" class="btn btn-primary w-[440px] min-h-[50px] !text-[18px]" matStepperPrevious>
+                    {{ "button.back" | translate }}
+                </button>
+            </div>
+        </div>
+    </mat-step>
+</mat-stepper>

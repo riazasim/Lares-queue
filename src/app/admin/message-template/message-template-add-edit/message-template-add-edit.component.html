@@ -1,0 +1,57 @@
+<app-message-template-add-edit-stepper [messageForm]="messageForm" linear [automationType]="automationType$" [id]="id" (selectionChange)="submit($event)">
+  <cdk-step aria-label="Add message - template">
+    <div>
+      <app-loader *ngIf="(isLoading$ | async)" [isContainer]="true" [fullScreen]="false"></app-loader>
+      <form *ngIf="!(isLoading$ | async)" [formGroup]="messageForm">
+        <div class="flex flex-col mx-auto max-w-[440px] gap-5">
+          <div>
+            <div iconic-input-wrapper leftIcon="message-lines">
+              <input inputRef type="text" placeholder="Name" formControlName="name">
+            </div>
+          </div>
+          <div>
+            <div textarea-wrapper leftIcon="message-lines">
+              <textarea inputRef cols="50" rows="10" type="text" placeholder="Message" formControlName="message"></textarea>
+            </div>
+          </div>
+          <div>
+            <label>Requires response</label>
+            <div class="columns-2">
+              <div class="flex items-center gap-2">
+                <label>Yes</label>
+                <input type="radio" inputRef name="requiresResponseBit" [value]="true" formControlName="requiresResponseBit">
+              </div>
+              <div class="flex items-center gap-2">
+                <label>No</label>
+                <input type="radio" inputRef name="requiresResponseBit" [value]="false" formControlName="requiresResponseBit">
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </cdk-step>
+
+  <cdk-step aria-label="Select automation type">
+    <app-message-template-menu [automationType]="automationType$" (typeEventEmitter)="setAutomationType($event)">
+    </app-message-template-menu>
+  </cdk-step>
+  <cdk-step aria-label="Automation type" [ngSwitch]="(automationType$ | async)">
+    <app-loader *ngIf="(isLoading$ | async)" [isContainer]="true" [fullScreen]="false"></app-loader>
+    <div *ngIf="!(isLoading$ | async)">
+      <app-message-template-conditions [automationType]="automationType$" [query]="whereQuery" *ngSwitchCase="automationTypeEnum.actionBased"></app-message-template-conditions>
+      <app-message-template-conditions *ngSwitchCase="automationTypeEnum.timeBased"
+      [repeatOption]="messageForm.get('repeatOption')?.value"
+      [automationDate]="messageForm.get('automationDate')?.value"
+      [automationType]="automationType$"
+      [query]="whereQuery">
+    </app-message-template-conditions>
+      <app-message-template-success *ngSwitchCase="automationTypeEnum.noAutomation"></app-message-template-success>
+    </div>
+  </cdk-step>
+  <cdk-step aria-label="Success">
+    <app-loader *ngIf="(isLoading$ | async)" [isContainer]="true" [fullScreen]="false"></app-loader>
+    <app-message-template-success *ngIf="!(isLoading$ | async)"></app-message-template-success>
+  </cdk-step>
+</app-message-template-add-edit-stepper>
+

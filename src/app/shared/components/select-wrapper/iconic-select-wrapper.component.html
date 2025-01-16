@@ -1,0 +1,33 @@
+<div [class.dashboard]="dashboardInp" [class.tableInp]="isTable"
+    [class.valid]="isValid && (isTouched || withoutTouched)"
+    [class.invalid]="isInvalid || !isValid && (isTouched || withoutTouched)" [class.disabled]="isDisabled"
+    [class.loading]="loading" class="iconic-layout-wrapper relative">
+
+    <div class="loader absolute top-0 right-0 left-0 bottom-0 hidden z-10"></div>
+
+    <div class="input-container" [class.!hidden]="loading">
+        <img *ngIf="leftSvg" [src]="leftSvg" alt="icon" class="mx-[10px] max-h-5 max-w-5">
+        <fa-icon *ngIf="leftIcon" [icon]="leftIcon" size="lg" class="icon"></fa-icon>
+        <div class="select-container flex items-center" >
+            <ng-content select="select[spAccessInputRef]"></ng-content>
+            <fa-icon *ngIf="rightIcon" [icon]="rightIcon" size="lg"
+                class="icon select-decoration {{dashboardInp ? '!text-[#C6C6C6]' : ''}}"></fa-icon>
+        </div>
+        <ng-container *ngIf="appendedTemplate" [ngTemplateOutlet]="appendedTemplate"></ng-container>
+        <fa-icon *ngIf="isValid && withCheckmark && isTouched" [icon]="checkmark" size="lg" class="icon valid">
+        </fa-icon>
+        <fa-icon *ngIf="!isValid && isTouched" [icon]="xmark" size="lg" class="icon invalid">
+        </fa-icon>
+    </div>
+
+    <div *ngIf="showValidation && showValidationMessageDiv" class="errors-container" [class.!hidden]="loading"
+        [style.visibility]="isTouched && showValidationMessages && errors ? 'visible': 'hidden'" [style.height.px]="21">
+        <div *ngFor="let error of (errors | keyvalue)" class="text-center">
+            <span *ngIf="$any(error)?.value && $any(error)?.value?.message;"
+                class="invalid">{{$any(error)?.value?.message}}</span>
+        </div>
+    </div>
+
+
+</div>
+<ng-content select="[auxiliary]"></ng-content>

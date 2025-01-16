@@ -1,0 +1,17 @@
+<div class="layout-wrapper" *ngIf="slideContent">
+  <header class="logo-container">
+    <img *ngIf="slideContent.logoSrc" [src]="slideContent.logoSrc" alt="logo" class="logo"/>
+  </header>
+  <main class="main-container">
+    <img *ngIf="slideContent.pictureSrc" [src]="slideContent.pictureSrc"
+      alt="onboarding-picture" />
+      <h1 class="heading-4" *ngIf="slideContent.heading">{{slideContent.heading}}</h1>
+    <p *ngIf="slideContent.description" class="text-muted text-xl">
+      {{slideContent.description}}
+    </p>
+  </main>
+  <footer *ngIf="slideContent.customContent" class="footer-container">
+    <ng-container [ngTemplateOutlet]="slideContent.customContent">
+    </ng-container>
+  </footer>
+</div>

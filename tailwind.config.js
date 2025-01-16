@@ -39,7 +39,7 @@ module.exports = {
       transparent: 'transparent',
       primary: {
         light: 'var(--primary-light-color)',
-        DEFAULT: 'var(--primary-color)',
+        DEFAULT: '#3498DB',
         dark: 'var(--primary-dark-color)'
       },
       secondary: {

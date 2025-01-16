@@ -8,13 +8,13 @@ import { ActivatedRoute, Router } from '@angular/router';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent {
-    constructor( 
+    constructor(
         private readonly router: Router,
         private readonly route: ActivatedRoute,
-    ) {}
+    ) { }
 
-    next(){
+    next() {
         this.router.navigate(['../parameters'], { relativeTo: this.route });
     }
-   
+
 }

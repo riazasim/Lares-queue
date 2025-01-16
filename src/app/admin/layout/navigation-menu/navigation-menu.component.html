@@ -49,15 +49,10 @@
       <img [src]="isCollapsed ? 'assets/images/toggle-collapsed.svg' : 'assets/images/toggle-not-collapsed.svg'" />
     </div>
   </div> -->
-  <div class="layout-wrapper" [style.width]="isCollapsed ? '7rem' : '268px'">
-    <div class="logo">
+<div class="layout-wrapper" [style.width]="isCollapsed ? '7rem' : '268px'">
+    <!-- <div class="logo">
       <img class="px-0.5" src="assets/images/q-logo.svg" alt="logo" />
     </div>
-  
-  
-  
-  
-  
     <mat-vertical-stepper class="stepper" [linear]="false" [ngClass]="{ 'collapsed': isCollapsed }" labelPosition="end"
       #stepper>
       <ng-template matStepperIcon="edit">
@@ -111,9 +106,50 @@
           </div>
         </ng-template>
       </mat-step>
-    </mat-vertical-stepper>
-  
-    <div class="collapsed-icon" (click)="toggleCollapse()">
-      <img [src]="isCollapsed ? 'assets/images/toggle-collapsed.svg' : 'assets/images/toggle-not-collapsed.svg'" />
+    </mat-vertical-stepper> -->
+    <div class="logo">
+        <img class="px-0.5" src="assets/images/q-logo.svg" alt="logo" />
     </div>
-  </div>
+    <div class="flex flex-col gap-4 items-center">
+        <div class="flex flex-col gap-4">
+            <div class="step-content flex gap-5 items-center"
+                [class.done]="activeRoutes.has('/en/home') && ((activeRoute | async )!== '/en/home')"
+                [class.active]="(activeRoute | async )=== '/en/home'" (click)="onStepChange('/en/home')">
+                <img src="assets/images/home.svg" />
+                <span class="text-[#46474C] mt-1" *ngIf="!isCollapsed">Home</span>
+            </div>
+            <div class="step-content flex gap-5 items-center"
+                [class.done]="activeRoutes.has('/en/parameters')  && (activeRoute | async )!== '/en/parameters'"
+                [class.active]="(activeRoute | async )=== '/en/parameters'" (click)="onStepChange('/en/parameters')">
+                <img src="assets/images/settings.svg" />
+                <span class="text-[#46474C]" *ngIf="!isCollapsed">Parameters</span>
+            </div>
+            <div class="step-content flex gap-5 items-center"
+                [class.done]="activeRoutes.has('/en/queue')  && (activeRoute | async )!== '/en/queue'"
+                [class.active]="(activeRoute | async )=== '/en/queue'" (click)="onStepChange('/en/queue')">
+                <img src="assets/images/traffic.svg" />
+                <span class="text-[#46474C]" *ngIf="!isCollapsed">Queue</span>
+            </div>
+            <div class="step-content flex gap-5 items-center"
+                [class.done]="activeRoutes.has('/en/simulation/filter') && (activeRoute | async )!== '/en/simulation/filter'"
+                [class.active]="(activeRoute | async )=== '/en/simulation/filter'" (click)="onStepChange('/en/simulation/filter')">
+                <img src="assets/images/play-square.svg" />
+                <span class="text-[#46474C]" *ngIf="!isCollapsed">Simulation</span>
+            </div>
+            <div class="step-content flex gap-5 items-center"
+                [class.done]="activeRoutes.has('/en/reports') && (activeRoute | async )!== '/en/reports'"
+                [class.active]="(activeRoute | async )=== '/en/reports'" (click)="onStepChange('/en/reports')">
+                <img src="assets/images/reports-1.svg" />
+                <span class="text-[#46474C]" *ngIf="!isCollapsed">Reports</span>
+            </div>
+            <div class="step-content flex gap-5 items-center last" (click)="onStepChange('finish')">
+                <img src="assets/images/flag.svg" />
+                <span class="text-[#46474C]" *ngIf="!isCollapsed">Finish</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="collapsed-icon" (click)="toggleCollapse()">
+        <img [src]="isCollapsed ? 'assets/images/toggle-collapsed.svg' : 'assets/images/toggle-not-collapsed.svg'" />
+    </div>
+</div>

@@ -43,6 +43,7 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { SimulationComponent } from './simulation/simulation.component';
 import { ReportsComponent } from './reports/reports.component';
 import { ParametersQueueComponent } from './parameters/parameters-queue/parameters-queue.component';
+import { RouterModule } from '@angular/router';
 
 
 
@@ -100,7 +101,7 @@ import { ParametersQueueComponent } from './parameters/parameters-queue/paramete
         NgScrollbarReachedModule,
         MatSliderModule,
         MatProgressBarModule,
-        
+        RouterModule
     ]
 })
 export class AdminModule { }

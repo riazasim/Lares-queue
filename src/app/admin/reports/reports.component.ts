@@ -8,16 +8,16 @@ import { ActivatedRoute, Router } from '@angular/router';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReportsComponent {
-    constructor( 
+    constructor(
         private readonly router: Router,
         private readonly route: ActivatedRoute,
-    ) {}
+    ) { }
 
-    startAgain(){
-        this.router.navigate(['../home'], { relativeTo: this.route });
+    startAgain() {
+        this.router.navigate(['../home'], { relativeTo: this.route, queryParams: { finish: true } });
     }
-    finish(){
-        this.router.navigate(['../home'], { relativeTo: this.route });
+    finish() {
+        this.router.navigate(['../home'], { relativeTo: this.route, queryParams: { finish: true } });
     }
-   
+
 }

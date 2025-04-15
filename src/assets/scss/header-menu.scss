@@ -1,0 +1,30 @@
+.header-menu-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+
+  @apply min-md:flex-row min-md:justify-around min-md:items-center;
+
+  > .header-menu-list-item {
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      cursor: pointer;
+      @apply max-md:bg-primary-light max-md:text-white min-md:text-primary;
+    }
+
+    .menu-icon {
+      min-width: 30px;
+      display: inline-flex;
+      justify-content: center;
+    }
+
+    .menu-label {
+      margin-left: 1rem;
+      @apply min-md:hidden
+    }
+  }
+}

@@ -1,0 +1,11 @@
+div.iconic-layout-wrapper > div.input-container > input[type=text],
+div.iconic-layout-wrapper > div.input-container > input[type=text]:focus {
+    border: 0;
+    outline: 0;
+    box-shadow: unset;
+    width: 100%;
+}
+::ng-deep.input-container{
+    border-radius: 3px !important;
+}
+

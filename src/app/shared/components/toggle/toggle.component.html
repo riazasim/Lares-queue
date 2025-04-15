@@ -1,0 +1,12 @@
+<form *ngIf="formGroup; else modelTemplate" [formGroup]="formGroup">
+    <div class="switch form">
+        <input [id]="field" class="look" type="checkbox" [formControlName]="field">
+        <label [for]="field"></label>
+    </div>
+</form>
+<ng-template #modelTemplate>
+    <div class="switch">
+        <input [id]="field" class="look" type="checkbox" [checked]="model" [disabled]="disabled" (change)="onModelChange.emit($any($event.target).checked)">
+        <label [for]="field"></label>
+    </div>
+</ng-template>

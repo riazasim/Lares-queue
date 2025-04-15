@@ -1,0 +1,3 @@
+export const USER_TYPE_ADMIN = 'ROLE_ADMIN'; //'ADMIN';
+export const USER_TYPE_OPERATOR = 'OPERATOR';
+export const USER_TYPE_BROADCASTER = 'BROADCASTER';

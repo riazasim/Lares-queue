@@ -1,0 +1,62 @@
+<!-- <app-loader *ngIf="(isLoading$ | async)" [isContainer]="true" [fullScreen]="false"></app-loader> -->
+<!-- <form [formGroup]="accessPointsForm" *ngIf="!(isLoading$ | async)"> -->
+<form [formGroup]="accessPointsForm">
+    <material-panel-table [showHeader]="false">
+        <div table class="w-full overflow-hidden">
+            <ng-scrollbar track="horizontal" class="border border-[#E1E1E1] rounded-[10px]" [autoHeightDisabled]="false"
+                style="scrollbar-width: none;">
+                <table class="material-table no-wrap overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th>Access point name</th>
+                            <th>Processing speed for correct LPR (s)</th>
+                            <th>Wrong LPR readings (%)</th>
+                            <th>Processing speed for wrong LPR (s)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody formArrayName="accessPoints">
+                        <tr *ngFor="let accessPoint of accessPoints.controls | slice:(pageIndex * pageSize):(pageIndex * pageSize + pageSize); let i = index" [formGroupName]="pageIndex * pageSize + i">
+
+                        <!-- <tr *ngFor="let accessPoint of accessPoints.controls | slice:(pageIndex * pageSize):(pageIndex * pageSize + pageSize); let i = index" [formGroupName]="i"> -->
+                            <td>
+                                    <input matInput placeholder="Enter access point name" formControlName="name" />
+                            </td>
+                            <td>
+                                <input matInput placeholder="Enter processing speed in seconds" type="number"
+                                    formControlName="processingSpeedLPR" />
+                            </td>
+                            <td>
+                                <input matInput placeholder="Enter wrong LPR reading percentage" type="number"
+                                    formControlName="wrongLPRReading" (keypress)="numDecimalUtil.validateNumberInput($event)"
+                                    (input)="numDecimalUtil.enforceMaxValue($event)"/>
+                            </td>
+                            <td>
+                                <input matInput placeholder="Enter processing speed for wrong LPR" type="number"
+                                    formControlName="processingSpeedWrongLPR" />
+                            </td>
+                            <td>
+                                <a (click)="removeAccessPoint(i)" class="text-danger cursor-pointer">Delete</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-scrollbar>
+            <div class="mt-4 flex gap-4">
+                <button type="button" class="text-primary font-bold py-5" (click)="addAccessPoint()">
+                    <fa-icon icon="circle-plus"></fa-icon> Add access point
+                </button>
+            </div>
+        </div>
+    </material-panel-table>
+</form>
+<mat-paginator [pageSizeOptions]="pageSizeOptions"
+        [length]="length" [pageIndex]="pageIndex" (page)="onPaginateChange($event)" [pageSize]="pageSize"
+        showFirstLastButtons>
+    </mat-paginator>
+    
+<div class="mt-6 text-right">
+    <button type="button" (click)="next()" [disabled]="!accessPointsForm.valid" class="btn text-white bg-[#3498DB] w-[160px]">
+        Next
+    </button>
+</div>

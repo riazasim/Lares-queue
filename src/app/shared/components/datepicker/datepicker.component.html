@@ -1,0 +1,26 @@
+<ng-container *ngIf="formGroup; else simple">
+    <form [formGroup]="formGroup">
+        <div class="iconic-layout-wrapper relative" [class.loading]="loading">
+            <div class="loader absolute top-0 right-0 left-0 bottom-0 hidden z-10"></div>
+            <div class="input-container" [ngStyle]="styles" [class.!hidden]="loading">
+                <fa-icon (click)="picker.open()" icon="calendar-days" size="lg" class="icon cursor-pointer"></fa-icon>
+                <input onkeydown="return false" [ngStyle]="{'textAlign': textAlign}" (click)="picker.open()" type="text" [placeholder]="placeholder" [formControlName]="field" [matDatepicker]="picker">
+                <fa-icon (click)="formGroup.get(field)?.patchValue(null)" *ngIf="formGroup.get(field)?.value" icon="close" size="lg" class="icon cursor-pointer"></fa-icon>
+                <mat-datepicker #picker></mat-datepicker>
+            </div>
+        </div>
+    </form>
+</ng-container>
+<ng-template #simple>
+    <div class="iconic-layout-wrapper relative" [class.loading]="loading">
+        <div class="loader absolute top-0 right-0 left-0 bottom-0 hidden z-10"></div>
+        <div class="input-container" [ngStyle]="styles" [class.!hidden]="loading">
+            <fa-icon (click)="picker.open()" icon="calendar-days" size="lg" class="icon cursor-pointer"></fa-icon>
+            <input onkeydown="return false" [ngStyle]="{'textAlign': textAlign}"
+                    (click)="picker.open()" type="text"
+                    [placeholder]="placeholder" [ngModel]="model" (ngModelChange)="dateChanged.emit($event)" [matDatepicker]="picker" class="py-0">
+            <fa-icon (click)="model = ''; dateRemoved.emit(true)" *ngIf="model" icon="close" size="lg" class="icon cursor-pointer"></fa-icon>
+            <mat-datepicker #picker></mat-datepicker>
+        </div>
+    </div>
+</ng-template>

@@ -1,0 +1,79 @@
+.select-container {
+    position: relative;
+    flex-grow: 1;
+    display: flex;
+}
+
+.select-decoration {
+    position: absolute;
+    right: 10px;
+    color: black;
+}
+
+[multiple],
+textarea,
+select {
+    appearance: none;
+    background-color: #fff;
+    border-color: #a0a0a0;
+    border-width: 1px;
+    border-radius: 3px;
+    padding-top: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 1rem;
+    padding-left: 1rem;
+    font-size: var(--form-control-font-size);
+    line-height: 1.5rem;
+    --tw-shadow: 0 0 #0000;
+}
+
+.mat-mdc-select-arrow-wrapper {
+    height: 24px;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    margin-right: 7px;
+}
+
+::ng-deep.mat-mdc-select-arrow svg {
+    fill: black !important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+::ng-deep div.mat-mdc-select-panel {
+    scrollbar-width: none;
+    padding: 8px !important;
+    padding-top: 0px !important;
+}
+.mat-mdc-select {
+    width: 90%;
+}
+.mat-mdc-select {
+    width: 100%;
+    color: inherit;
+    font-family: var(--app-font-family);
+    line-height: var(--mat-select-trigger-text-line-height);
+    font-size: var(--form-control-font-size); 
+    font-weight: inherit;
+    letter-spacing: var(--mat-select-trigger-text-tracking);
+}
+.mat-mdc-option .mdc-list-item__primary-text {
+    white-space: normal;
+    font-size: var(--form-control-font-size);
+    font-weight: inherit;
+    letter-spacing: inherit;
+    line-height: inherit;
+    font-family: var(--app-font-family);
+    text-decoration: inherit;
+    text-transform: inherit;
+    margin-right: auto;
+}
+::ng-deep.mat-mdc-select-arrow-wrapper {
+    display: none !important;
+}
+.iconic-layout-wrapper > .input-container > .icon:last-child {
+    margin-right: 7px;
+}

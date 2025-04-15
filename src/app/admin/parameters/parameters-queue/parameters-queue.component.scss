@@ -1,0 +1,246 @@
+mat-progress-bar.custom-progress-bar {
+    width: 100%;
+    height: 10px;
+    border-radius: 5px;
+  
+    .mat-mdc-linear-progress {
+      border-radius: 5px;
+    }
+  }
+  
+  .mat-mdc-progress-bar {
+    --mdc-linear-progress-active-indicator-color: #3498DB;
+    --mdc-linear-progress-track-color: #E4E7EC;
+    // --mdc-linear-progress-track-height: 24px;
+    //   --mdc-linear-progress-active-indicator-height: 24px;
+  }
+  ::ng-deep mat-progress-bar .mdc-linear-progress__bar-inner {
+    border-top-width: 10px;
+  }
+  hr {
+    border-top: 1px solid #EAECF0;
+  }
+
+
+
+/* Container */
+.slider-container {
+  position: relative;
+  width: 98%;
+  height: 5px;
+  background: #e0e0e0;
+  border-radius: 5px;
+}
+
+/* Track (Between Min & Max Handles) */
+.slider-track {
+  position: absolute;
+  height: 5px;
+  background-color: #3498DB;
+  border-radius: 5px;
+  z-index: 1;
+}
+
+/* Handles (Draggable Circles) */
+.handle {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background-color: #3498DB;
+  border: 3px solid #3498DB;
+  border-radius: 50%;
+  top: -5px;
+  cursor: pointer;
+  z-index: 2;
+  transform: none;
+  transition: none;
+}
+
+/* Hover Effect */
+.handle:hover {
+  transform: none;
+}
+
+/* Tooltip (Value Display Above Handles) */
+.tooltip {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 8px;
+  background-color: #3498DB;
+  color: white;
+  font-size: 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  text-align: center;
+  visibility: visible;
+}
+
+.tooltip-left {
+  left: 0;
+  transform: translateX(0%); /* Align tooltip start from left */
+}
+
+.tooltip-right {
+  left: 100%;
+  transform: translateX(-100%); /* Align tooltip end at right */
+}
+
+.time-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5em;
+  padding-top: 10px;
+  font-size: 0.75em;
+  color: #9b9b9b;
+
+  span {
+    position: relative;
+  }
+}
+
+/* Booking Slot Label */
+// .booking-slot {
+//   position: absolute;
+//   bottom: -30px;
+//   padding: 4px 8px;
+//   background-color: #007BFF;
+//   color: white;
+//   font-size: 12px;
+//   border-radius: 4px;
+//   text-align: center;
+//   white-space: nowrap;
+// }
+
+
+  // .slider-container {
+  //   position: relative;
+  //   margin-top: 20px;
+  
+  //   .slider {
+  //     -webkit-appearance: none;
+  //     width: 100%;
+  //     height: 7px;
+  //     border-radius: 5px;
+  //     background: #E4E7EC;
+  //     outline: none;
+  //     // background-image: linear-gradient(#3498DB, #3498DB);
+  //     background-repeat: no-repeat;
+  //     background-position: center;
+  //   }
+  
+  //   .slider::-webkit-slider-thumb {
+  //     -webkit-appearance: none;
+  //     appearance: none;
+  //     width: 20px;
+  //     height: 20px;
+  //     background: #3498DB;
+  //     cursor: pointer;
+  //     border-radius: 50%;
+  //   }
+  
+  //   .slider::-moz-range-thumb {
+  //     width: 20px;
+  //     height: 20px;
+  //     background: #3498DB;
+  //     cursor: pointer;
+  //     border-radius: 50%;
+  //   }
+  
+  //   .slider-labels {
+  //     display: flex;
+  //     justify-content: space-between;
+  //     position: absolute;
+  //     width: 100%;
+  //     top: 25px;
+  //     pointer-events: none;
+  //     span {
+  //       font-size: 10px;
+  //       color: #333;
+  //     }
+  //   }
+  // }
+
+  .no-border{
+    border: none;
+  }
+
+  input[type='number'] {
+    -moz-appearance: textfield;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+  .chart-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .center-text {
+    position: absolute;
+    margin-right: 65px;
+    text-align: center;
+  }
+  
+  .total {
+    font-size: 24px;
+    font-weight: bold;
+    color: #3498DB; /* Blue */
+  }
+  
+  .label {
+    font-size: 14px;
+    color: gray;
+  }
+  .vl {
+    border-left: 2px solid #EAECF0;
+    height: 250px;
+  }
+
+  ::ng-deep.chart-legend .legend-label-color {
+    display: inline-block;
+    height: 40px !important;
+    width: 5px !important;
+    margin-right: 5px;
+    color: #5b646b;
+    border-radius: 3px;
+}
+
+::ng-deep.chart-legend .legend-labels {
+  line-height: 85%;
+  list-style: none;
+  text-align: left;
+  float: left;
+  width: 100%;
+  border-radius: 3px;
+  overflow-y: unset !important; 
+  overflow-x: unset !important; 
+  white-space: nowrap;
+  background: none !important;
+}
+
+::ng-deep.chart-legend .legend-label-text {
+  display: inline-block;
+  vertical-align: top;
+  line-height: 15px;
+  font-size: 12px;
+  width: auto !important;
+  text-overflow: unset !important;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+::ng-deep.chart-legend {
+  padding: 48px 0 !important;
+  width: auto !important;
+  align-items: center;
+}

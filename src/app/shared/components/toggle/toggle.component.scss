@@ -1,0 +1,49 @@
+:host {
+    display: inline-block;
+}
+
+.switch {
+    position: relative;
+    width: 60px;
+    &.form {
+        height: 45px;
+    }
+  }
+  
+  .switch label {
+    width: 60px;
+    height: 29px;
+    background-color: transparent;
+    border: 3px solid #999;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 50px;
+    cursor: pointer;
+  }
+  
+  .switch input[type="checkbox"] {
+    visibility: hidden;
+  }
+  
+  .switch label:after {
+    content: '';
+    width: 21px;
+    height: 21px;
+    border-radius: 50px;
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    transition: 100ms;
+    background-color: #999;
+  }
+  
+  .switch .look:checked + label:after {
+    background-color: #17A0B5;
+    left: 32px;
+  }
+  
+  .switch .look:checked + label {
+    background-color: transparent;
+    border-color: #17A0B5;
+  }

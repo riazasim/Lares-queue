@@ -1,0 +1,14 @@
+section {
+    @apply shadow-lg;
+    display: flex;
+    flex-direction: column;
+    // justify-content: center;
+    // align-items: center;
+    min-height: calc(100vh - 150px);
+    background: white;
+    border-radius: var(--app-border-radius);
+
+    @media screen and (max-width: 576px) {
+        min-height: 100%;
+    }
+}

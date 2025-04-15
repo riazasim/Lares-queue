@@ -1,0 +1,66 @@
+[type='text'], input:where(:not([type])), [type='email'], [type='url'], [type='password'], [type='number'], [type='date'], [type='datetime-local'], [type='month'], [type='search'], [type='tel'], [type='time'], [type='week'], [multiple], textarea, select {
+    appearance: none;
+    background-color: #fff;
+    border-color: #6b7280;
+    border-width: 0px;
+    border-radius: 0px;
+    padding-top: 0.5rem;
+    padding-right: 0.75rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    --shadow: 0 0 #0000;
+}
+::ng-deep.mat-mdc-tab-label-container {
+    display: flex;
+    flex-grow: 1;
+    overflow: hidden;
+    z-index: 1;
+    border-bottom-style: solid;
+    border-bottom-width: var(--mat-tab-header-divider-height);
+    border-bottom-color: #E1E1E1 !important;
+}
+::ng-deep.mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+    color: #3498DB !important;
+}
+::ng-deep.mat-mdc-focus-indicator {
+    position: relative;
+    color: #3498DB !important;
+}
+::ng-deep.mdc-tab__text-label {
+    transition: 150ms color linear;
+    display: inline-block;
+    line-height: 3 !important;
+    z-index: 2;
+}
+::ng-deep.mat-mdc-tab .mdc-tab__text-label {
+    color: var(--mat-tab-header-inactive-label-text-color);
+    display: inline-flex;
+    align-items: center;
+    gap: 3px !important;
+}
+::ng-deep.mat-mdc-tab .mdc-tab__text-label {
+    color: #2A374E !important;
+    display: inline-flex;
+    align-items: center;
+}
+.mdc-tab {
+    min-width: 90px;
+    padding-right: 24px;
+    padding-left: 24px;
+    display: flex;
+    flex: 1 0 auto;
+    justify-content: center;
+    box-sizing: border-box;
+    margin: 0px 0px 0px 0px;
+    padding-top: 0px;
+    padding-bottom: 0;
+    border: none;
+    outline: none;
+    text-align: center;
+    white-space: nowrap;
+    cursor: pointer;
+    -webkit-appearance: none;
+    z-index: 1;
+}

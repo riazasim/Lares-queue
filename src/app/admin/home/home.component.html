@@ -1,0 +1,72 @@
+<div class="p-6 bg-white rounded-lg">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Queue Simulator</h2>
+    <p class="text-lightGray">
+        This tool was created to demonstrate the power of our queue management system. Combining features like booking
+        forms,
+        queue capacities, access validation, late arrival management, and so on, we can automate queue management and
+        drastically improve the processing speed at the access point.<br>
+        All you need to do is to create your own scenarios (PARAMETERS) and the app will take care of
+        generating the queues (QUEUE), simulating<br> the 24 hours flow (SIMULATION) and measuring performance
+        (REPORTS).
+    </p>
+
+
+
+    <div class="grid grid-cols-1 min-md:grid-cols-2 gap-6 mt-4">
+        <!-- Parameters Card -->
+        <div class="p-8 border border-[#CBD5E1] rounded">
+            <div class="flex items-center justify-between mb-8">
+                <h3 class="text-lg font-medium text-gray-700">Parameters</h3>
+                <img src="assets/images/Parameters.svg" alt="Parameters">
+            </div>
+            <p class="text-lightGray text-sm">
+                First, you need to provide a set of parameters which will be used to generate the queue and configure
+                the way the system
+                performs in real-life situations.
+            </p>
+        </div>
+
+        <!-- Queue Card -->
+        <div class="p-8 border border-[#CBD5E1] rounded">
+            <div class="flex items-center justify-between mb-8">
+                <h3 class="text-lg font-medium text-gray-700">Queue</h3>
+                <img src="assets/images/Queue.svg" alt="Queue">
+            </div>
+            <p class="text-lightGray text-sm">
+                Based on these parameters the app will generate the individual queue for each tenant and after that the
+                composite queue by
+                combining the individual queues of each tenant.
+            </p>
+        </div>
+
+        <!-- Simulation Card -->
+        <div class="p-8 border border-[#CBD5E1] rounded">
+            <div class="flex items-center justify-between mb-8">
+                <h3 class="text-lg font-medium text-gray-700">Simulation</h3>
+                <img src="assets/images/Simulation.svg" alt="Simulation">
+            </div>
+            <p class="text-lightGray text-sm">
+                This step is where the app simulates the flow of trucks arriving at the access point and generates a
+                short visual
+                simulation and a log with the events, decisions and KPIs.
+            </p>
+        </div>
+
+        <!-- Reports Card -->
+        <div class="p-8 border border-[#CBD5E1] rounded">
+            <div class="flex items-center justify-between mb-8">
+                <h3 class="text-lg font-medium text-gray-700">Reports</h3>
+                <img src="assets/images/Reports.svg" alt="Reports">
+            </div>
+            <p class="text-lightGray text-sm">
+                The reports section will display different KPIs and graphs emphasizing the performance of the system
+                which can be used for
+                further analysis or in your decision-making process.
+            </p>
+        </div>
+    </div>
+
+    <div class="mt-6 text-right">
+        <button type="button" (click)="next()" class="btn text-white bg-[#3498DB] w-[160px]">Next</button>
+    </div>
+</div>

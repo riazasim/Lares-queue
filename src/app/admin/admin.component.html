@@ -1,0 +1,41 @@
+<app-loader [isContainer]="false" *ngIf="(isLoading$ | async)" [fullScreen]="true" message="Logining Out"></app-loader>
+<div admin-layout version="latest">
+    <!--    [companyName$]="companyName$"-->
+    <admin-header header optionsTitle="Menu" [companyName$]="(companyName$ | async)!">
+        <ul menu class="header-menu-list">
+            <li class="header-menu-list-item">
+                <fa-icon icon="bell" size="lg" class="menu-icon" tabindex="0" role="button">
+                </fa-icon>
+                <div *ngIf="notificationsCount !== null && notificationsCount > 0" [matBadge]="notificationsCount"
+                    matBadgeColor="warn" class="h-full top-0 min-md:top-[-10px] right-[5px]">
+                </div>
+                <span class="menu-label">Notificări</span>
+            </li>
+            <li class="header-menu-list-item">
+                <fa-icon icon="user" size="lg" class="menu-icon" tabindex="0" role="button"
+                    [cdkMenuTriggerFor]="profile">
+                </fa-icon>
+                <ng-template #profile>
+                    <div class="bg-white shadow-md p-4 min-w-[100px]">
+                        <ul>
+                            <li>Profile</li>
+                            <li>Fullname: </li>
+                            <li>Age:</li>
+                            <li>Phone:</li>
+                        </ul>
+                    </div>
+                </ng-template>
+                <span class="menu-label">Account</span>
+            </li>
+            <li class="header-menu-list-item" (click)="logout()">
+                <fa-icon icon="sign-out" size="lg" class="menu-icon" tabindex="0" role="button"></fa-icon>
+                <span class="menu-label">Logout</span>
+            </li>
+        </ul>
+    </admin-header>
+    <navigation-menu aside [logoSrc]="logoImgSrc">
+    </navigation-menu>
+    <div main class="p-4 min-md:px-10 min-md:pb-8 min-h-full flex flex-col">
+        <router-outlet></router-outlet>
+    </div>
+</div>

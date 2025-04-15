@@ -1,0 +1,132 @@
+<section class="h-max" [@slideIn] [@slideOut] *ngIf="(step$ | async) === 1">
+    <div class="flex flex-col gap-16">
+        <div class="flex flex-col gap-4">
+            <h1 class="heading-2 text-center mb-8">PERSONAL DATA</h1>
+
+            <p class="mb-8 text-[#08073A] text-xl max-w-[430px]">
+                All personal data processed through our apps are your property and are always available to you.
+                <br><br>
+                To better understand the conditions, legal requirments and our commitment, please read the dedicated
+                sectio at
+                <a href="https://www.privacy.lowis.tech" target="_blank" class="text-[#08073A] text-xl">
+                    https://www.privacy.lowis.tech</a>
+            </p>
+
+            <div class="flex gap-4 items-center">
+                <input id="viewed" type="checkbox" class="border border-defaultText cursor-pointer" (change)="handleCheckboxChange($event)" [(ngModel)]="isCheckboxChecked">
+                <label for="viewed" class="text-xl text-[#08073A]">I read and understood the privacy
+                    notice</label>
+            </div>
+        </div>
+        <div class="flex flex-col gap-5 text-center">
+            <button class="btn btn-primary w-full" [disabled]="!isCheckboxChecked" (click)="step$.next(2)">Continue</button>
+            <p class="heading-5 text-textDefault font-bold">Already have an account? <a
+                class="text-primary cursor-pointer" routerLink="../sign-in">Sign in</a></p>
+            <!-- <button class="btn btn-outline-primary w-full mt-5" routerLink="../sign-in">Back</button> -->
+        </div>
+    </div>
+</section>
+
+<section [@slideIn] [@slideOut] *ngIf="(step$ | async) === 2">
+    <div class="flex flex-col gap-4">
+        <h1 class="heading-2 text-center mb-8">Sign up</h1>
+        <form id="signUpForm" [formGroup]="registerForm" class="w-full min-w-xs flex flex-col gap-1">
+
+            <div formGroupName="userSetting" iconic-input-wrapper leftIcon="user" class="w-full"
+                [withCheckmark]="true">
+                <input formControlName="firstName" type="text" inputRef placeholder="First Name"
+                    class="text-center" />
+            </div>
+            <div formGroupName="userSetting" iconic-input-wrapper required leftIcon="user" class="w-full"
+                [withCheckmark]="true">
+                <input formControlName="lastName" required type="text" inputRef placeholder="Last Name" class="text-center" />
+            </div>
+
+            <div formGroupName="user" iconic-input-wrapper leftIcon="envelope" class="w-full" [withCheckmark]="true">
+                <input formControlName="email" required type="text" inputRef placeholder="Email" class="text-center" />
+            </div>
+
+            <!-- <div formGroupName="userSetting" iconic-input-wrapper [withCheckmark]="true" leftIcon="phone"
+                class="w-full">
+                <input formControlName="phone" type="tel" inputRef placeholder="Phone #" class="text-center">
+            </div>
+            <div formGroupName="userSetting" iconic-input-wrapper [withCheckmark]="true" leftIcon="phone"
+                class="w-full">
+                <input formControlName="phoneRegionCode" type="text" inputRef placeholder="Phone Region Code"
+                    class="text-center">
+            </div> -->
+        </form>
+        <div class="flex flex-col gap-5 text-center">
+            <button [disabled]="shouldDisable()" type="submit" class="btn btn-primary w-full"
+                (click)="step$.next(3)">Continue</button>
+                <!-- <button class="btn btn-outline-primary w-full" (click)="step$.next(1)">Back</button> -->
+            <!-- <div class="flex flex-col gap-2">
+                <p>Or sign up with another account</p>
+                <div class="flex gap-12 justify-center">
+                    <img src="assets/images/AppleLogo.svg" alt="Apple Logo">
+                    <img src="assets/images/GoogleLogo.svg" alt="Google Logo">
+                </div>
+            </div> -->
+            <p class="heading-5 text-textDefault mt-3 font-bold">Already have an account? <a
+                    class="text-primary cursor-pointer" routerLink="../sign-in">Sign in</a></p>
+        </div>
+    </div>
+</section>
+
+<section [@slideIn] [@slideOut] *ngIf="(step$ | async) === 3">
+    <div class="flex flex-col gap-10">
+        <div class="flex flex-col gap-8">
+            <h1 class="heading-2 text-center">Sign up</h1>
+            <p class="text-[#08073A] text-md text-center max-w-[430px]">Choose the type of account you want
+                to create.
+                <br>
+                Different features are available depending on the type of account.
+            </p>
+        </div>
+        <div class="flex flex-col gap-12">
+            <div class="flex flex-col gap-4">
+                <div [ngClass]="{'w-full shadow-md rounded-lg border border-transparent gap-5 h-28 p-6 flex items-center cursor-pointer' : true, '!border-black' : (value === 'ROLE_USER_TRANSPORT')}" value="ROLE_USER_TRANSPORT" (click)="setRoleValue($event)">
+                    <div class="flex justify-center p-5 border border-gray rounded-full h-[72px] w-[72px] items-center" value="ROLE_USER_TRANSPORT" (click)="setRoleValue($event)">
+                        <img src="assets/images/Reg_truck.svg" alt="icon" value="ROLE_USER_TRANSPORT" (click)="setRoleValue($event)">
+                      </div>
+                    <h1 class="text text-4xl font-bold" value="ROLE_USER_TRANSPORT" (click)="setRoleValue($event)">Transport company</h1>
+                </div>
+                <div [ngClass]="{'w-full shadow-md rounded-lg border border-transparent gap-5 h-28 p-6 flex items-center cursor-pointer' : true, '!border-black' : (value === 'ROLE_USER_AGENT')}" value="ROLE_USER_AGENT" (click)="setRoleValue($event)">
+                    <div class="flex justify-center p-5 border border-gray rounded-full h-[72px] w-[72px] items-center" value="ROLE_USER_AGENT" (click)="setRoleValue($event)">
+                        <img src="assets/images/Reg_file.svg" alt="icon" value="ROLE_USER_AGENT" (click)="setRoleValue($event)">
+                      </div>
+                    <h1 class="text text-4xl font-bold" value="ROLE_USER_AGENT" (click)="setRoleValue($event)">Agent company</h1>
+                </div>
+                <div [ngClass]="{'w-full shadow-md rounded-lg border border-transparent gap-5 h-28 p-6 flex items-center cursor-pointer' : true, '!border-black' : (value === 'ROLE_USER_MANEUVERING')}" value="ROLE_USER_MANEUVERING" (click)="setRoleValue($event)">
+                    <div class="flex justify-center p-5 border border-gray rounded-full h-[72px] w-[72px] items-center" value="ROLE_USER_MANEUVERING" (click)="setRoleValue($event)">
+                        <img src="assets/images/Reg_manu.svg" alt="icon" value="ROLE_USER_MANEUVERING" (click)="setRoleValue($event)">
+                      </div>
+                    <h1 class="text text-4xl font-bold" value="ROLE_USER_MANEUVERING" (click)="setRoleValue($event)">Maneuvering company</h1>
+                </div>
+            </div>
+            <div>
+                <button class="btn btn-primary w-full" [disabled]="!optionSelected" (click)="step$.next(4)">Next</button>
+                <button class="btn btn-outline-primary mt-5 w-full" (click)="step$.next(2)">Back</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section [@slideIn] [@slideOut] *ngIf="(step$ | async) === 4">
+    <div class="flex flex-col gap-16">
+        <div class="flex flex-col gap-12">
+            <h1 class="heading-2 text-center">CONGRATULATIONS!</h1>
+            <p class="text-[#08073A] text-xl max-w-[430px]">Your account was created.
+                You will receive an email to activate your account.
+                <br><br>
+                Please make sure you activate the account in maximum 72 hours. Otherwise, the account will be
+                automatically deleted.
+            </p>
+        </div>
+        <div>
+            <button [disabled]="isLoading$ | async" type="submit" class="btn btn-primary w-full" (click)="signUp()"
+                form="signUpForm">Home</button>
+                <button class="btn btn-outline-primary mt-5 w-full" (click)="step$.next(3)">Back</button>
+        </div>
+    </div>
+</section>

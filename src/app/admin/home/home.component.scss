@@ -1,0 +1,29 @@
+/* dual-range-slider.component.css */
+.slider-container {
+    position: relative;
+    width: 100%; /* Adjust the width as needed */
+    height: 4px; /* Smaller height for a sleeker track */
+    background-color: #E0E0E0; /* Light grey track */
+    border-radius: 2px;
+  }
+  
+  .slider-track {
+    position: absolute;
+    background-color: #007BFF; /* Bright blue for the active track */
+    height: 100%;
+    z-index: 1;
+    border-radius: 2px;
+  }
+  
+  .handle {
+    position: absolute;
+    width: 20px; /* Larger handle for easier interaction */
+    height: 20px; /* Square, but you can adjust for a round handle */
+    background-color: white;
+    border: 2px solid #007BFF; /* Border color matches the track */
+    border-radius: 50%; /* Circular handles */
+    top: -8px; /* Adjust top position to center the handle on the track */
+    cursor: pointer;
+    z-index: 2;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Soft shadow for 3D effect */
+  }

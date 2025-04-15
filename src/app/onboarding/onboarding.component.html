@@ -1,0 +1,5 @@
+<onboarding-slideshow *ngIf="onboardingSlides$" [slides]="onboardingSlides$"></onboarding-slideshow>
+
+<ng-template #letsStartBtnTemplate>
+  <button matRipple class="btn btn-primary w-full max-w-xs" routerLink="../admin" (click)="setTutorialTrue()">Let`s Start</button>
+</ng-template>

@@ -1,0 +1,97 @@
+<ng-container *ngIf="formGroup; else simple">
+    <form [formGroup]="formGroup">
+        <div [class.valid]="isValid === true && (isTouched || withoutTouched)" [class.tableInp]="isTable"
+            [class.invalid]="isInvalid || !isValid && (isTouched || withoutTouched)" [class.disabled]="isDisabled"
+            [class.dashboard]="dashboardInp" [class.loading]="loading" class="iconic-layout-wrapper relative">
+            <div class="loader absolute top-0 right-0 left-0 bottom-0 hidden z-10"></div>
+            <div class="input-container" [ngStyle]="styles" [class.!hidden]="loading">
+                <img *ngIf="leftSvg" [src]="leftSvg" alt="icon" class="mx-[10px] max-h-5 max-w-5">
+                <fa-icon *ngIf="leftIcon" [icon]="leftIcon" size="lg" class="icon"></fa-icon>
+                <mat-select class="relative !pt-0" [formControlName]="formControlName" *ngIf="!multiple" [value]="value"
+                    (openedChange)="onOpenedChange($event)" placeholder="{{placeholder}}" #select
+                    (selectionChange)="onSelectionChange($event)">
+                    <div class="sticky top-0 z-10 bg-white !pt-2">
+                        <searchbar>
+                            <fa-icon icon="search" leftIcon></fa-icon>
+                            <input input type="text" (keyup)="onInputChange($event)">
+                        </searchbar>
+                        <hr class="my-1">
+                    </div>
+                    <app-loader *ngIf="contentLoading | async" [fullScreen]="false" [isOverlay]="true"
+                        [isOverlayWhite]="true"></app-loader>
+                    <mat-option *ngFor="let item of (items | filter: search : 'name'); let i = index;"
+                        [value]="item.id">
+                        {{item.name}}
+                    </mat-option>
+                    <div class="w-full" *ngIf="(items | filter: search : 'name').length === 0">
+                        <p class="text-center text-columnCell">No Item Found</p>
+                    </div>
+                </mat-select>
+                <mat-select class="relative !pt-0" *ngIf="multiple" placeholder="{{placeholder}}"
+                    (openedChange)="onOpenedChange($event)" [value]="value" [multiple]="multiple" #select
+                    (selectionChange)="onSelectionChange($event)">
+                    <div class="sticky top-0 z-10 bg-white !pt-2">
+                        <searchbar>
+                            <fa-icon icon="search" leftIcon></fa-icon>
+                            <input input type="text" (keyup)="onInputChange($event)">
+                        </searchbar>
+                        <hr class="my-1">
+                    </div>
+                    <app-loader *ngIf="contentLoading | async" [fullScreen]="false" [isOverlay]="true"
+                        [isOverlayWhite]="true"></app-loader>
+                    <mat-option *ngFor="let item of (items | filter: search : 'name'); let i = index;"
+                        [value]="item.id">
+                        {{item.name}}
+                    </mat-option>
+                    <div class="w-full" *ngIf="(items | filter: search : 'name').length === 0">
+                        <p class="text-center text-columnCell">No Item Found</p>
+                    </div>
+                </mat-select>
+                <fa-icon *ngIf="rightIcon" [icon]="rightIcon" size="lg"
+                class="icon select-decoration {{dashboardInp ? '!text-[#C6C6C6]' : ''}}"></fa-icon>
+                <fa-icon *ngIf="isValid && withCheckmark && (isTouched || withoutTouched) && showValidation"
+                    [icon]="checkmark" size="lg" class="icon valid"></fa-icon>
+                <fa-icon *ngIf="!isValid && isTouched && showValidation" [icon]="xmark" size="lg" class="icon invalid">
+                </fa-icon>
+            </div>
+            <div *ngIf="showValidation && showValidationMessageDiv" class="errors-container" [class.!hidden]="loading"
+                [style.visibility]="(isTouched || withoutTouched) && showValidationMessages && errors ? 'visible': 'hidden'"
+                [style.height.px]="21">
+                <div *ngFor="let error of (errors | keyvalue)" class="text-center">
+                    <span *ngIf="$any(error)?.value && $any(error)?.value?.message;"
+                        class="invalid">{{$any(error)?.value?.message}}</span>
+                </div>
+            </div>
+        </div>
+    </form>
+</ng-container>
+<ng-template #simple>
+    <div [class.valid]="isValid === true && (isTouched || withoutTouched)" [class.tableInp]="isTable"
+        [class.invalid]="isInvalid || !isValid && (isTouched || withoutTouched)" [class.disabled]="isDisabled"
+        [class.dashboard]="dashboardInp" [class.loading]="loading" class="iconic-layout-wrapper relative">
+        <div class="loader absolute top-0 right-0 left-0 bottom-0 hidden z-10"></div>
+        <div class="input-container !min-h-[35px] !border-none" [ngStyle]="styles" [class.!hidden]="loading">
+            <!-- <fa-icon icon="calendar-days" size="lg" class="icon cursor-pointer"></fa-icon> -->
+            <select class="w-full" (selectionChange)="onSelectionChange($event)" (openedChange)="onOpenedChange($event)"
+                #select [multiple]="multiple">
+                <searchbar>
+                    <fa-icon icon="search" leftIcon></fa-icon>
+                    <input input type="text" (keyup)="onInputChange($event)">
+                </searchbar>
+                <hr class="my-1 ">
+                <option *ngFor="let item of (items | filter: search : 'name'); let i = index;" [value]="item.id">
+                    {{item.name}}
+                </option>
+                <div class="w-full" *ngIf="(items | filter: search : 'name').length === 0">
+                    <p class="text-center text-columnCell">No Item Found</p>
+                </div>
+            </select>
+            <fa-icon *ngIf="rightIcon" [icon]="rightIcon" size="lg"
+                class="icon select-decoration {{dashboardInp ? '!text-[#C6C6C6]' : ''}}"></fa-icon>
+            <fa-icon *ngIf="rightIcon" [icon]="rightIcon" size="lg"
+                class="icon select-decoration {{dashboardInp ? '!text-[#C6C6C6]' : ''}}"></fa-icon>
+        </div>
+    </div>
+</ng-template>
+
+<ng-content select="[auxiliary]"></ng-content>

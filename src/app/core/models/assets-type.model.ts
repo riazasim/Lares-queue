@@ -1,0 +1,1 @@
+export type AssetsType = 'admin' | 'onboarding' | 'portal' | 'shared';

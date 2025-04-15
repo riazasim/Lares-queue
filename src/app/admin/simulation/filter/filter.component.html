@@ -1,0 +1,50 @@
+<div class="p-6 bg-white rounded-lg">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Simulation</h2>
+    <p class="text-lightGray mb-4">
+        Now that parameters were set and queues generated, you can start the 24 hours simulation.<br />
+        You can set the simulation speed or skip directly to reports.
+    </p>
+    
+    <form [formGroup]="queueForm">
+        <div class="flex gap-3 my-4">
+            <div class="flex gap-1">
+                <input type="radio" id="allTenants" name="tenantSelection" value="All Tenants" checked
+                    (change)="selectTenant('All Tenants')" class="h-5 w-5 border-[#CCCCCC]" />
+                <label for="allTenants" class="text-[#354050] font-semibold">All tenants</label>
+            </div>
+            <div class="flex gap-1">
+                <input type="radio" id="selectTenant" name="tenantSelection" value="Select Tenant"
+                    (change)="selectTenant('Select Tenant')" class="h-5 w-5 border-[#CCCCCC]" />
+                <label for="selectTenant" class="text-[#354050] font-semibold">Select tenant</label>
+            </div>
+        </div>
+
+        <div *ngIf="isSelectedTenant$ | async" class="mt-4 w-[50%]" [matTooltip]="'Select Tenant'"
+            matTooltipClass="drop-shadow-lg" matTooltipPosition="above" iconic-select-wrapper
+            leftSvg="assets/images/building-05.svg">
+            <select spAccessInputRef name="tenant" id="tenant" formControlName="parameterTenantId">
+                <option disabled value="">Tenant</option>
+                <option *ngFor="let tenant of tenants" [value]="tenant.id">
+                    {{ tenant.name }}
+                </option>
+            </select>
+        </div>
+    </form>
+
+    <div class="mt-6 flex w-full justify-end text-right">
+        <button type="button" (click)="next()" [disabled]="(isLoading$ | async) || (isCheckingProgress$ | async)"
+            class="btn flex justify-center gap-2 items-center text-white bg-[#3498DB] w-[160px]">
+            Next
+            <app-loader *ngIf="(isLoading$ | async) || (isCheckingProgress$ | async)" [buttonLoader]="true" 
+                [isContainer]="false" size="lg" [fullScreen]="false" class="w-[20px] h-[20px]"></app-loader>
+        </button>
+    </div>
+</div>
+
+<!-- Full-screen loading overlay while checking progress -->
+<div *ngIf="isCheckingProgress$ | async" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+    <div class="p-6 bg-white rounded-lg shadow-lg text-center">
+        <app-loader [buttonLoader]="true" size="lg"></app-loader>
+        <p class="mt-4 text-gray-700 font-semibold">Your simulation is in progress, please wait...</p>
+    </div>
+</div>

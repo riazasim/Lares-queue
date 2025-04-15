@@ -1,0 +1,27 @@
+<form [formGroup]="formGroup" class="flex gap-2">
+    <div [class]="containerClass">
+        <button [class.invalid]="formGroup.get(buttonField)?.invalid"
+            [ngClass]="{'border-invalid': formGroup.get(buttonField)?.invalid, 'border-borderColor': formGroup.get(buttonField)?.valid}"
+            class="flex py-2 px-4 items-center gap-2 w-full justify-between border  rounded-[10px] min-h-[53px]"
+            [matMenuTriggerFor]="phoneNumberMenu" #trigger="matMenuTrigger">
+            <span *ngIf="(selectedCountry$ | async)" class="whitespace-nowrap text-gray-500"><i
+                    class="fi fi-{{(selectedCountry$ | async)?.code}}"></i> {{(selectedCountry$ |
+                async)?.dialCode}}</span>
+            <span *ngIf="!(selectedCountry$ | async)">{{buttonPlaceholder}}</span>
+            <fa-icon [icon]="['fas', 'caret-down']"></fa-icon>
+        </button>
+        <mat-menu #phoneNumberMenu="matMenu" class="!bg-white !max-h-[280px] !max-w-[360px]">
+            <menu (click)="selectCountry(country)" mat-menu-item *ngFor="let country of countries">
+                <i class="fi fi-{{country.code}}"></i> {{country.name}} <span
+                    class="text-gray-500">{{country.dialCode}}</span>
+            </menu>
+        </mat-menu>
+    </div>
+    <div iconic-input-wrapper class="w-full" [ngClass]="{'disabled': !(selectedCountry$ | async)}" [loading]="loading | async">
+        <input type="text" inputRef [readonly]="!(selectedCountry$ | async)"
+            (paste)="parsePasteNumber($event)" autocomplete="off" [placeholder]="placeholder" [formControlName]="field"
+            [maxlength]="(selectedCountry$ | async) ? (selectedCountry$ | async)!.code === 'ro'? (selectedCountry$ | async)!.mask!.length+2:(selectedCountry$ | async)!.mask!.length:34"
+            [value]="formGroup.get(field)?.value | mask: (selectedCountry$ | async)?.mask ?? '000-000-000-000' : { prefix: (selectedCountry$ | async)?.code === 'ro'? '0 ': ''}"
+            onkeypress="return event.key >= '0' && event.key <= '9'" class="text-center" />
+    </div>
+</form>

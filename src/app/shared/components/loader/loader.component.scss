@@ -1,0 +1,37 @@
+.loader {
+    @apply flex flex-col justify-center items-center h-full w-full;
+    z-index: 100000000;
+
+    &.fullscreen {
+        @apply absolute inset-0;
+        background: var(--loader-fullscreen-bg, rgba(0, 0, 0, .8));
+    }
+
+    &.overlay {
+        @apply absolute inset-0;
+        z-index: 10;
+        background: var(--loader-fullscreen-bg, rgba(0, 0, 0, .8));
+    }
+
+    &.overlay.white {
+        background: var(--loader-fullscreen-bg, rgba(255, 255, 255, .65));
+    }
+
+}
+
+.body-container {
+    @apply flex items-center justify-center;
+    min-height: calc(100vh - 190px);
+
+    @media screen and (max-width: 576px) {
+        min-height: 100%;
+    }
+}
+
+.body-container.button {
+    min-height: max-content;
+
+    @media screen and (max-width: 576px) {
+        min-height: max-content;
+    }
+}

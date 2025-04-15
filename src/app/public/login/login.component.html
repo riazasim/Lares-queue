@@ -1,0 +1,24 @@
+<div class="w-full px-4">
+    <h1 class="heading-2 text-center mb-8">Sign In</h1>
+
+    <form [formGroup]="loginForm" class="w-full min-w-xs flex flex-col">
+
+        <div iconic-input-wrapper leftIcon="user" class="w-full" [withCheckmark]="true">
+            <input formControlName="username" type="text" inputRef placeholder="Email" class="text-center" />
+        </div>
+        <div iconic-password-wrapper [withCheckmark]="true" leftIcon="lock" class="w-full">
+            <input formControlName="password" type="password" inputRef placeholder="Password" class="text-center">
+        </div>
+    </form>
+    <div class="text-right pt-2 pb-6">
+        <a class="font-bold" routerLink="../forgot-password">Forgot Password</a>
+    </div>
+
+    <div class="text-center">
+        <button  [disabled]="(isLoading$ | async) || loginForm.invalid" type="submit" class="btn btn-primary min-w-xs" (click)="sigIn()">{{!(isLoading$ | async) ? 'Sign In' : '' }}
+            <app-loader *ngIf="isLoading$ | async" [isContainer]="false" [fullScreen]="false" size="xl"></app-loader>
+        </button>
+        <button [disabled]="isLoading$ | async" type="submit" class="btn btn-outline-primary min-w-xs mt-5"
+            routerLink="../sign-up">Sign Up</button>
+    </div>
+</div>

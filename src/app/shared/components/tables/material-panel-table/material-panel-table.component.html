@@ -1,0 +1,24 @@
+<div class="layout-wrapper">
+    <panel [Class]="Class" [showHeader]="showHeader">
+        <div menu class="flex mb-4 min-md:mb-8 flex-col min-md:flex-row gap-y-4 gap-x-8 items-center">
+
+            <h3 *ngIf="tableTitle" class="heading-3 font-bold max-md:text-center min-md:mr-auto">{{tableTitle}}</h3>
+
+            <searchbar *ngIf="showSearchbar" class="w-full max-w-xs">
+                <!-- <fa-icon [icon]="searchIcon" class="text-black"></fa-icon> -->
+                <input type="text" input placeholder="Caută" #searchbar>
+            </searchbar>
+
+            <div class="flex min-md:flex-row flex-col gap-4">
+                <button class="btn btn-primary min-w-[4rem] min-md:ml-auto max-md:self-center" matRipple
+                    *ngIf="buttonLabel" (click)="buttonClicked.emit()">{{buttonLabel}}</button>
+                <button class="btn btn-primary min-w-[4rem] min-md:ml-auto max-md:self-center" matRipple
+                    *ngIf="secondButtonLabel" (click)="secondButtonClicked.emit()">{{secondButtonLabel}}</button>
+            </div>
+        </div>
+        <div content>
+            <ng-content select="[table]"></ng-content>
+            <ng-content select="[optional]"></ng-content>
+        </div>
+    </panel>
+</div>

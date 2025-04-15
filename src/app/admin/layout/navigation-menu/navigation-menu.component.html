@@ -1,0 +1,157 @@
+<!-- <div class="layout-wrapper slide-in-left">
+    <a [routerLink]="logoRedirect" class="logo">
+        <img *ngIf="logoSrc; else iconLogo" [src]="logoSrc" alt="logo" />
+        <ng-template #iconLogo>
+            <fa-icon icon="truck-fast" size="3x" class="text-primary"></fa-icon>
+        </ng-template>
+    </a>
+    <hr class="">
+    <div class="upper-menu-items">
+        <div class="layout-wrapper" routerLink="../operator/dashboard">
+            <fa-icon icon="tachometer-fast" size="2x"></fa-icon>
+            <span class="menu-item-label">Dashboard</span>
+        </div>
+        <div class="layout-wrapper" routerLink="../admin/partners">
+            <fa-icon [icon]="['fas', 'shield-check']" size="2x"></fa-icon>
+            <span class="menu-item-label">Partners</span>
+        </div>
+        <div class="layout-wrapper" routerLink="../admin/locations">
+            <fa-icon icon="location-dot" size="2x"></fa-icon>
+            <span class="menu-item-label">Locations</span>
+        </div>
+        <div class="layout-wrapper" routerLink="../operator/scheduling">
+            <fa-icon icon="calendar-range" size="2x"></fa-icon>
+            <span class="menu-item-label text-gray">Scheduling</span>
+        </div>
+    </div>
+    <div class="lower-menu-items">
+        <div class="layout-wrapper" routerLink="location-settings">
+            <fa-icon icon="sliders-up" size="2x"></fa-icon>
+            <span class="menu-item-label">Settings</span>
+        </div>
+    </div>
+</div> -->
+<!-- <div class="layout-wrapper slide-in-left tw-transition-all tw-ease-in-out tw-duration-500" [style.width]="isCollapsed ? '7rem' : '268px'">
+        <div class="logo">
+            <img src="assets/images/q-logo.svg" alt="logo"/>
+        </div>
+    <div>
+        <mat-vertical-stepper [ngClass]="isCollapsed ? 'layout-wrapper' : 'not-collapsed'" labelPosition="end" [linear]="false" #stepper>
+            <mat-step label="Home" ></mat-step>
+            <mat-step label="Parameters"> </mat-step>
+            <mat-step label="Queue"></mat-step>
+            <mat-step label="Simulation"></mat-step>
+            <mat-step label="Reports"></mat-step>
+            <mat-step label="Finish"></mat-step>
+        </mat-vertical-stepper>
+    </div>
+    <div class="collapsed-icon" (click)="toggleCollapse()">
+      <img [src]="isCollapsed ? 'assets/images/toggle-collapsed.svg' : 'assets/images/toggle-not-collapsed.svg'" />
+    </div>
+  </div> -->
+<div class="layout-wrapper" [style.width]="isCollapsed ? '7rem' : '268px'">
+    <!-- <div class="logo">
+      <img class="px-0.5" src="assets/images/q-logo.svg" alt="logo" />
+    </div>
+    <mat-vertical-stepper class="stepper" [linear]="false" [ngClass]="{ 'collapsed': isCollapsed }" labelPosition="end"
+      #stepper>
+      <ng-template matStepperIcon="edit">
+        <mat-icon class="!w-3 !h-3 rounded-lg bg-white"></mat-icon>
+      </ng-template>
+      <mat-step>
+        <ng-template matStepLabel>
+          <div class="step-content flex gap-5 items-center" routerLink="../home">
+            <img src="assets/images/home.svg" />
+            <span class="text-[#46474C] mt-1" *ngIf="!isCollapsed">Home</span>
+          </div>
+        </ng-template>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>
+          <div class="step-content flex gap-5 items-center" routerLink="../parameters">
+            <img src="assets/images/settings.svg" />
+            <span class="text-[#46474C]" *ngIf="!isCollapsed">Parameters</span>
+          </div>
+        </ng-template>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>
+          <div class="step-content flex gap-5 items-center" routerLink="../queue">
+            <img src="assets/images/traffic.svg" />
+            <span class="text-[#46474C]" *ngIf="!isCollapsed">Queue</span>
+          </div>
+        </ng-template>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>
+          <div class="step-content flex gap-5 items-center" routerLink="../simulation">
+            <img src="assets/images/play-square.svg" />
+            <span class="text-[#46474C]" *ngIf="!isCollapsed">Simulation</span>
+          </div>
+        </ng-template>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>
+          <div class="step-content flex gap-5 items-center" routerLink="../reports">
+            <img src="assets/images/reports-1.svg" />
+            <span class="text-[#46474C]" *ngIf="!isCollapsed">Reports</span>
+          </div>
+        </ng-template>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>
+          <div class="step-content flex gap-5 items-center" routerLink="">
+            <img src="assets/images/flag.svg" />
+            <span class="text-[#46474C]" *ngIf="!isCollapsed">Finish</span>
+          </div>
+        </ng-template>
+      </mat-step>
+    </mat-vertical-stepper> -->
+    <div class="logo">
+        <img class="px-0.5" src="assets/images/q-logo.svg" alt="logo" />
+    </div>
+    <hr>
+    <div class="flex flex-col gap-4 items-center mr-[50px]">
+        <div class="flex flex-col gap-4">
+            <div class="step-content flex gap-1 items-center"
+                [class.done]="activeRoutes.has('/en/home') && ((activeRoute | async )!== '/en/home')"
+                [class.active]="(activeRoute | async)?.startsWith('/en/home')" (click)="onStepChange('/en/home')">
+                <!-- [class.active]="(activeRoute | async )=== '/en/home'" (click)="onStepChange('/en/home')"> -->
+                <img src="assets/images/home.svg" />
+                <span class="text-[#46474C] mt-1" *ngIf="!isCollapsed">Home</span>
+            </div>
+            <div class="step-content flex gap-1 items-center"
+                [class.done]="activeRoutes.has('/en/parameters')  && (activeRoute | async )!== '/en/parameters'"
+                [class.active]="(activeRoute | async )=== '/en/parameters'" (click)="onStepChange('/en/parameters')">
+                <img src="assets/images/settings.svg" />
+                <span class="text-[#46474C]" *ngIf="!isCollapsed">Parameters</span>
+            </div>
+            <div class="step-content flex gap-1 items-center"
+                [class.done]="activeRoutes.has('/en/queue')  && (activeRoute | async )!== '/en/queue'"
+                [class.active]="(activeRoute | async )=== '/en/queue'" (click)="onStepChange('/en/queue')">
+                <img src="assets/images/traffic.svg" />
+                <span class="text-[#46474C]" *ngIf="!isCollapsed">Queue</span>
+            </div>
+            <div class="step-content flex gap-1 items-center"
+                [class.done]="activeRoutes.has('/en/simulation/filter') && (activeRoute | async )!== '/en/simulation/filter'"
+                [class.active]="(activeRoute | async )=== '/en/simulation/filter'" (click)="onStepChange('/en/simulation/filter')">
+                <img src="assets/images/play-square.svg" />
+                <span class="text-[#46474C]" *ngIf="!isCollapsed">Simulation</span>
+            </div>
+            <div class="step-content flex gap-1 items-center"
+                [class.done]="activeRoutes.has('/en/reports') && (activeRoute | async )!== '/en/reports'"
+                [class.active]="(activeRoute | async )=== '/en/reports'" (click)="onStepChange('/en/reports')">
+                <img src="assets/images/reports-1.svg" />
+                <span class="text-[#46474C]" *ngIf="!isCollapsed">Reports</span>
+            </div>
+            <div class="step-content flex gap-1 items-center last" (click)="onStepChange('finish')">
+                <img src="assets/images/flag.svg" />
+                <span class="text-[#46474C]" *ngIf="!isCollapsed">Finish</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div class="collapsed-icon" (click)="toggleCollapse()">
+        <img [src]="isCollapsed ? 'assets/images/toggle-collapsed.svg' : 'assets/images/toggle-not-collapsed.svg'" />
+    </div> -->
+</div>

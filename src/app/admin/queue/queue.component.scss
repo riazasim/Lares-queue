@@ -1,0 +1,32 @@
+hr.line {
+  margin-block: 1%;
+  border-top: 2px solid #EAECF0;
+}
+
+mat-progress-bar.custom-progress-bar {
+  width: 100%;
+  height: 10px;
+  border-radius: 5px;
+
+  .mat-mdc-linear-progress {
+    border-radius: 5px;
+  }
+}
+
+.probable{
+  --mdc-linear-progress-active-indicator-color: green;
+  --mdc-linear-progress-track-color: #E4E7EC;
+  // --mdc-linear-progress-track-height: 24px;
+  //   --mdc-linear-progress-active-indicator-height: 24px;
+}
+.worst{
+  --mdc-linear-progress-active-indicator-color: red;
+  --mdc-linear-progress-track-color: #E4E7EC;
+}
+::ng-deep mat-progress-bar .mdc-linear-progress__bar-inner {
+  border-top-width: 10px;
+}
+
+span.text-sm {
+  line-height: 10px;
+}

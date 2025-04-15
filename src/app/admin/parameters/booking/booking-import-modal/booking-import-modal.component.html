@@ -1,0 +1,32 @@
+<div class="max-w-lg min-sm:min-w-[500px]">
+  <div class="flex justify-between px-4 py-4">
+    <h2 class="font-bold text-columnCell flex items-center">Import XLS</h2>
+    <div *ngIf="!(isLoading$ | async)" class="close-button text-[25px] cursor-pointer" (click)="cancel()">&times;</div>
+  </div>
+  <div mat-dialog-body class="mb-8 px-4 py-4">
+    <app-loader class="m-auto flex-grow" *ngIf="(isLoading$ | async)" [fullScreen]="false"></app-loader>
+    <div *ngIf="!(isLoading$ | async)">
+      <div class="flex">
+        <input #input class="rounded-l grow focus:shadow-none focus:border-0" (click)="file.click()" type="text" readonly placeholder="Choose file">
+        <button (click)="file.click()" class="rounded-l-none grow-1 bg-primary text-white rounded-r px-4">Search</button>
+      </div>
+      <input #file [style.visibility]="'hidden'" accept=".xlsx" type="file" (change)="handleFileChange()">
+      <div class="flex items-center gap-2">
+        <button class="btn btn-primary btn-icon px-1" (click)="download()">
+          <fa-icon [icon]="['fas', 'cloud-arrow-down']" size="lg"></fa-icon>
+        </button>
+        <span class="font-bold text-columnCell">
+          Download XLSX template
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-end flex-wrap-reverse gap-4 p-4">
+    <button [disabled]="(isLoading$ | async)" tabIndex="-1" (click)="confirm()"
+      class="bg-primary py-2 text-white min-w-[130px] rounded-full">
+      <span *ngIf="!(isLoading$ | async)">Save</span>
+      <app-loader [isWhite]="true" class="m-auto" *ngIf="(isLoading$ | async)" [fullScreen]="false" [size]="'lg'"></app-loader>
+    </button>
+  </div>
+</div>

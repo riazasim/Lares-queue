@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnInit, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, interval, Subject, Subscription, switchMap, takeUntil } from 'rxjs';
 import { SimulationService } from 'src/app/core/services/simulation.service';
 import { NumberTickerComponent } from 'src/app/shared/components/number-ticker/number-ticker.component';
 import { ProgressBarComponent } from 'src/app/shared/components/progress-bar/progress-bar.component';
@@ -11,18 +11,22 @@ interface TimeSlot {
     value: number;
 }
 @Component({
-    selector: 'app-showcase-tab',
-    templateUrl: './showcase-tab.component.html',
-    styleUrls: ['./showcase-tab.component.scss']
+    selector: 'app-probable-case',
+    templateUrl: './probable-case.component.html',
+    styleUrls: ['./probable-case.component.scss']
 })
-export class ShowcaseTabsComponent implements OnInit {
+export class ProbableCaseComponent implements OnInit {
     @ViewChild(SankeyChartComponent) sankey!: SankeyChartComponent;
     @ViewChild(ProgressBarComponent) progress!: ProgressBarComponent;
     @ViewChildren(NumberTickerComponent) numberTickers!: QueryList<NumberTickerComponent>;
     @Input() Headers: any[] = [];
     @Input() Classes: any[] = [];
-    @Input() simulation: any;
-    @Input() key: number;
+    // @Input() simulation: any;
+    @Input() key!: number;
+    isLoading$ = new BehaviorSubject<boolean>(false);
+  isCheckingProgress$ = new BehaviorSubject<boolean>(false);
+    private stopPolling$ = new Subject<void>();
+      private progressSubscription: Subscription | null = null;
     defaultTickerValue: TimeSlot[] = [
         { time: '00:00', value: 0 },
         { time: '01:00', value: 0 },
@@ -49,6 +53,9 @@ export class ShowcaseTabsComponent implements OnInit {
         { time: '22:00', value: 0 },
         { time: '23:00', value: 0 }
     ]
+    probableScenario: any[] = [];
+    worstScenario: any[] = [];
+    simulation: any[] = [];
     tenantId: number | null = null;
     sliderValue: number = 300;
     hours: string = '05';
@@ -89,34 +96,24 @@ export class ShowcaseTabsComponent implements OnInit {
 
 
     constructor(
+        private readonly simulationService: SimulationService,
         private cdr: ChangeDetectorRef,
         private readonly router: Router,
         private readonly route: ActivatedRoute,
     ) { }
 
 
-    ngOnInit(): void {
-        // if (this.simulation) {
-        //     console.log('Simulation data received:', this.simulation);
-        //     this.transformData(this.simulation);
-        // }
-        // this.route.queryParams.subscribe((params) => {
-        //     this.tenantId = params['tenantId'] ? +params['tenantId'] : null;
-        //     this.getSimulationData(this.tenantId);
-        // });
-        // this.getSimulationData(this.tenantId);
-        // console.log('sd:1',this.simulation)
-        // this.transformData(this.simulation);
-    }
+    ngOnInit(): void {}
+
+    ngOnDestroy(): void {
+        this.stopPolling$.next();
+        this.stopPolling$.complete();
+        this.progressSubscription?.unsubscribe();
+      }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes['simulation'] && changes['simulation'].currentValue) {
-            console.log('Simulation data received:', this.simulation);
-            
-            this.transformData(this.simulation);
-            
-            // ✅ Force Angular to detect the change
-            this.cdr.detectChanges();
+        if (changes['key']) {
+            this.loadScenarioData();
         }
     }
 
@@ -173,6 +170,75 @@ export class ShowcaseTabsComponent implements OnInit {
     getSliderPosition(): string {
         return `calc((100% / 1440) * ${this.sliderValue} - 2em)`;
     }
+    
+      loadScenarioData(): void {
+        this.isLoading$.next(true);
+    
+        // Destroy old data before fetching
+        this.simulation = [];
+        this.cdr.detectChanges(); // Clear view
+    
+        // const type = this.selectedIndex === 0 ? 'PROBABLE_CASE' : 'WORST_CASE';
+        const data = { queue: { queueSimulationType: 'PROBABLE_CASE' } };
+        this.simulationService.getSimulation(data).subscribe({
+            next: (response) => {
+            const attributes = response;
+            if (!attributes) {
+              console.error('Unexpected response:', response);
+              return;
+            }
+    
+            this.probableScenario = Array.isArray(attributes.probableScenario) ? attributes.probableScenario : [];
+            // this.worstScenario = Array.isArray(attributes.worstScenario) ? attributes.worstScenario : [];
+    
+            // this.simulation = this.selectedIndex === 0 ? this.probableScenario : this.worstScenario;
+            this.simulation = this.probableScenario;
+
+            this.transformData(this.simulation);
+    
+            this.cdr.detectChanges();
+            this.pollSimulationProgress();
+            this.isLoading$.next(false);
+          },
+          error: (error) => {
+            console.error('Failed to load simulation:', error);
+            this.isLoading$.next(false);
+          }
+        });
+      }
+
+    // Progress polling
+      checkSimulationProgress() {
+        // const type = this.selectedIndex === 0 ? 'PROBABLE_CASE' : 'WORST_CASE';
+        const payload = { queue: { queueSimulationType: 'PROBABLE_CASE' } };
+        return this.simulationService.checkSimulationProgress(payload);
+      }
+    
+      pollSimulationProgress(): void {
+        this.progressSubscription = interval(30000)
+          .pipe(
+            takeUntil(this.stopPolling$),
+            switchMap(() => this.checkSimulationProgress())
+          )
+          .subscribe({
+              next: (response) => {
+                debugger
+              if (response?.data?.attributes?.simulationStatus === 'completed') {
+                this.isCheckingProgress$.next(false);
+                this.stopPolling$.next();
+                this.router.navigate(['../showcase'], {
+                  relativeTo: this.route,
+                  queryParams: { tenantId: 'yourTenantIdHere' }
+                });
+              }
+            },
+            error: (error) => {
+              console.error('Simulation progress check failed:', error);
+              this.isCheckingProgress$.next(false);
+              this.stopPolling$.next();
+            }
+          });
+      }
 
 
     transformData(simulationData: any[]) {

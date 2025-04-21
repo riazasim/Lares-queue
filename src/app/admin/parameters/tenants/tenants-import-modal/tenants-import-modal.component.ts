@@ -29,13 +29,13 @@ export class TenantsImportModalComponent {
         items: input.map(item => ({
           type: "tenant",
           attributes: {
-            name: item[0],
-            insideQueueCapacity: item[1].toString(),
-            initialInsideQueue: item[2].toString(),
-            hourlyProcessingSpeedMax: item[3].toString(),
-            parameterTenantParameterAccessPoints: item[4].toString(),
-            // parameterTenantParameterAccessPoints: item[4],
-            gateToTenantTimeInMin: item[5].toString(),
+            name: item?.[0],
+            insideQueueCapacity: item?.[1]?.toString(),
+            initialInsideQueue: item?.[2]?.toString(),
+            hourlyProcessingSpeedMax: item?.[3]?.toString(),
+            parameterTenantParameterAccessPoints: item?.[4]?.toString(),
+            // parameterTenantParameterAccessPoints: item?.[4],
+            gateToTenantTimeInMin: item?.[5]?.toString(),
           }
         }))
       }

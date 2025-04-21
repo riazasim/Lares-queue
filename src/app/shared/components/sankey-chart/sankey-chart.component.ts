@@ -42,7 +42,7 @@ import {
     @Input() timeSeriesData: any = {};
     @Input() groupKeys: string[] = []; // e.g., ["Access Granted", "Access Denied"]
     // totalAnimationDuration in milliseconds – default 60000 ms (1 min)
-    @Input() totalAnimationDuration: number = 60000;
+    @Input() totalAnimationDuration: number = 120000;
     @Input() width = 800;
     @Input() height = 500;
     @Input() margin = { top: 10, right: 130, bottom: 10, left: 10 };

@@ -1,3 +1,16 @@
+<div *ngIf="isLoading$ | async" class="fixed inset-0 flex items-center justify-center bg-glass-sm bg-opacity-50 z-50">
+    <div class="p-6 bg-white rounded-lg shadow-lg text-center">
+      <app-loader [buttonLoader]="true" size="lg"></app-loader>
+      <p class="mt-4 text-gray-700 font-semibold">Loading simulation data...</p>
+    </div>
+  </div>
+  
+  <div *ngIf="isCheckingProgress$ | async" class="fixed inset-0 flex items-center justify-center bg-glass-sm bg-opacity-50 z-50">
+    <div class="p-6 bg-white rounded-lg shadow-lg text-center">
+      <app-loader [buttonLoader]="true" size="lg"></app-loader>
+      <p class="mt-4 text-gray-700 font-semibold">Your simulation is in progress, please wait...</p>
+    </div>
+  </div>
 <div>
     <div class="p-3 my-2 w-full h-[140px] border border-[#E4E7EC] rounded-lg">
 
@@ -5,31 +18,14 @@
             <span class="text-[#46474C] font-semibold">Timeline</span>
             <span class="text-[#46474C] font-semibold">Simulation speed:
                 <select class="speed" (change)="changeSpeed($event)">
-                    <!-- <option value="60000"> 1 min </option> -->
                     <option selected value="120000"> 2 min </option>
-                    <!-- <option value="180000"> 3 min </option>
-                    <option value="240000"> 4 min </option>
-                    <option value="300000"> 5 min </option> -->
-                    <!-- <option *ngFor="let animationDuration of animationDuration" [value]="animationDuration.value">
-                        {{ animationDuration.name }}
-                    </option> -->
                 </select>
             </span>
         </div>
 
         <div class="px-6 slider-container">
-            <!-- Time Display -->
-            <!-- <div class="time-display" [style.left]="getSliderPosition()">
-                <span>{{ hours }}:{{ minutes }}</span>
-                <div class="time-arrow"></div>
-            </div> -->
-
-            <!-- Slider -->
-            <!-- <input type="range" min="1" max="1440" [value]="sliderValue" class="slider" id="myRange"
-                (input)="updateSlider()" [(ngModel)]="sliderValue" /> -->
             <app-progress-bar [duration]="selectedAnimationDuration/1000" class="custom-progress-bar">
             </app-progress-bar>
-            <!-- Time Labels -->
             <div class="time-labels">
                 <span *ngFor="let time of generateTimeLabels()">{{ time }}</span>
             </div>
@@ -39,7 +35,7 @@
     <div class="p-3 my-2 w-full border border-[#E4E7EC] rounded-lg">
 
         <div class="flex gap-2 justify-start items-center p-2">
-            <span class="text-[#46474C] font-semibold" *ngFor="let Header of Headers;">{{Header}}</span>
+            <span class="text-[#46474C] font-semibold">Worst case scenario</span>
         </div>
         <hr class="mx-2 my-1">
         <div class="grid min-lg:grid-cols-2 grid-cols-1 gap-x-10 min-3xl:gap-x-20 gap-y-4 p-2">
@@ -122,7 +118,6 @@
                     <span class="text-[#46474C]">Total access granted</span>
                     <app-number-ticker [autoPlay]="false" [totalAnimationTime]="selectedAnimationDuration"
                         [data]="(totalAccessGranted$ | async) || defaultTickerValue"></app-number-ticker>
-                    <!-- <span class="text-[#46474C]">{{totalAccessGranted}}</span> -->
                 </div>
                 <hr class="my-1">
             </div>
@@ -140,6 +135,5 @@
 <div class="flex gap-3 justify-end mt-6">
     <button type="button" (click)="isStarted ? stopAnimation() : startAnimation()"
         class="btn text-white bg-[#3498DB] w-[160px]">Start / Stop</button>
-    <!-- <button type="button" (click)="resetAnimation()" class="btn text-white bg-[#3498DB] w-[160px]">Reset</button> -->
     <button type="button" (click)="next()" class="btn text-white bg-[#3498DB] w-[160px]">Next</button>
 </div>

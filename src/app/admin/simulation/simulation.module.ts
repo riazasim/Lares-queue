@@ -15,9 +15,10 @@ import {MatTableModule} from "@angular/material/table";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import { FilterComponent } from './filter/filter.component';
 import { SimulationRoutingModule } from './simulation-routing.module';
-import { ShowcaseTabsComponent } from './showcase/showcase-tab/showcase-tab.component';
 import { SimulationComponent } from './simulation.component';
 import { ShowcaseComponent } from './showcase/showcase.component';
+import { WorstCaseComponent } from './showcase/worst-case/worst-case.component';
+import { ProbableCaseComponent } from './showcase/probable-case/probable-case.component';
 
 
 @NgModule({
@@ -25,8 +26,10 @@ import { ShowcaseComponent } from './showcase/showcase.component';
     SimulationComponent,
     FilterComponent,
     ShowcaseComponent,
-    // WorstCaseComponent,
-    ShowcaseTabsComponent,
+    WorstCaseComponent,
+    ProbableCaseComponent,
+    ProbableCaseComponent,
+    // ShowcaseTabsComponent,
   ],
   imports: [
     CommonModule,

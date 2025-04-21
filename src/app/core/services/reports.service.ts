@@ -12,13 +12,23 @@ import {
 export class ReportsService {
   constructor(private http: HttpClient) { }
 
-  initialQueueDetailCSV(): Observable<Blob> {
-    return this.http.post(`${environment.apiUrl}${environment.apiVersion}/report/downloadInitialQueueDetailCSV`, {}, {
+  probabaleTransactions(): Observable<Blob> {
+    return this.http.post(`${environment.apiUrl}${environment.apiVersion}/report/downloadProbableQueueDetailCSV`, {}, {
       responseType: 'blob'
     });
   }
-  probableQueueDetailCSV(): Observable<Blob> {
+  worstTransactions(): Observable<Blob> {
+    return this.http.post(`${environment.apiUrl}${environment.apiVersion}/report/downloadWorstQueueDetailCSV`, {}, {
+      responseType: 'blob'
+    });
+  }
+  probabaleQueue(): Observable<Blob> {
     return this.http.post(`${environment.apiUrl}${environment.apiVersion}/report/downloadProbableQueueDetailCSV`, {}, {
+      responseType: 'blob'
+    });
+  }
+  worstQueue(): Observable<Blob> {
+    return this.http.post(`${environment.apiUrl}${environment.apiVersion}/report/downloadWorstQueueDetailCSV`, {}, {
       responseType: 'blob'
     });
   }

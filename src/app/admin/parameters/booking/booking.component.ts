@@ -183,8 +183,8 @@ export class BookingComponent implements OnInit {
 
     this.bookingService.create(payload).subscribe({
       next: () => {
-        this.nextTab.emit();
         console.log('Payload created successfully:', payload);
+        this.nextTab.emit();
       },
       error: (error: any) => {
         console.error('Error during creation:', error);

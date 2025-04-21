@@ -99,6 +99,9 @@ export class FilterComponent implements OnInit, OnDestroy {
             next: (res) => {
                 console.log('Simulation started successfully:', res);
                 this.isLoading$.next(false);
+                // this.router.navigate(['../showcase'], {
+                //     relativeTo: this.route,
+                // });
                 this.isCheckingProgress$.next(true);
                 this.pollSimulationProgress(); // Start polling
             },

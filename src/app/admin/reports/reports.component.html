@@ -1,3 +1,9 @@
+<div *ngIf="isLoading$ | async" class="fixed inset-0 flex items-center justify-center bg-glass-sm bg-opacity-50 z-50">
+  <div class="p-6 bg-white rounded-lg shadow-lg text-center">
+    <app-loader [buttonLoader]="true" size="lg"></app-loader>
+    <p class="mt-4 text-gray-700 font-semibold">Wait while download is getting ready...</p>
+  </div>
+</div>
 <div class="p-6 bg-white rounded-lg">
     <h2 class="text-2xl font-semibold text-gray-800 mb-4">Thank you!</h2>
     <p class="text-lightGray">
@@ -14,8 +20,6 @@
         </div>
         <div>
           <a class="text-[#3498DB] text-sm font-semibold">Parmeters file (PDF)</a>
-          <!-- <a href="https://www.privacy.lowis.tech" target="_blank" class="text-[#3498DB] text-xl">
-            https://www.privacy.lowis.tech</a> -->
         </div>
       </div>
   
@@ -25,18 +29,8 @@
           <img src="assets/images/Queue.svg" alt="Queue">
         </div>
         <div>
-          <a 
-   (click)="initialQueueDetailCSV($event)" 
-   class="text-[#3498DB] text-sm font-semibold">
-   Queue - CSV file testing (CSV)
-</a><br>
-          <!-- <a href="" 
-   (click)="downloadProbableQueueDetailCSV()" 
-   class="text-[#3498DB] text-sm font-semibold">
-   Queue - most probable scenario (CSV)
-</a><br> -->
-          <a class="text-[#3498DB] text-sm font-semibold">Queue - most probable scenario (CSV)</a><br>
-          <a class="text-[#3498DB] text-sm font-semibold">Queue - worst case scenario (CSV)</a>
+          <a class="text-[#3498DB] text-sm font-semibold cursor-pointer" (click)="probabaleQueue($event)">Queue - most probable scenario (CSV)</a><br>
+          <a class="text-[#3498DB] text-sm font-semibold cursor-pointer" (click)="worstQueue($event)">Queue - worst case scenario (CSV)</a>
         </div>
       </div>
   
@@ -46,10 +40,10 @@
           <img src="assets/images/Simulation.svg" alt="Simulation">
         </div>
         <div>
-          <a class="text-[#3498DB] text-sm font-semibold">Transactions - most probable scenario (CSV)</a><br>
-          <a class="text-[#3498DB] text-sm font-semibold">Transactions - worst case scenario (CSV)</a><br>
-          <a class="text-[#3498DB] text-sm font-semibold">Animation - most probable scenario (AVI)</a><br>
-          <a class="text-[#3498DB] text-sm font-semibold">Animation - worst case scenario (AVI)</a><br>
+          <a class="text-[#3498DB] text-sm font-semibold cursor-pointer" (click)="probabaleTransactions($event)">Transactions - most probable scenario (CSV)</a><br>
+          <a class="text-[#3498DB] text-sm font-semibold cursor-pointer" (click)="worstTransactions($event)">Transactions - worst case scenario (CSV)</a><br>
+          <!-- <a class="text-[#3498DB] text-sm font-semibold">Animation - most probable scenario (AVI)</a><br>
+          <a class="text-[#3498DB] text-sm font-semibold">Animation - worst case scenario (AVI)</a><br> -->
         </div>
       </div>
   
@@ -60,7 +54,7 @@
         </div>
         <div>
           <a class="text-[#3498DB] text-sm font-semibold">Reports - most probable scenario (PDF)</a><br>
-          <a class="text-[#3498DB] text-sm font-semibold">Reports - most probable scenario (PDF)</a>
+          <a class="text-[#3498DB] text-sm font-semibold">Reports - worst case scenario (PDF)</a>
         </div>
       </div>
     </div>

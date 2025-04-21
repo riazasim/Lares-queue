@@ -1,0 +1,103 @@
+mat-progress-bar.custom-progress-bar {
+    width: 100%;
+    height: 10px;
+    border-radius: 5px;
+  
+    .mat-mdc-linear-progress {
+      border-radius: 5px;
+    }
+  }
+  
+  .mat-mdc-progress-bar {
+    --mdc-linear-progress-active-indicator-color: #3498DB;
+    --mdc-linear-progress-track-color: #E4E7EC;
+    // --mdc-linear-progress-track-height: 24px;
+    //   --mdc-linear-progress-active-indicator-height: 24px;
+  }
+  ::ng-deep mat-progress-bar .mdc-linear-progress__bar-inner {
+    border-top-width: 10px;
+  }
+  hr {
+    border-top: 1px solid #EAECF0;
+  }
+
+
+  .slider-container {
+    position: relative;
+    width: 100%;
+    padding: 1em;
+  
+    .time-display {
+      position: absolute;
+      top: -2em;
+      // left: calc((100% / 1440) * {{ sliderValue }} - 2em);
+      background-color: #3498db;
+      color: #fff;
+      padding: 0.2em 0.5em;
+      border-radius: 0.5em;
+      text-align: center;
+      font-size: 0.875em;
+  
+      .time-arrow {
+        width: 0;
+        height: 0;
+        border-left: 0.5em solid transparent;
+        border-right: 0.5em solid transparent;
+        border-top: 0.5em solid #3498db;
+        margin: 0 auto;
+      }
+    }
+  
+    .slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 8px;
+      background:  #dfe6ec;
+      border-radius: 4px;
+      outline: none;
+  
+      &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 16px;
+        height: 16px;
+        background: #3498db;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+    }
+  
+    .time-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5em;
+      font-size: 0.75em;
+      color: #9b9b9b;
+  
+      span {
+        position: relative;
+      }
+    }
+  }
+
+  .speed{
+    width: 75px !important;
+    border:none !important;
+    padding-right: 0rem !important;
+    cursor: pointer !important;
+    // background-image: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e);
+  }
+  .speed:focus {
+    --tw-ring-color: transparent !important;
+}
+
+  svg {
+    width: 90%;
+    height: 300px;
+  }
+  
+  // Add animation styling
+  circle {
+    transition: opacity 0.2s ease-in-out;
+  }

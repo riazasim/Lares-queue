@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 import { NativeResponseWrapper } from 'src/app/core/models/response-wrappers.types';
 import { ParametersQueueService } from 'src/app/core/services/parameters-queue.service';
 import { ReportsService } from 'src/app/core/services/reports.service';
@@ -12,6 +13,7 @@ import { ReportsService } from 'src/app/core/services/reports.service';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReportsComponent {
+    isLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
     constructor(
         private readonly parametersQueueService: ParametersQueueService,
         private readonly reportsService: ReportsService,
@@ -20,43 +22,78 @@ export class ReportsComponent {
         private readonly route: ActivatedRoute,
     ) { }
 
-    // downloadProbableQueueDetailCSV() {
-    //     this.reportsService.probableQueueDetailCSV().subscribe({
-    //       next: (blob: Blob) => {
-    //         const url = window.URL.createObjectURL(blob);
-    //         const link = document.createElement('a');
-    //         link.href = url;
-    //         link.download = 'probable-scenario.csv';
-    //         link.click();
-    //         window.URL.revokeObjectURL(url);
-    //       },
-    //       error: (error) => {
-    //         console.error('Failed to download CSV:', error);
-    //       }
-    //     });
-    //   }
-    // downloadInitialQueueDetailCSV() {
-    //     return this.reportsService.initialQueueDetailCSV();
-    // }
-
-    initialQueueDetailCSV(event: MouseEvent): void {
+    probabaleTransactions(event: MouseEvent): void {
         event.preventDefault();
       
-        this.reportsService.initialQueueDetailCSV().subscribe({
+        this.reportsService.probabaleTransactions().subscribe({
           next: (blob: Blob) => {
             const csvBlob = new Blob([blob], { type: 'text/csv' });
             const url = window.URL.createObjectURL(csvBlob);
       
-            // 👉 Open in a new tab
-            window.open(url, '_blank');
-      
-            // 👉 Trigger file download
+            // ✅ Just trigger file download
             const anchor = document.createElement('a');
             anchor.href = url;
-            anchor.download = 'initial-queue-detail.csv';
+            anchor.download = 'Probabale scenario transactions.csv';
             anchor.click();
       
-            // 👉 Clean up
+            // ✅ Clean up
+            setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+          },
+          error: (err) => {
+            console.error('CSV download failed:', err);
+          }
+        });
+      }
+
+      worstTransactions(event: MouseEvent): void {
+        event.preventDefault();
+      
+        this.reportsService.worstTransactions().subscribe({
+          next: (blob: Blob) => {
+            const csvBlob = new Blob([blob], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(csvBlob);
+            const anchor = document.createElement('a');
+            anchor.href = url;
+            anchor.download = 'Worst case scenario transactions.csv';
+            anchor.click();
+            setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+          },
+          error: (err) => {
+            console.error('CSV download failed:', err);
+          }
+        });
+      }
+
+    probabaleQueue(event: MouseEvent): void {
+        event.preventDefault();
+      
+        this.reportsService.probabaleQueue().subscribe({
+          next: (blob: Blob) => {
+            const csvBlob = new Blob([blob], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(csvBlob);
+            const anchor = document.createElement('a');
+            anchor.href = url;
+            anchor.download = 'Probabale scenario queue.csv';
+            anchor.click();
+            setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+          },
+          error: (err) => {
+            console.error('CSV download failed:', err);
+          }
+        });
+      }
+
+    worstQueue(event: MouseEvent): void {
+        event.preventDefault();
+      
+        this.reportsService.worstQueue().subscribe({
+          next: (blob: Blob) => {
+            const csvBlob = new Blob([blob], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(csvBlob);
+            const anchor = document.createElement('a');
+            anchor.href = url;
+            anchor.download = 'Worst case scenario queue.csv';
+            anchor.click();
             setTimeout(() => window.URL.revokeObjectURL(url), 1000);
           },
           error: (err) => {

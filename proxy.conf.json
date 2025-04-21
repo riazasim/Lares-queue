@@ -1,6 +1,6 @@
 {
     "/api": {
-        "target": "http://44.223.234.203:8080",
+        "target": "http://localhost:4000",
         "secure": false,
         "logLevel": "debug",
         "changeOrigin": true

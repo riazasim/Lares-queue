@@ -53,7 +53,7 @@ export class ParametersQueueComponent implements OnInit {
   ngOnInit() {
     this.initForm();
   }
-  
+
   initData() {
     this.initForm();
     this.getParameterQueueSetting();
@@ -61,21 +61,27 @@ export class ParametersQueueComponent implements OnInit {
 
   initForm(): void {
     this.queueForm = this.fb.group({
-      accessWindowStartValue: [this.percentToValue(this.minValue), [...createRequiredValidators()]],
-      accessWindowEndValue: [this.percentToValue(this.maxValue), [...createRequiredValidators()]],
-      arrivedEarly: [0, [...createRequiredValidators(), Validators.max(100), Validators.min(0)]],
-      arrivedLate: [0, [...createRequiredValidators(), Validators.max(100), Validators.min(0)]],
-      notArrived: [0, [...createRequiredValidators(), Validators.max(100), Validators.min(0)]],
-      arrivedOnTime: [100, [...createRequiredValidators(), Validators.max(100), Validators.min(0)]],
-      mostProbableScenario: [0, [...createRequiredValidators(), Validators.max(100), Validators.min(0)]],
-      worstCaseScenario: [0, [...createRequiredValidators()]]
+      accessWindow: this.fb.group({
+        start: [this.percentToValue(this.minValue), [...createRequiredValidators()]],
+        end: [this.percentToValue(this.maxValue), [...createRequiredValidators()]],
+      }),
+      arrivalConformity: this.fb.group({
+        early: [0, [...createRequiredValidators(), Validators.max(100), Validators.min(0)]],
+        late: [0, [...createRequiredValidators(), Validators.max(100), Validators.min(0)]],
+        notArrived: [0, [...createRequiredValidators(), Validators.max(100), Validators.min(0)]],
+        onTime: [0, [...createRequiredValidators(), Validators.max(100), Validators.min(0)]],
+      }),
+      orderRandomization: this.fb.group({
+        MPS: [0, [...createRequiredValidators(), Validators.max(100), Validators.min(0)]],
+        WPS: [0, [...createRequiredValidators(), Validators.max(100), Validators.min(0)]],
+      })
     });
 
-    this.queueForm.get('accessWindowStartValue')?.valueChanges.subscribe(startTime => {
+    this.queueForm.get('accessWindow.start')?.valueChanges.subscribe(startTime => {
       this.minValue = this.valueToPercent(startTime);
     });
-  
-    this.queueForm.get('accessWindowEndValue')?.valueChanges.subscribe(endTime => {
+
+    this.queueForm.get('accessWindow.end')?.valueChanges.subscribe(endTime => {
       this.maxValue = this.valueToPercent(endTime);
     });
 
@@ -97,11 +103,10 @@ export class ParametersQueueComponent implements OnInit {
     });
   }
 
-  getParameterQueueSetting(){
-    this.parametersQueueService.getParameterQueueSetting().subscribe({
+  getParameterQueueSetting() {
+    this.parametersQueueService.getBookingCounts().subscribe({
       next: (response) => {
-        this.queueSettings = response;
-        this.booking = this.queueSettings?.bookingCount;
+        this.booking = response;
         this.totalTrucks = this.booking; // Set totalTrucks to booking
         this.series[3].value = this.totalTrucks;
         this.updateChartData(this.queueForm.value);
@@ -132,9 +137,6 @@ export class ParametersQueueComponent implements OnInit {
     return '';
   }
 
-  onSelect(event: any) {
-    console.log(event);
-  }
 
   valueToPercent(value: number): number {
     return ((value - this.minRange) / this.totalRange) * 100;
@@ -142,52 +144,32 @@ export class ParametersQueueComponent implements OnInit {
 
   // Converts percentage (0 to 100) to real value (-12 to +4)
   percentToValue(percent: number): number {
-    return Math.round(this.minRange + (percent / 100) * this.totalRange);
+    return Math.round(this.minRange + (percent / 100) * this.totalRange) < 0 ? Math.round(this.minRange + (percent / 100) * this.totalRange) * -1 : Math.round(this.minRange + (percent / 100) * this.totalRange);
   }
 
   @HostListener('document:mousemove', ['$event'])
   onMouseMove(event: MouseEvent) {
     if (!this.activeHandle) return;
-  
+
     const container = document.getElementById('slider-container')!;
     const rect = container.getBoundingClientRect();
     let percent = ((event.clientX - rect.left) / rect.width) * 100;
     percent = Math.max(0, Math.min(percent, 100));
-  
+
     if (this.activeHandle === 'min' && percent > this.maxValue) {
       percent = this.maxValue;
     } else if (this.activeHandle === 'max' && percent < this.minValue) {
       percent = this.minValue;
     }
-  
+
     if (this.activeHandle === 'min') {
       this.minValue = percent;
-      this.queueForm.patchValue({ accessWindowStartValue: this.percentToValue(percent) });
+      this.queueForm.patchValue({ accessWindow: { start: this.percentToValue(percent) } });
     } else {
       this.maxValue = percent;
-      this.queueForm.patchValue({ accessWindowEndValue: this.percentToValue(percent) });
+      this.queueForm.patchValue({ accessWindow: { end: this.percentToValue(percent) } });
     }
   }
-  // onMouseMove(event: MouseEvent) {
-  //   if (!this.activeHandle) return;
-
-  //   const container = document.getElementById('slider-container')!;
-  //   const rect = container.getBoundingClientRect();
-  //   let percent = ((event.clientX - rect.left) / rect.width) * 100;
-  //   percent = Math.max(0, Math.min(percent, 100));
-
-  //   if (this.activeHandle === 'min' && percent > this.maxValue) {
-  //     percent = this.maxValue;
-  //   } else if (this.activeHandle === 'max' && percent < this.minValue) {
-  //     percent = this.minValue;
-  //   }
-
-  //   if (this.activeHandle === 'min') {
-  //     this.minValue = percent;
-  //   } else {
-  //     this.maxValue = percent;
-  //   }
-  // }
 
   @HostListener('document:mouseup')
   onMouseUp() {
@@ -211,115 +193,74 @@ export class ParametersQueueComponent implements OnInit {
 
   updateFields(values: any) {
     const totalPercentage = 100;
-  let filledTotal = ['arrivedEarly', 'arrivedLate', 'notArrived'].reduce((acc, key) => {
-    return acc + (values[key] ? parseInt(values[key], 10) : 0);
-  }, 0);
+    let filledTotal = ['early', 'late', 'notArrived'].reduce((acc, key) => {
+      return acc + (values.arrivalConformity[key] ? parseInt(values.arrivalConformity[key], 10) : 0);
+    }, 0);
 
-  if (filledTotal > totalPercentage) {
-    alert('The total percentage cannot exceed 100%. Please adjust the values.');
-    return;
-  }
+    if (filledTotal > totalPercentage) {
+      alert('The total percentage cannot exceed 100%. Please adjust the values.');
+      return;
+    }
 
-  let remaining = totalPercentage - filledTotal;
-  if (remaining >= 0) {
-    this.queueForm.patchValue({
-      arrivedOnTime: remaining
-    }, { emitEvent: false });
-  } else {
-    alert('The total percentage exceeds 100%. Please adjust the values.');
-    return;
-  }
-  this.updateChartData(values);
+    let remaining = totalPercentage - filledTotal;
+    if (remaining >= 0) {
+      this.queueForm.patchValue({
+        arrivalConformity: { onTime: remaining }
+      }, { emitEvent: false });
+    } else {
+      alert('The total percentage exceeds 100%. Please adjust the values.');
+      return;
+    }
+    this.updateChartData(values);
   }
 
   updateChartData(values: any) {
-  //   const totalValue = this.totalTrucks;
-  //   let earlyValue = Math.round(totalValue * (values.arrivedEarly / 100));
-  //   let lateValue = Math.round(totalValue * (values.arrivedLate / 100));
-  //   let notArrivedValue = Math.round(totalValue * (values.notArrived / 100));
-  //   let onTimeValue = totalValue - (earlyValue + lateValue + notArrivedValue);
+    const totalPercentage = 100;
+    let filledTotal = ['early', 'late', 'notArrived'].reduce((acc, key) => acc + (values.arrivalConformity[key] ? parseInt(values.arrivalConformity[key], 10) : 0), 0);
+    let remaining = totalPercentage - filledTotal;
 
-  //   const newSeries = [
-  //     { name: "Early", value: earlyValue, color: "#FFD700" },
-  //     { name: "Late", value: lateValue, color: "#1E90FF" },
-  //     { name: "Not Arrived", value: notArrivedValue, color: "#FF4081" },
-  //     { name: "On Time", value: onTimeValue, color: "#20C997" }
-  //   ];
-  //   this.series = [...newSeries];
-  //   this.colorScheme = {
-  //     domain: newSeries.map(s => s.color),
-  //     name: 'customScheme',
-  //     selectable: true,
-  //     group: ScaleType.Ordinal
-  //   };
+    this.series = [
+      { name: "Early", value: Math.round(this.totalTrucks * (values.early / 100)), color: "#FFD700" },
+      { name: "Late", value: Math.round(this.totalTrucks * (values.late / 100)), color: "#1E90FF" },
+      { name: "Not Arrived", value: Math.round(this.totalTrucks * (values.notArrived / 100)), color: "#FF4081" },
+      { name: "On Time", value: Math.round(this.totalTrucks * (remaining / 100)), color: "#20C997" }
+    ];
 
-  //   this.cd.detectChanges();
-  // }
-  const totalPercentage = 100;
-  let filledTotal = ['arrivedEarly', 'arrivedLate', 'notArrived'].reduce((acc, key) => acc + (values[key] ? parseInt(values[key], 10) : 0), 0);
-  let remaining = totalPercentage - filledTotal;
+    this.colorScheme = {
+      domain: this.series.map(s => s.color),
+      name: 'customScheme',
+      selectable: true,
+      group: ScaleType.Ordinal
+    };
 
-  this.series = [
-    { name: "Early", value: Math.round(this.totalTrucks * (values.arrivedEarly / 100)), color: "#FFD700" },
-    { name: "Late", value: Math.round(this.totalTrucks * (values.arrivedLate / 100)), color: "#1E90FF" },
-    { name: "Not Arrived", value: Math.round(this.totalTrucks * (values.notArrived / 100)), color: "#FF4081" },
-    { name: "On Time", value: Math.round(this.totalTrucks * (remaining / 100)), color: "#20C997" }
-  ];
-
-  this.colorScheme = {
-    domain: this.series.map(s => s.color),
-    name: 'customScheme',
-    selectable: true,
-    group: ScaleType.Ordinal
-  };
-
-  this.cd.detectChanges();
-}
+    this.cd.detectChanges();
+  }
 
   checkErrors() {
-    // const control = this.queueForm.get('arrivedEarly');
-    // if (control && control.hasError('max')) {
-    //   console.log('Max error:', control.getError('max'));
-    // }
-    // const mostProbableControl = this.queueForm.get('mostProbableScenario');
-    // const worstCaseControl = this.queueForm.get('worstCaseScenario');
-    // if (mostProbableControl && mostProbableControl.errors) {
-    //     if (mostProbableControl.errors['max'] || mostProbableControl.errors['min']) {
-    //         // this.snackBar.open('Most Probable Scenario value must be between 0 and 50.', 'Close', { duration: 3000 });
-    //         alert('Most Probable Scenario value must be between 0 and 100.');
-    //     }
-    // }
+    const mostProbableControl = this.queueForm.get('orderRandomization.MPS');
+    const worstCaseControl = this.queueForm.get('orderRandomization.WPS');
+    if (!mostProbableControl || !worstCaseControl) return;
 
-    // if (worstCaseControl && worstCaseControl.errors) {
-    //     if (worstCaseControl.errors['max'] || worstCaseControl.errors['min']) {
-    //         // this.snackBar.open('Worst Case Scenario value must be between 51 and 100.', 'Close', { duration: 3000 });
-    //         alert('Worst Case Scenario value must be greater than Most Probable Scenario.');
-    //     }
-    // }
-    const mostProbableControl = this.queueForm.get('mostProbableScenario');
-  const worstCaseControl = this.queueForm.get('worstCaseScenario');
-  if (!mostProbableControl || !worstCaseControl) return;
+    const mostProbableValue = mostProbableControl.value;
+    const worstCaseValue = worstCaseControl.value;
 
-  const mostProbableValue = mostProbableControl.value;
-  const worstCaseValue = worstCaseControl.value;
+    if (
+      mostProbableControl.invalid &&
+      (mostProbableControl.hasError('max') || mostProbableControl.hasError('min'))
+    ) {
+      alert('Most Probable Scenario value must be between 0 and 50.');
+    }
 
-  if (
-    mostProbableControl.invalid &&
-    (mostProbableControl.hasError('max') || mostProbableControl.hasError('min'))
-  ) {
-    alert('Most Probable Scenario value must be between 0 and 50.');
-  }
-
-  if (
-    worstCaseControl.invalid &&
-    (worstCaseControl.hasError('max') || worstCaseControl.hasError('min') || worstCaseValue <= mostProbableValue)
-  ) {
-    alert('Worst Case Scenario value must be greater than Most Probable Scenario.');
-  }
+    if (
+      worstCaseControl.invalid &&
+      (worstCaseControl.hasError('max') || worstCaseControl.hasError('min') || worstCaseValue <= mostProbableValue)
+    ) {
+      alert('Worst Case Scenario value must be greater than Most Probable Scenario.');
+    }
   }
 
   updateWorstCaseScenario() {
-    const mostProbable = parseInt(this.orderRandomizationForm.get('mostProbableScenario')?.value, 10) || 0;
+    const mostProbable = parseInt(this.orderRandomizationForm.get('orderRandomization.MPS')?.value, 10) || 0;
     const remaining = 100 - mostProbable;
     this.orderRandomizationForm.patchValue({
       worstCaseScenario: remaining >= 0 ? remaining : 0
@@ -329,25 +270,14 @@ export class ParametersQueueComponent implements OnInit {
   next() {
     // const parameterQueueData = { ...this.queueForm.getRawValue(), ...this.orderRandomizationForm.getRawValue() };
     const parameterQueueData = this.queueForm.getRawValue();
-    parameterQueueData.accessWindowStartValue = parameterQueueData.accessWindowStartValue.toString();
-    parameterQueueData.accessWindowEndValue = parameterQueueData.accessWindowEndValue.toString();
-    parameterQueueData.arrivedEarly = parameterQueueData.arrivedEarly.toString();
-    parameterQueueData.arrivedLate = parameterQueueData.arrivedLate.toString();
-    parameterQueueData.notArrived = parameterQueueData.notArrived.toString();
-    parameterQueueData.arrivedOnTime = parameterQueueData.arrivedOnTime.toString();
-    parameterQueueData.mostProbableScenario = parameterQueueData.mostProbableScenario.toString();
-    parameterQueueData.worstCaseScenario = parameterQueueData.worstCaseScenario.toString();
-    const payload = {
-          queue: parameterQueueData,
-        };
-        this.parametersQueueService.update(payload).subscribe({
-          next: () => {
-      this.nextTab.emit();
-        },
-        error: (error: any) => {
-          console.error('Error during creation:', error);
-          handleError(this.snackBar, error);
-        }
-      });
+    this.parametersQueueService.setParams(parameterQueueData).subscribe({
+      next: () => {
+        this.nextTab.emit();
+      },
+      error: (error: any) => {
+        console.error('Error during creation:', error);
+        handleError(this.snackBar, error);
+      }
+    });
   }
 }

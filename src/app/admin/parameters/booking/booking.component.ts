@@ -28,8 +28,9 @@ export class BookingComponent implements OnInit {
   timeSlotsHeader: string[] = Array.from({ length: 24 }, (_, i) =>
     `${i.toString().padStart(2, '0')}:00`
   );
-  timeSlots: string[] = Array.from({ length: 24 }, (_, i) => `timeSlot${i + 1}`);
-
+  timeSlots: string[] = Array.from({ length: 24 }, (_, i) =>
+    `${i.toString().padStart(2, '0')}:00`
+  );
   constructor(
     private fb: FormBuilder,
     private readonly dialogService: MatDialog,
@@ -37,7 +38,7 @@ export class BookingComponent implements OnInit {
     private readonly bookingService: BookingService,
     private snackBar: MatSnackBar,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.bookingForm = this.fb.group({
@@ -49,7 +50,6 @@ export class BookingComponent implements OnInit {
   }
   initData() {
     this.getTenantsList();
-    this.getTimeSlotList();
   }
 
   updateLength() {
@@ -63,64 +63,45 @@ export class BookingComponent implements OnInit {
   getTenantsList() {
     this.tenantsService.getTenantsList().subscribe({
       next: (response) => {
-        this.tenants = response.map((item: any) => item.attributes);
+        this.tenants = response;
         console.log('Tenants:', this.tenants);
       },
       error: (error) => console.error('Tenants:', error),
     });
   }
-  getTimeSlotList() {
-    this.bookingService.getTimeSlotList().subscribe({
-      next: (response) => {
-        this.timeSlotList = response.map((item: any) => item.attributes);
-        console.log('Time Slot List:', this.timeSlotList);
-      },
-      error: (error) => console.error('Time Slot List:', error),
-    });
-  }
 
   onTenantSelectionChange(): void {
-    // const selectedTenantIds = this.bookingForm
-    //   .get('booking')
-    //   ?.value.map((row: any) => row.parameterTenantId);
-    // this.selectedTenant = selectedTenantIds.filter((id: any) => id);
-    const selectedTenantIds = this.booking.controls
-    .map((group: any) => group.get('parameterTenantId')?.value)
-    .filter((id: any) => id); // Remove empty values
+    const selectedTenants = this.booking.controls
+      .map((group: any) => group.get('tenant')?.value)
+      .filter((id: any) => id); // Remove empty values
+    this.selectedTenant = this.tenants.filter(tenant => !selectedTenants.includes(tenant._id.toString()));
+    this.booking.controls.forEach((group: any) => {
+      const tenant = group.get('tenant')?.value;
+      const selectedTenant = this.tenants.find(tenant => tenant._id.toString() === tenant);
+      if (selectedTenant) {
+        group.patchValue({ initialQueueLength: selectedTenant.initialQueueLength || 0 });
+      }
+    });
 
-  console.log('Selected Tenant IDs:', selectedTenantIds);
-  console.log('Available Tenants:', this.tenants);
+  }
 
-  // Update tenant list by filtering out selected ones
-  this.selectedTenant = this.tenants.filter(tenant => !selectedTenantIds.includes(tenant.id.toString()));
-
-  // Auto-fill initialQueue for selected tenant
-  this.booking.controls.forEach((group: any) => {
-    const tenantId = group.get('parameterTenantId')?.value;
-    const selectedTenant = this.tenants.find(tenant => tenant.id.toString() === tenantId);
-
-    console.log('Selected Tenant:', selectedTenant);
-
-    if (selectedTenant) {
-      group.patchValue({ initialQueue: selectedTenant.initialInsideQueue || 0 });
-    }
-  });
-  
+  getBookingControl(group: any, slot: string): any {
+    return group.get('bookings')?.get(slot);
   }
 
   createBooking(bookingData: any = null): FormGroup {
     const timeSlotControls = this.timeSlots.reduce<Record<string, any>>(
       (acc, timeSlot) => {
-        acc[timeSlot] = [bookingData ? bookingData.attributes[timeSlot] : 0];
+        acc[timeSlot] = bookingData ? bookingData.bookings[timeSlot] : 0;
         return acc;
       },
       {}
     );
-  
+    console.log(timeSlotControls);
     return this.fb.group({
-      parameterTenantId: [bookingData ? bookingData.attributes.parameterTenantId : ''],
-      initialQueue: [bookingData ? bookingData.attributes.initialQueue : 0],
-      ...timeSlotControls,
+      tenant: [bookingData ? bookingData.tenant : ''],
+      initialQueueLength: [bookingData ? bookingData.initialQueueLength : 0],
+      bookings: this.fb.group(timeSlotControls),
     });
   }
 
@@ -137,48 +118,45 @@ export class BookingComponent implements OnInit {
   }
 
   openImportModal(): void {
-      this.isLoading$.next(true);
-      this.dialogService.open(BookingImportModalComponent, {
-        disableClose: true,
-        data: {}
-      }).afterClosed()
-        .subscribe({
-          next: (response) => {
-            if (response && response.data && response.data.items) {
-              this.updateBookingForm(response.data.items);
-            }
-            this.isLoading$.next(false);
-          },
-          error: (error) => {
-            console.error('Error during import:', error);
-            handleError(this.snackBar, error);
-            this.isLoading$.next(false);
+    this.isLoading$.next(true);
+    this.dialogService.open(BookingImportModalComponent, {
+      disableClose: true,
+      data: {}
+    }).afterClosed()
+      .subscribe({
+        next: (response) => {
+          if (response && response.data && response.data.items) {
+            console.log(response.data.items)
+            this.updateBookingForm(response.data.items);
           }
-        });
-    }
-    
-    updateBookingForm(importedBooking: any[]): void {
-      const bookingArray = this.booking as FormArray;
-      importedBooking.forEach((bookingItem) => {
-        if (bookingItem.type === "booking") {
-          bookingArray.push(this.createBooking(bookingItem));
+          this.isLoading$.next(false);
+        },
+        error: (error) => {
+          console.error('Error during import:', error);
+          handleError(this.snackBar, error);
+          this.isLoading$.next(false);
         }
       });
-      this.updateLength();
-      this.cdr.markForCheck();
+  }
+
+  updateBookingForm(importedBooking: any[]): void {
+    const bookingArray = this.booking as FormArray;
+    importedBooking.forEach((bookingItem) => {
+      bookingArray.push(this.createBooking(bookingItem));
+    });
+    this.updateLength();
+    this.cdr.markForCheck();
   }
 
   onPaginateChange(event: PageEvent) {
-      this.pageIndex = event.pageIndex;
-      this.pageSize = event.pageSize;
-    }
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+  }
 
   next(): void {
     const bookingData = this.bookingForm.getRawValue().booking;
     const payload = {
-      queue: {
-        parameterBookings: bookingData,
-      },
+      data: bookingData,
     };
 
     this.bookingService.create(payload).subscribe({
@@ -191,5 +169,5 @@ export class BookingComponent implements OnInit {
         handleError(this.snackBar, error);
       },
     });
-   }
+  }
 }

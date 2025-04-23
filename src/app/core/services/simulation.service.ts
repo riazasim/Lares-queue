@@ -17,7 +17,7 @@ export class SimulationService {
   constructor(private http: HttpClient) { }
 
   simulation(data: any): Observable<any> {
-    return this.http.post<ResponseItemWrapper<any>>(`${environment.apiUrl}${environment.apiVersion}/queue/startSimulationProcess`, data);
+    return this.http.post<ResponseItemWrapper<any>>(`${environment.apiUrl}${environment.apiVersion}/simulate`, data);
   }
   checkSimulationProgress(data: any): Observable<any> {
     return this.http.post<ResponseItemWrapper<any>>(`${environment.apiUrl}${environment.apiVersion}/queue/checkSimulationProgress`, wrapJsonForRequest(data));
@@ -31,12 +31,8 @@ export class SimulationService {
   }
 
   getSimulation(data: any): Observable<any> {
-    return this.http.post<ResponseItemWrapper<any>>(`${environment.apiUrl}${environment.apiVersion}/queue/getSimulation`, wrapJsonForRequest(data))
-      .pipe(pluckItemWrapperData<any, ResponseItemWrapper<any>>(),
-        map((p: any) => {
-          return p;
-        })
-      )
+    return this.http.post<ResponseItemWrapper<any>>(`${environment.apiUrl}${environment.apiVersion}/getSimulation`, wrapJsonForRequest(data))
+      .pipe(map(x => x.data))
   }
 
 }

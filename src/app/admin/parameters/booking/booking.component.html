@@ -1,100 +1,70 @@
 <form [formGroup]="bookingForm">
-    <material-panel-table [showHeader]="false">
-      <div table class="w-full overflow-hidden">
-        <ng-scrollbar
-          track="horizontal"
-          class="border border-[#E1E1E1] rounded-[10px]"
-          [autoHeightDisabled]="false"
-          style="scrollbar-width: none;"
-        >
-          <table class="material-table no-wrap overflow-hidden">
-            <thead>
-              <tr>
-                <th>Tenant</th>
-                <th>Initial Queue</th>
-                <th *ngFor="let timeSlot of timeSlotsHeader">{{ timeSlot }}</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody formArrayName="booking">
-              <!-- <tr
-                *ngFor="let booking of booking.controls; let i = index"
-                [formGroupName]="i"
-              > -->
-              <tr  *ngFor="let booking of booking.controls | slice:(pageIndex * pageSize):(pageIndex * pageSize + pageSize); let i = index" [formGroupName]="pageIndex * pageSize + i">
+  <material-panel-table [showHeader]="false">
+    <div table class="w-full overflow-hidden">
+      <ng-scrollbar track="horizontal" class="border border-[#E1E1E1] rounded-[10px]" [autoHeightDisabled]="false"
+        style="scrollbar-width: none;">
+        <table class="material-table no-wrap overflow-hidden">
+          <thead>
+            <tr>
+              <th>Tenant</th>
+              <th>Initial Queue</th>
+              <th *ngFor="let timeSlot of timeSlots">{{ timeSlot }}</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody formArrayName="booking">
+            <tr
+              *ngFor="let booking of booking.controls | slice:(pageIndex * pageSize):(pageIndex * pageSize + pageSize); let i = index"
+              [formGroupName]="pageIndex * pageSize + i">
 
-                <td>
-                  <div [isTable]="true" iconic-select-wrapper [showValidationMessageDiv]="false">
-                    <select formControlName="parameterTenantId" spAccessInputRef (change)="onTenantSelectionChange()">
-                        <option disabled selected value="">
-                          Tenant
-                        </option>
-                        <option *ngFor="let tenant of tenants" [value]="tenant.id">
-                            {{ tenant.name }}
-                        </option>
-                    </select>
+              <td>
+                <div [isTable]="true" iconic-select-wrapper [showValidationMessageDiv]="false">
+                  <select formControlName="tenant" spAccessInputRef (change)="onTenantSelectionChange()">
+                    <option disabled selected value="">
+                      Tenant
+                    </option>
+                    <option *ngFor="let tenant of tenants" [value]="tenant.name">
+                      {{ tenant.name }}
+                    </option>
+                  </select>
                 </div>
-                </td>
-                <td>
-                  <input
-                    matInput
-                    readonly
-                    placeholder="Initial Queue"
-                    type="number"
-                    formControlName="initialQueue"
-                  />
-                </td>
-                <td *ngFor="let timeSlot of timeSlots">
-                  <input
-                    matInput
-                    type="number"
-                    [formControlName]="timeSlot"
-                  />
-                </td>
-                <td>
-                  <a
-                    (click)="removeBooking(i)"
-                    class="text-danger cursor-pointer"
-                    >Delete</a
-                  >
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </ng-scrollbar>
-        <div class="mt-4 flex gap-4">
-          <button
-            type="button"
-            class="text-primary font-bold py-5"
-            (click)="addBooking()"
-          >
-            <fa-icon icon="circle-plus"></fa-icon> Add booking
-          </button>
-          <button type="button" class="text-primary font-bold py-5" (click)="openImportModal()">
-            <fa-icon icon="circle-plus"></fa-icon>  Import bookings
+              </td>
+              <td>
+                <input matInput readonly placeholder="Initial Queue" type="number"
+                  formControlName="initialQueueLength" />
+              </td>
+              <td *ngFor="let timeSlot of timeSlots">
+                <input matInput type="number" [formControl]="getBookingControl(booking, timeSlot)" />
+              </td>
+              <td>
+                <a (click)="removeBooking(i)" class="text-danger cursor-pointer">Delete</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </ng-scrollbar>
+      <div class="mt-4 flex gap-4">
+        <button type="button" class="text-primary font-bold py-5" (click)="addBooking()">
+          <fa-icon icon="circle-plus"></fa-icon> Add booking
         </button>
-        </div>
+        <button type="button" class="text-primary font-bold py-5" (click)="openImportModal()">
+          <fa-icon icon="circle-plus"></fa-icon> Import bookings
+        </button>
       </div>
-    </material-panel-table>
-  </form>
-  <mat-paginator [pageSizeOptions]="pageSizeOptions"
-  [length]="length" [pageIndex]="pageIndex" (page)="onPaginateChange($event)" [pageSize]="pageSize"
-  showFirstLastButtons>
+    </div>
+  </material-panel-table>
+</form>
+<mat-paginator [pageSizeOptions]="pageSizeOptions" [length]="length" [pageIndex]="pageIndex"
+  (page)="onPaginateChange($event)" [pageSize]="pageSize" showFirstLastButtons>
 </mat-paginator>
 
-  <div class="mt-6 text-right">
-    <!-- <button
+<div class="mt-6 text-right">
+  <!-- <button
       type="button"
       (click)="next()"
       class="btn text-white bg-[#3498DB] w-[160px]"
     > -->
-    <button
-      type="button"
-      (click)="next()"
-      [disabled]="!bookingForm.valid"
-      class="btn text-white bg-[#3498DB] w-[160px]"
-    >
-      Next
-    </button>
-  </div>
-  
+  <button type="button" (click)="next()" [disabled]="!bookingForm.valid" class="btn text-white bg-[#3498DB] w-[160px]">
+    Next
+  </button>
+</div>

@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnInit, 
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, interval, Subject, Subscription, switchMap, takeUntil } from 'rxjs';
 import { SimulationService } from 'src/app/core/services/simulation.service';
+import { NumberCounterComponent } from 'src/app/shared/components/number-counter/number-counter.component';
 import { NumberTickerComponent } from 'src/app/shared/components/number-ticker/number-ticker.component';
 import { ProgressBarComponent } from 'src/app/shared/components/progress-bar/progress-bar.component';
 import { SankeyChartComponent } from 'src/app/shared/components/sankey-chart/sankey-chart.component';
@@ -19,14 +20,15 @@ export class ProbableCaseComponent implements OnInit {
     @ViewChild(SankeyChartComponent) sankey!: SankeyChartComponent;
     @ViewChild(ProgressBarComponent) progress!: ProgressBarComponent;
     @ViewChildren(NumberTickerComponent) numberTickers!: QueryList<NumberTickerComponent>;
+    @ViewChildren(NumberCounterComponent) numberCounters!: QueryList<NumberCounterComponent>;
     @Input() Headers: any[] = [];
     @Input() Classes: any[] = [];
     // @Input() simulation: any;
     @Input() key!: number;
     isLoading$ = new BehaviorSubject<boolean>(false);
-  isCheckingProgress$ = new BehaviorSubject<boolean>(false);
+    isCheckingProgress$ = new BehaviorSubject<boolean>(false);
     private stopPolling$ = new Subject<void>();
-      private progressSubscription: Subscription | null = null;
+    private progressSubscription: Subscription | null = null;
     defaultTickerValue: TimeSlot[] = [
         { time: '00:00', value: 0 },
         { time: '01:00', value: 0 },
@@ -103,13 +105,13 @@ export class ProbableCaseComponent implements OnInit {
     ) { }
 
 
-    ngOnInit(): void {}
+    ngOnInit(): void { }
 
     ngOnDestroy(): void {
         this.stopPolling$.next();
         this.stopPolling$.complete();
         this.progressSubscription?.unsubscribe();
-      }
+    }
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['key']) {
@@ -170,171 +172,96 @@ export class ProbableCaseComponent implements OnInit {
     getSliderPosition(): string {
         return `calc((100% / 1440) * ${this.sliderValue} - 2em)`;
     }
-    
-      loadScenarioData(): void {
+
+    loadScenarioData(): void {
         this.isLoading$.next(true);
-    
-        // Destroy old data before fetching
-        this.simulation = [];
-        this.cdr.detectChanges(); // Clear view
-    
-        // const type = this.selectedIndex === 0 ? 'PROBABLE_CASE' : 'WORST_CASE';
-        const data = { queue: { queueSimulationType: 'PROBABLE_CASE' } };
+        this.cdr.detectChanges();
+        const data = { scenario: "mps" };
         this.simulationService.getSimulation(data).subscribe({
             next: (response) => {
-            const attributes = response;
-            if (!attributes) {
-              console.error('Unexpected response:', response);
-              return;
-            }
-    
-            this.probableScenario = Array.isArray(attributes.probableScenario) ? attributes.probableScenario : [];
-            // this.worstScenario = Array.isArray(attributes.worstScenario) ? attributes.worstScenario : [];
-    
-            // this.simulation = this.selectedIndex === 0 ? this.probableScenario : this.worstScenario;
-            this.simulation = this.probableScenario;
-
-            this.transformData(this.simulation);
-    
-            this.cdr.detectChanges();
-            this.pollSimulationProgress();
-            this.isLoading$.next(false);
-          },
-          error: (error) => {
-            console.error('Failed to load simulation:', error);
-            this.isLoading$.next(false);
-          }
-        });
-      }
-
-    // Progress polling
-      checkSimulationProgress() {
-        // const type = this.selectedIndex === 0 ? 'PROBABLE_CASE' : 'WORST_CASE';
-        const payload = { queue: { queueSimulationType: 'PROBABLE_CASE' } };
-        return this.simulationService.checkSimulationProgress(payload);
-      }
-    
-      pollSimulationProgress(): void {
-        this.progressSubscription = interval(30000)
-          .pipe(
-            takeUntil(this.stopPolling$),
-            switchMap(() => this.checkSimulationProgress())
-          )
-          .subscribe({
-              next: (response) => {
-                debugger
-              if (response?.data?.attributes?.simulationStatus === 'completed') {
-                this.isCheckingProgress$.next(false);
-                this.stopPolling$.next();
-                this.router.navigate(['../showcase'], {
-                  relativeTo: this.route,
-                  queryParams: { tenantId: 'yourTenantIdHere' }
-                });
-              }
+                this.simulation = response;
+                this.transformData(this.simulation);
+                this.cdr.detectChanges();
+                this.isLoading$.next(false);
             },
             error: (error) => {
-              console.error('Simulation progress check failed:', error);
-              this.isCheckingProgress$.next(false);
-              this.stopPolling$.next();
+                console.error('Failed to load simulation:', error);
+                this.isLoading$.next(false);
             }
-          });
-      }
+        });
+    }
 
 
     transformData(simulationData: any[]) {
-        const transformedData: any = {};
+        const transformedData: any = {}
         const transformedTimedData: any = {};
-
-        console.log('SD:', simulationData);
-        simulationData.forEach((item: any, index) => {
-            if (!item || !item.processedTruckDistributions || !Array.isArray(item.processedTruckDistributions)) {
-                console.warn("Skipping item as it has no processedTruckDistributions:", item);
-                return;
+        simulationData?.forEach(item => {
+            if (!transformedTimedData[item.accessPoint]) {
+                transformedTimedData[item.accessPoint] = [];
             }
-
-
-            this.totalAccessGranted$.value.push({
-                time: item.timeSlot.timeSlotName,
-                value: Number(item.totalAccessGrantedCount) || 0
-            });
-            this.outsideQueueLength += (Number(item.outsideQueueLength) || 0) / 1000;
-            this.outsideQueueLength = parseFloat(this.outsideQueueLength.toFixed(2));
-            this.totalProcessedTrucks$.value.push({
-                time: item.timeSlot.timeSlotName,
-                value: Number(item.totalAccessGrantedCount) + Number(item.totalAccessDeniedCount) || 0
-            })
-            this.totalOutsideTrucks$.value.push({
-                time: item.timeSlot.timeSlotName,
-                value: Number(item.outsideTruckCount) || 0
-            })
-            this.totalInsideTrucks$.value.push({
-                time: item.timeSlot.timeSlotName,
-                value: Number(item.truckInsideCount) || 0
-            })
-            this.totalEarlyTrucks$.value.push({
-                time: item.timeSlot.timeSlotName,
-                value: Number(item.earlyTruckCount) || 0
-            })
-            this.totalLateTrucks$.value.push({
-                time: item.timeSlot.timeSlotName,
-                value: Number(item.lateTruckCount) || 0
-            })
-            this.totalNotArrivedTrucks$.value.push({
-                time: item.timeSlot.timeSlotName,
-                value: Number(item.notArrivedTruckCount) || 0
-            })
-            this.totalOnTimeTrucks$.value.push({
-                time: item.timeSlot.timeSlotName,
-                value: Number(item.arrivedOnTimeTruckCount) || 0
-            })
-
-
-
-            item.processedTruckDistributions.forEach((distribution: any) => {
-                const accessPointName = distribution.parameterAccessPoint?.name;
-
-                if (!accessPointName) {
-                    console.warn("Skipping distribution due to missing parameterAccessPoint:", distribution);
-                    return;
+            if (!transformedData[item.accessPoint]) {
+                transformedData[item.accessPoint] = {
+                    Denied: item.simulationResults.denied,
+                    Granted: item.simulationResults.granted
                 }
-
-                if (!transformedData[accessPointName]) {
-                    transformedData[accessPointName] = {
-                        "Granted": 0,
-                        "Denied": 0
-                    };
-                }
-
-                if (!transformedTimedData[accessPointName]) {
-                    transformedTimedData[accessPointName] = [];
-                }
-                transformedData[accessPointName]["Granted"] += distribution.accessGrantedCount || 0;
-                transformedData[accessPointName]["Denied"] += distribution.accessDeniedCount || 0;
-
-                transformedTimedData[accessPointName].push({
-                    "Time": item.timeSlot.timeSlotName,
-                    "Granted": distribution.accessGrantedCount || 0,
-                    "Denied": distribution.accessDeniedCount || 0
+            }
+            transformedData[item.accessPoint].Denied += item.simulationResults.denied
+            transformedData[item.accessPoint].Granted += item.simulationResults.granted
+            Object.entries(item.timeSlots).forEach(([key, value]: any) => {
+                transformedTimedData[item.accessPoint].push({
+                    "Time": key,
+                    "Granted": value.granted || 0,
+                    "Denied": value.denied || 0
                 })
-            });
-        });
-        this.data.next(transformedData);
-        this.timedData.next(transformedTimedData);
-        console.log(this.timedData.value)
-        console.log(this.totalAccessGranted$.value)
-        console.log(this.totalProcessedTrucks$.value)
-        console.log(this.totalOutsideTrucks$.value)
-        console.log(this.totalInsideTrucks$.value)
-        console.log(this.totalEarlyTrucks$.value)
-        console.log(this.totalLateTrucks$.value)
-        console.log(this.totalNotArrivedTrucks$.value)
-        console.log(this.totalOnTimeTrucks$.value)
-        if (this.data.value && this.timedData.value && this.sankey && this.progress) {
+                this.totalAccessGranted$.value.push({
+                    time: key,
+                    value: Number(value?.granted) || 0
+                });
+                this.outsideQueueLength += (Number(value?.outsideQueueLength) || 0) / 1000;
+                this.outsideQueueLength = parseFloat(this.outsideQueueLength.toFixed(2));
+                this.totalProcessedTrucks$.value.push({
+                    time: key,
+                    value: Number(value?.granted) + Number(value?.denied) || 0
+                })
+                this.totalOutsideTrucks$.value.push({
+                    time: key,
+                    value: Number(value?.currentQueue) || 0
+                })
+                this.totalInsideTrucks$.value.push({
+                    time: key,
+                    value: Number(value?.internalQueue) || 0
+                })
+                this.totalEarlyTrucks$.value.push({
+                    time: key,
+                    value: Number(value?.earlyArrivals) || 0
+                })
+                this.totalLateTrucks$.value.push({
+                    time: key,
+                    value: Number(value?.lateArrivals) || 0
+                })
+                this.totalNotArrivedTrucks$.value.push({
+                    time: key,
+                    value: Number(value?.expired) || 0
+                })
+                this.totalOnTimeTrucks$.value.push({
+                    time: key,
+                    value: Number(value?.onTimeArrivals) || 0
+                })
+            })
+            console.log(item)
+        })
+
+        this.data.next(transformedData)
+        this.timedData.next(transformedTimedData)
+
+        if (this.data.value && this.sankey && this.progress) {
             this.progress?.start()
         }
-        if (this.data.value && this.timedData.value && this.sankey && this.numberTickers) {
+        if (this.data.value && this.sankey && this.numberTickers && this.numberCounters) {
             this.numberTickers.forEach(ticker => ticker.play());
+            this.numberCounters.forEach(ticker => ticker.play())
         }
+
     }
 
     labels = ["Denied", "Granted"]

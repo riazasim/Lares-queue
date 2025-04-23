@@ -17,7 +17,7 @@ export class BookingService {
   constructor(private http: HttpClient) { }
 
   create(data: any): Observable<any> {
-    return this.http.post<ResponseItemWrapper<any>>(`${environment.apiUrl}${environment.apiVersion}/queue/createParameterBooking`, wrapJsonForRequest(data));
+    return this.http.post<ResponseItemWrapper<any>>(`${environment.apiUrl}${environment.apiVersion}/bookings/create`, wrapJsonForRequest(data));
   }
 
   getTimeSlotList(): Observable<any> {
@@ -29,12 +29,8 @@ export class BookingService {
       )
   }
   getParameterBookingList(): Observable<any> {
-    return this.http.post<ResponseItemWrapper<any>>(`${environment.apiUrl}${environment.apiVersion}/queue/getParameterBookingList`, {})
-      .pipe(pluckItemWrapperData<any, ResponseItemWrapper<any>>(),
-        map((p: any) => {
-          return p;
-        })
-      )
+    return this.http.post<ResponseItemWrapper<any>>(`${environment.apiUrl}${environment.apiVersion}/bookings/count`, {})
+      .pipe(map(x => x.data))
   }
 
 }

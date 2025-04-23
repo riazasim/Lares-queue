@@ -31,8 +31,8 @@ export class TenantsComponent implements OnInit {
     private readonly dialogService: MatDialog,
     private readonly tenantsService: TenantsService,
     private readonly accessPointsService: AccessPointsService,
-        private snackBar: MatSnackBar,
-        private cdr: ChangeDetectorRef
+    private snackBar: MatSnackBar,
+    private cdr: ChangeDetectorRef
   ) { }
 
 
@@ -44,7 +44,7 @@ export class TenantsComponent implements OnInit {
 
   initData() {
     this.initForm();
-    this.getAccessPointsList();  
+    this.getAccessPointsList();
   }
 
   updateLength() {
@@ -63,10 +63,10 @@ export class TenantsComponent implements OnInit {
     return this.tenantsForm.get('tenants') as FormArray;
   }
 
-  getAccessPointsList(){
+  getAccessPointsList() {
     this.accessPointsService.getAccessPointsList().subscribe({
       next: (response) => {
-        this.accessPoints = response.map((item:any) => item.attributes);
+        this.accessPoints = response.map((item: any) => item);
         console.log('Access Points Loaded:', this.accessPoints);
       },
       error: (error) => console.error('Failed to load access points:', error)
@@ -76,11 +76,11 @@ export class TenantsComponent implements OnInit {
   createTenant(tenantData: any = null): FormGroup {
     return this.fb.group({
       name: [tenantData ? tenantData.attributes.name : '', [...createRequiredValidators()]],
-      insideQueueCapacity: [tenantData ? tenantData.attributes.insideQueueCapacity : '', [...createRequiredValidators()]],
-      initialInsideQueue: [tenantData ? tenantData.attributes.initialInsideQueue : '', [...createRequiredValidators()]],
-      hourlyProcessingSpeedMax: [tenantData ? tenantData.attributes.hourlyProcessingSpeedMax : '', [...createRequiredValidators()]],
-      parameterAccessPointId: [tenantData ? tenantData.attributes.parameterAccessPointId : '', [...createRequiredValidators()]],
-      gateToTenantTime: [tenantData ? tenantData.attributes.gateToTenantTimeInMin : '', [...createRequiredValidators()]],
+      maxQueueLength: [tenantData ? tenantData.attributes.maxQueueLength : '', [...createRequiredValidators()]],
+      initialQueueLength: [tenantData ? tenantData.attributes.initialQueueLength : '', [...createRequiredValidators()]],
+      hourlyProcessingSpeed: [tenantData ? tenantData.attributes.hourlyProcessingSpeed : '', [...createRequiredValidators()]],
+      distanceToAccessPoint: [tenantData ? tenantData.attributes.distanceToAccessPoint : '', [...createRequiredValidators()]],
+      accessPoint: [tenantData ? tenantData.attributes.accessPoint : '', [...createRequiredValidators()]],
     });
   }
 
@@ -133,7 +133,7 @@ export class TenantsComponent implements OnInit {
         }
       });
   }
-  
+
   updateTenantsForm(importedTenants: any[]): void {
     const tenantsArray = this.tenants as FormArray;
     importedTenants.forEach((tenantItem) => {
@@ -142,9 +142,9 @@ export class TenantsComponent implements OnInit {
       }
     });
     this.cdr.markForCheck(); // Trigger change detection manually
-}
+  }
 
-onPaginateChange(event: PageEvent) {
+  onPaginateChange(event: PageEvent) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
   }
@@ -152,23 +152,23 @@ onPaginateChange(event: PageEvent) {
   next() {
     const tenantsData = this.tenantsForm.getRawValue().tenants.map((tenant: any) => ({
       ...tenant,
-      insideQueueCapacity: tenant.insideQueueCapacity.toString(),
-      initialInsideQueue: tenant.initialInsideQueue.toString(),
-      hourlyProcessingSpeedMax: tenant.hourlyProcessingSpeedMax.toString(),
-      gateToTenantTime: tenant.gateToTenantTime.toString(),
+      maxQueueLength: Number(tenant.maxQueueLength),
+      initialQueueLength: Number(tenant.initialQueueLength),
+      hourlyProcessingSpeed: Number(tenant.hourlyProcessingSpeed),
+      distanceToAccessPoint: Number(tenant.distanceToAccessPoint),
+      accessPoint: String(tenant.accessPoint)
     }));
     const payload = {
-          queue: {
-            parameterTenants: tenantsData },
-        };
-        this.tenantsService.create(payload).subscribe({
-          next: () => {
-            this.nextTab.emit();
-          },
-          error: (error: any) => {
-            console.error('Error during creation:', error);
-            handleError(this.snackBar, error);
-          }
-        });
+      data: tenantsData,
+    };
+    this.tenantsService.create(payload).subscribe({
+      next: () => {
+        this.nextTab.emit();
+      },
+      error: (error: any) => {
+        console.error('Error during creation:', error);
+        handleError(this.snackBar, error);
       }
+    });
   }
+}

@@ -70,6 +70,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { SankeyChartComponent } from './components/sankey-chart/sankey-chart.component';
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 import { NumberTickerComponent } from './components/number-ticker/number-ticker.component';
+import { NumberCounterComponent } from './components/number-counter/number-counter.component';
 
 export const MY_FORMATS = {
     parse: {
@@ -117,7 +118,8 @@ export const MY_FORMATS = {
         IconicSelectSearchComponent,
         SankeyChartComponent,
         ProgressBarComponent,
-        NumberTickerComponent
+        NumberTickerComponent,
+        NumberCounterComponent
     ],
     imports: [
         FontAwesomeModule,
@@ -218,7 +220,8 @@ export const MY_FORMATS = {
         NgxChartsModule,
         SankeyChartComponent,
         ProgressBarComponent,
-        NumberTickerComponent
+        NumberTickerComponent,
+        NumberCounterComponent
     ],
     providers: [
         provideNgxMask(),

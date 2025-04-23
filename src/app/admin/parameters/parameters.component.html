@@ -8,28 +8,28 @@
     </p>
 
     <mat-tab-group [(selectedIndex)]="selectedIndex" (selectedIndexChange)="onTabChange($event)" mat-stretch-tabs="false" mat-align-tabs="start">
-      <mat-tab [disabled]="true">
+      <mat-tab>
         <ng-template mat-tab-label>
           Access Points
         </ng-template>
         <p class="my-4 text-gray">Make sure you set the values as close to your real life scenarios because the data represents the entry point for the simulation.</p>
         <app-access-points (nextTab)="nextTab()"></app-access-points>
       </mat-tab>
-      <mat-tab [disabled]="true">
+      <mat-tab>
         <ng-template mat-tab-label>
           Tenants
         </ng-template>
         <p class="my-4 text-gray">List all the tenants and their associated parameters.</p>
         <app-tenants (nextTab)="nextTab()"></app-tenants>
       </mat-tab>
-      <mat-tab [disabled]="true">
+      <mat-tab>
         <ng-template mat-tab-label>
           Booking
         </ng-template>
         <p class="my-4 text-gray">Bookings will be used as a parameter for the access validation process.</p>
         <app-booking (nextTab)="nextTab()"></app-booking>
       </mat-tab>
-      <mat-tab [disabled]="true">
+      <mat-tab>
         <ng-template mat-tab-label>
           QUEUE
         </ng-template>

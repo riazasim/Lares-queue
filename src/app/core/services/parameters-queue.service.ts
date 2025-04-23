@@ -13,23 +13,21 @@ import { pluckItemWrapperData } from 'src/app/shared/utils/api.functions';
 export class ParametersQueueService {
   constructor(private http: HttpClient) { }
 
-  update(data: any): Observable<any> {
-    return this.http.post<ResponseItemWrapper<any>>(`${environment.apiUrl}${environment.apiVersion}/queue/updateParameterQueueSetting`, data);
+  setParams(data: any): Observable<any> {
+    return this.http.post<ResponseItemWrapper<any>>(`${environment.apiUrl}${environment.apiVersion}/setQueueParameters`, data);
   }
-  
-  getParameterQueueSetting(): Observable<any> {
-    return this.http.post<ResponseItemWrapper<any>>(`${environment.apiUrl}${environment.apiVersion}/queue/getParameterQueueSetting`, {})
-    .pipe(pluckItemWrapperData<any, ResponseItemWrapper<any>>(),
-    map((p: any) => {
-      return p;
-    })
-  )
-}
 
-deleteQueue(): Observable<any> {
-    // let data ={
-    //   "shipId":id
-    // }
+  getParameterQueueSetting(): Observable<any> {
+    return this.http.post<ResponseItemWrapper<any>>(`${environment.apiUrl}${environment.apiVersion}/getQueueParameters`, {})
+      .pipe(map(x => x.data))
+  }
+
+  getBookingCounts(): Observable<any> {
+    return this.http.post<ResponseItemWrapper<any>>(`${environment.apiUrl}${environment.apiVersion}/bookings/count`, {})
+      .pipe(map(x => x.data))
+  }
+
+  deleteQueue(): Observable<any> {
     return this.http.post(`${environment.apiUrl}${environment.apiVersion}/queue/deleteQueue`, {})
   }
 }

@@ -8,20 +8,20 @@
     <div class="p-3 my-2 w-full border border-[#E4E7EC] rounded-lg">
         <span class="text-sm text-gray-600">Most probable scenario</span>
         <div class="flex gap-2 justify-between items-center my-2">
-            <mat-progress-bar mode="determinate" [value]="(queues$ | async)?.mostProbableScenario"
+            <mat-progress-bar mode="determinate" [value]="(queues$ | async)?.orderRandomization?.MPS"
                 class="custom-progress-bar probable">
             </mat-progress-bar>
-            <span class="text-sm text-gray-600">{{(queues$ | async)?.mostProbableScenario}}%</span>
+            <span class="text-sm text-gray-600">{{(queues$ | async)?.orderRandomization?.MPS}}%</span>
         </div>
 
     </div>
     <div class="p-3 my-2 w-full border border-[#E4E7EC] rounded-lg">
         <span class="text-sm text-gray-600 mb-2">Worst case scenario</span>
         <div class="flex gap-2 justify-between items-center my-2">
-            <mat-progress-bar mode="determinate" [value]="(queues$ | async)?.worstCaseScenario"
+            <mat-progress-bar mode="determinate" [value]="(queues$ | async)?.orderRandomization?.WPS"
                 class="custom-progress-bar worst">
             </mat-progress-bar>
-            <span class="text-sm text-gray-600">{{(queues$ | async)?.worstCaseScenario}}%</span>
+            <span class="text-sm text-gray-600">{{(queues$ | async)?.orderRandomization?.WPS}}%</span>
         </div>
 
     </div>

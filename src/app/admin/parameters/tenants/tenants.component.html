@@ -1,8 +1,8 @@
-
- <form [formGroup]="tenantsForm">
-<material-panel-table [showHeader]="false">
+<form [formGroup]="tenantsForm">
+  <material-panel-table [showHeader]="false">
     <div table class="w-full overflow-hidden">
-      <ng-scrollbar track="horizontal" class="border border-[#E1E1E1] rounded-[10px]" [autoHeightDisabled]="false" style="scrollbar-width: none;">
+      <ng-scrollbar track="horizontal" class="border border-[#E1E1E1] rounded-[10px]" [autoHeightDisabled]="false"
+        style="scrollbar-width: none;">
         <table class="material-table no-wrap overflow-hidden">
           <thead>
             <tr>
@@ -16,33 +16,37 @@
             </tr>
           </thead>
           <tbody formArrayName="tenants">
-            <tr  *ngFor="let tenant of tenants.controls | slice:(pageIndex * pageSize):(pageIndex * pageSize + pageSize); let i = index" [formGroupName]="pageIndex * pageSize + i">
+            <tr
+              *ngFor="let tenant of tenants.controls | slice:(pageIndex * pageSize):(pageIndex * pageSize + pageSize); let i = index"
+              [formGroupName]="pageIndex * pageSize + i">
               <td>
                 <input formControlName="name" matInput placeholder="Enter tenant name" />
               </td>
               <td>
-                <input formControlName="insideQueueCapacity" matInput placeholder="Allocated capacity" type="number" />
+                <input formControlName="maxQueueLength" matInput placeholder="Allocated capacity" type="number" />
               </td>
               <td>
-                <input formControlName="initialInsideQueue" matInput placeholder="Initial queue" type="number" />
+                <input formControlName="initialQueueLength" matInput placeholder="Initial queue" type="number" />
               </td>
               <td>
-                <input formControlName="hourlyProcessingSpeedMax" matInput placeholder="Tenant processing speed" type="number" />
+                <input formControlName="hourlyProcessingSpeed" matInput placeholder="Tenant processing speed"
+                  type="number" />
               </td>
               <td>
                 <div [isTable]="true" iconic-select-wrapper [showValidationMessageDiv]="false">
-                  <select formControlName="parameterAccessPointId" spAccessInputRef (selectionChange)="onAccessPointSelectionChange()">
-                      <option disabled selected value="">
-                        Access Point
-                      </option>
-                      <option *ngFor="let accessPoint of accessPoints" [value]="accessPoint.id">
-                          {{ accessPoint.name }}
-                      </option>
+                  <select formControlName="accessPoint" spAccessInputRef
+                    (selectionChange)="onAccessPointSelectionChange()">
+                    <option disabled selected value="">
+                      Access Point
+                    </option>
+                    <option *ngFor="let accessPoint of accessPoints" [value]="accessPoint.name">
+                      {{ accessPoint.name }}
+                    </option>
                   </select>
-              </div>
+                </div>
               </td>
               <td>
-                <input formControlName="gateToTenantTime" matInput placeholder="e.g., 10" type="number" />
+                <input formControlName="distanceToAccessPoint" matInput placeholder="e.g., 10" type="number" />
               </td>
               <td>
                 <a (click)="removeRow(i)" class="text-danger cursor-pointer">Delete</a>
@@ -53,23 +57,21 @@
       </ng-scrollbar>
       <div class="mt-4 flex gap-4">
         <button type="button" class="text-primary font-bold py-5" (click)="addRow()">
-            <fa-icon icon="circle-plus"></fa-icon> Add tenant
-        </button>  
+          <fa-icon icon="circle-plus"></fa-icon> Add tenant
+        </button>
         <button type="button" class="text-primary font-bold py-5" (click)="openImportModal()">
-          <fa-icon icon="circle-plus"></fa-icon>  Import tenants
+          <fa-icon icon="circle-plus"></fa-icon> Import tenants
         </button>
       </div>
     </div>
   </material-panel-table>
-  </form>
-  <mat-paginator [pageSizeOptions]="pageSizeOptions"
-        [length]="length" [pageIndex]="pageIndex" (page)="onPaginateChange($event)" [pageSize]="pageSize"
-        showFirstLastButtons>
-    </mat-paginator>
-  <div class="mt-6 text-right">
-    <!-- <button type="button" (click)="next()"  class="btn text-white bg-[#3498DB] w-[160px]"> -->
-    <button type="button" (click)="next()" [disabled]="!tenantsForm.valid" class="btn text-white bg-[#3498DB] w-[160px]">
-        Next
-    </button>
+</form>
+<mat-paginator [pageSizeOptions]="pageSizeOptions" [length]="length" [pageIndex]="pageIndex"
+  (page)="onPaginateChange($event)" [pageSize]="pageSize" showFirstLastButtons>
+</mat-paginator>
+<div class="mt-6 text-right">
+  <!-- <button type="button" (click)="next()"  class="btn text-white bg-[#3498DB] w-[160px]"> -->
+  <button type="button" (click)="next()" [disabled]="!tenantsForm.valid" class="btn text-white bg-[#3498DB] w-[160px]">
+    Next
+  </button>
 </div>
-

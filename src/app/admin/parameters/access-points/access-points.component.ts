@@ -14,8 +14,8 @@ import { createRequiredValidators } from 'src/app/shared/validators/generic-vali
   styleUrls: ['./access-points.component.scss'],
 })
 export class AccessPointsComponent implements OnInit {
-[x: string]: any;
-numDecimalUtil = numDecimal;
+  [x: string]: any;
+  numDecimalUtil = numDecimal;
   isLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   @Output() nextTab = new EventEmitter<void>();
   accessPointsForm: FormGroup;
@@ -50,9 +50,9 @@ numDecimalUtil = numDecimal;
   createAccessPoint(): FormGroup {
     return this.fb.group({
       name: ['', [...createRequiredValidators()]],
-      processingSpeedLPR: ['', [...createRequiredValidators()]],
-      wrongLPRReading: ['', [...createRequiredValidators(), Validators.max(100), Validators.min(0),Validators.pattern(/^\d+$/)]],
-      processingSpeedWrongLPR: ['', [...createRequiredValidators()]],
+      wrongLPRPercentage: ['', [...createRequiredValidators(), Validators.max(100), Validators.min(0), Validators.pattern(/^\d+$/)]],
+      wrongLPRProcessingTime: ['', [...createRequiredValidators()]],
+      correctLPRProcessingTime: ['', [...createRequiredValidators()]],
     });
   }
 
@@ -75,9 +75,8 @@ numDecimalUtil = numDecimal;
 
   next() {
     const payload = {
-      queue: {
-        parameterAccessPoints: this.accessPointsForm.getRawValue().accessPoints,
-      },
+      data: this.accessPointsForm.getRawValue().accessPoints,
+      processId: localStorage.getItem('processId')
     };
     this.accessPointsService.create(payload).subscribe({
       next: () => {

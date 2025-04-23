@@ -18,14 +18,14 @@ export class ParametersComponent {
 
   constructor(
     private readonly router: Router,
-                private readonly route: ActivatedRoute,
-  ) {}
+    private readonly route: ActivatedRoute,
+  ) { }
 
   nextTab() {
     if (this.selectedIndex < 3) {
       this.selectedIndex++;
     } else {
-          this.router.navigate(['../queue'], { relativeTo: this.route });
+      this.router.navigate(['../queue'], { relativeTo: this.route });
     }
   }
 

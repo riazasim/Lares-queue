@@ -22,9 +22,9 @@
         <div *ngIf="isSelectedTenant$ | async" class="mt-4 w-[50%]" [matTooltip]="'Select Tenant'"
             matTooltipClass="drop-shadow-lg" matTooltipPosition="above" iconic-select-wrapper
             leftSvg="assets/images/building-05.svg">
-            <select spAccessInputRef name="tenant" id="tenant" formControlName="parameterTenantId">
+            <select spAccessInputRef name="tenant" id="tenant" formControlName="tenants">
                 <option disabled value="">Tenant</option>
-                <option *ngFor="let tenant of tenants" [value]="tenant.id">
+                <option *ngFor="let tenant of tenants" [value]="tenant.name">
                     {{ tenant.name }}
                 </option>
             </select>

@@ -1,16 +1,17 @@
 <div *ngIf="isLoading$ | async" class="fixed inset-0 flex items-center justify-center bg-glass-sm bg-opacity-50 z-50">
     <div class="p-6 bg-white rounded-lg shadow-lg text-center">
-      <app-loader [buttonLoader]="true" size="lg"></app-loader>
-      <p class="mt-4 text-gray-700 font-semibold">Loading simulation data...</p>
+        <app-loader [buttonLoader]="true" size="lg"></app-loader>
+        <p class="mt-4 text-gray-700 font-semibold">Loading simulation data...</p>
     </div>
-  </div>
-  
-  <div *ngIf="isCheckingProgress$ | async" class="fixed inset-0 flex items-center justify-center bg-glass-sm bg-opacity-50 z-50">
+</div>
+
+<div *ngIf="isCheckingProgress$ | async"
+    class="fixed inset-0 flex items-center justify-center bg-glass-sm bg-opacity-50 z-50">
     <div class="p-6 bg-white rounded-lg shadow-lg text-center">
-      <app-loader [buttonLoader]="true" size="lg"></app-loader>
-      <p class="mt-4 text-gray-700 font-semibold">Your simulation is in progress, please wait...</p>
+        <app-loader [buttonLoader]="true" size="lg"></app-loader>
+        <p class="mt-4 text-gray-700 font-semibold">Your simulation is in progress, please wait...</p>
     </div>
-  </div>
+</div>
 <div>
     <div class="p-3 my-2 w-full h-[140px] border border-[#E4E7EC] rounded-lg">
 
@@ -31,15 +32,6 @@
         </div>
 
         <div class="px-6 slider-container">
-            <!-- Time Display -->
-            <!-- <div class="time-display" [style.left]="getSliderPosition()">
-                <span>{{ hours }}:{{ minutes }}</span>
-                <div class="time-arrow"></div>
-            </div> -->
-
-            <!-- Slider -->
-            <!-- <input type="range" min="1" max="1440" [value]="sliderValue" class="slider" id="myRange"
-                (input)="updateSlider()" [(ngModel)]="sliderValue" /> -->
             <app-progress-bar [duration]="selectedAnimationDuration/1000" class="custom-progress-bar">
             </app-progress-bar>
             <!-- Time Labels -->
@@ -68,8 +60,8 @@
                 <div class="flex gap-2 justify-between items-center my-2">
                     <span class="text-[#46474C]">No. of trucks outside</span>
                     <span class="text-[#46474C]">
-                        <app-number-ticker [autoPlay]="false" [totalAnimationTime]="selectedAnimationDuration"
-                            [data]="(totalOutsideTrucks$ | async) || defaultTickerValue"></app-number-ticker>
+                        <app-counter-ticker [autoPlay]="false" [totalAnimationTime]="selectedAnimationDuration"
+                            [data]="(totalOutsideTrucks$ | async) || defaultTickerValue"></app-counter-ticker>
                     </span>
                 </div>
                 <hr class="my-1">
@@ -135,7 +127,6 @@
                     <span class="text-[#46474C]">Total access granted</span>
                     <app-number-ticker [autoPlay]="false" [totalAnimationTime]="selectedAnimationDuration"
                         [data]="(totalAccessGranted$ | async) || defaultTickerValue"></app-number-ticker>
-                    <!-- <span class="text-[#46474C]">{{totalAccessGranted}}</span> -->
                 </div>
                 <hr class="my-1">
             </div>
@@ -153,6 +144,5 @@
 <div class="flex gap-3 justify-end mt-6">
     <button type="button" (click)="isStarted ? stopAnimation() : startAnimation()"
         class="btn text-white bg-[#3498DB] w-[160px]">Start / Stop</button>
-    <!-- <button type="button" (click)="resetAnimation()" class="btn text-white bg-[#3498DB] w-[160px]">Reset</button> -->
     <button type="button" (click)="next()" class="btn text-white bg-[#3498DB] w-[160px]">Next</button>
 </div>

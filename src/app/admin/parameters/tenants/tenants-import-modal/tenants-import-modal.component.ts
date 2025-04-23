@@ -30,12 +30,11 @@ export class TenantsImportModalComponent {
           type: "tenant",
           attributes: {
             name: item?.[0],
-            insideQueueCapacity: item?.[1]?.toString(),
-            initialInsideQueue: item?.[2]?.toString(),
-            hourlyProcessingSpeedMax: item?.[3]?.toString(),
-            parameterTenantParameterAccessPoints: item?.[4]?.toString(),
-            // parameterTenantParameterAccessPoints: item?.[4],
-            gateToTenantTimeInMin: item?.[5]?.toString(),
+            maxQueueLength: item?.[1]?.toString(),
+            initialQueueLength: item?.[2]?.toString(),
+            hourlyProcessingSpeed: item?.[3]?.toString(),
+            accessPoint: item?.[4]?.toString(),
+            distanceToAccessPoint: item?.[5]?.toString(),
           }
         }))
       }

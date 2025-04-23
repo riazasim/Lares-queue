@@ -17,7 +17,7 @@ export class AccessPointsService {
   constructor(private http: HttpClient) { }
 
   create(data: any): Observable<any> {
-    return this.http.post<ResponseItemWrapper<any>>(`${environment.apiUrl}${environment.apiVersion}/queue/createParameterAccessPoint`, data);
+    return this.http.post<ResponseItemWrapper<any>>(`${environment.apiUrl}${environment.apiVersion}/accessPoints/create`, data);
   }
 
   delete(id: number): Observable<any> {
@@ -28,12 +28,8 @@ export class AccessPointsService {
   }
 
   getAccessPointsList(): Observable<any> {
-    return this.http.post<ResponseItemWrapper<any>>(`${environment.apiUrl}${environment.apiVersion}/queue/getParameterAccessPointList`, {})
-      .pipe(pluckItemWrapperData<any, ResponseItemWrapper<any>>(),
-        map((p: any) => {
-          return p;
-        })
-      )
+    return this.http.post<ResponseItemWrapper<any>>(`${environment.apiUrl}${environment.apiVersion}/accessPoints`, {})
+      .pipe(map(x => x.data))
   }
 
 }

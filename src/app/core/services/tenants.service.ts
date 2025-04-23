@@ -18,7 +18,7 @@ export class TenantsService {
   constructor(private http: HttpClient) { }
 
   create(data: any): Observable<any> {
-    return this.http.post<ResponseItemWrapper<any>>(`${environment.apiUrl}${environment.apiVersion}/queue/createParameterTenant`, wrapJsonForRequest(data));
+    return this.http.post<ResponseItemWrapper<any>>(`${environment.apiUrl}${environment.apiVersion}/tenants/create`, wrapJsonForRequest(data));
   }
 
   importTenants(list: any[]): Observable<any> {
@@ -33,12 +33,8 @@ export class TenantsService {
   }
 
   getTenantsList(): Observable<any> {
-    return this.http.post<ResponseItemWrapper<any>>(`${environment.apiUrl}${environment.apiVersion}/queue/getParameterTenantList`, {})
-      .pipe(pluckItemWrapperData<any, ResponseItemWrapper<any>>(),
-        map((p: any) => {
-          return p;
-        })
-      )
+    return this.http.post<ResponseItemWrapper<any>>(`${environment.apiUrl}${environment.apiVersion}/tenants`, {})
+      .pipe(map(x => x.data))
   }
 
 }

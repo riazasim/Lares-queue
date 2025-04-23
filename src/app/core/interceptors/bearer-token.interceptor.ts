@@ -20,28 +20,28 @@ export class BearerTokenInterceptor implements HttpInterceptor {
     }
 
     intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-        const token = this.tokenService.authToken;
-        const noTokenRequestFlag = request.context.get(NO_TOKEN_REQUEST);
-        if ((typeof token === 'string') && !noTokenRequestFlag) {
-            request = request.clone({
-                setHeaders: {
-                    [this.authorizationHeaderName]: token
-                }
-            });
-        }
+        // const token = this.tokenService.authToken;
+        // const noTokenRequestFlag = request.context.get(NO_TOKEN_REQUEST);
+        // if ((typeof token === 'string') && !noTokenRequestFlag) {
+        //     request = request.clone({
+        //         setHeaders: {
+        //             [this.authorizationHeaderName]: token
+        //         }
+        //     });
+        // }
 
         request = request.clone({
             setHeaders: {
-                'Transport-Mode': localStorage.getItem("appMode") || ""
+                'Authorization': localStorage.getItem("token") || ""
             }
         });
 
         return next.handle(request).pipe(
             catchError((response: any) => {
                 if (response.status === 401) {
-                    localStorage.clear();
-                    document.cookie = `${SESSION_TOKEN}=; Max-Age=0;`;
-                    this.router.navigate(['/']);
+                    // localStorage.clear();
+                    // document.cookie = `${SESSION_TOKEN}=; Max-Age=0;`;
+                    // this.router.navigate(['/']);
                 }
 
                 return throwError(() => response.error);

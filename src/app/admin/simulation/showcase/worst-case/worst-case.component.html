@@ -1,16 +1,17 @@
 <div *ngIf="isLoading$ | async" class="fixed inset-0 flex items-center justify-center bg-glass-sm bg-opacity-50 z-50">
     <div class="p-6 bg-white rounded-lg shadow-lg text-center">
-      <app-loader [buttonLoader]="true" size="lg"></app-loader>
-      <p class="mt-4 text-gray-700 font-semibold">Loading simulation data...</p>
+        <app-loader [buttonLoader]="true" size="lg"></app-loader>
+        <p class="mt-4 text-gray-700 font-semibold">Loading simulation data...</p>
     </div>
-  </div>
-  
-  <div *ngIf="isCheckingProgress$ | async" class="fixed inset-0 flex items-center justify-center bg-glass-sm bg-opacity-50 z-50">
+</div>
+
+<div *ngIf="isCheckingProgress$ | async"
+    class="fixed inset-0 flex items-center justify-center bg-glass-sm bg-opacity-50 z-50">
     <div class="p-6 bg-white rounded-lg shadow-lg text-center">
-      <app-loader [buttonLoader]="true" size="lg"></app-loader>
-      <p class="mt-4 text-gray-700 font-semibold">Your simulation is in progress, please wait...</p>
+        <app-loader [buttonLoader]="true" size="lg"></app-loader>
+        <p class="mt-4 text-gray-700 font-semibold">Your simulation is in progress, please wait...</p>
     </div>
-  </div>
+</div>
 <div>
     <div class="p-3 my-2 w-full h-[140px] border border-[#E4E7EC] rounded-lg">
 
@@ -125,9 +126,8 @@
 
     </div>
     <div class="flex justify-center items-center bg-gray-100">
-        <app-sankey-chart [timeSeriesData]="(timedData | async) || {}"
-            [totalAnimationDuration]="selectedAnimationDuration" [rawData]="(data | async) || {}" [groupKeys]="labels"
-            [width]="width" [height]="500">
+        <app-sankey-chart [totalAnimationDuration]="selectedAnimationDuration" [rawData]="(data | async) || {}"
+            [groupKeys]="labels" [width]="width" [height]="500">
         </app-sankey-chart>
     </div>
 

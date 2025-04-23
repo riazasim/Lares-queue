@@ -51,8 +51,7 @@ export class FilterComponent implements OnInit, OnDestroy {
     getTenantsList() {
         this.tenantsService.getTenantsList().subscribe({
             next: (response) => {
-                this.tenants = response.map((item: any) => item.attributes);
-                console.log('Tenants:', this.tenants);
+                this.tenants = response;
             },
             error: (error) => console.error('Tenants:', error),
         });
@@ -64,81 +63,41 @@ export class FilterComponent implements OnInit, OnDestroy {
 
     initForm() {
         this.queueForm = this.fb.group({
-            parameterTenantId: [null, [...createRequiredValidators()]],
+            tenants: [null, [...createRequiredValidators()]],
         });
     }
 
-    startSimulation(tenantId: number | null) {
+    startSimulation(tenantNames: string[]) {
         let data = {
-            "queue": {
-                "parameterTenantId": tenantId
-            }
+            tenantNames
         };
         return this.simulationService.simulation(data);
     }
 
-    checkSimulationProgress() {
-        const payload = {
-            queue: {
-                queueSimulationStatus: 'PROBABLE_CASE',
-            },
-          };
-        return this.simulationService.checkSimulationProgress(payload);
-    }
 
     next() {
         this.isLoading$.next(true);
-        let tenantId = this.queueForm.get('parameterTenantId')?.value;
-        if (tenantId !== null && tenantId !== undefined) {
-            tenantId = tenantId.toString();
-        } else {
-            tenantId = '';
+        let tenantNames: string[] = []
+        if (this.isSelectedTenant$.value) {
+            tenantNames.push(this.queueForm.get('tenants')?.value);
         }
-
-        this.startSimulation(tenantId).subscribe({
+        else {
+            this.tenants.forEach(tenant => {
+                tenantNames.push(tenant.name)
+            })
+        }
+        this.startSimulation(tenantNames).subscribe({
             next: (res) => {
                 console.log('Simulation started successfully:', res);
                 this.isLoading$.next(false);
-                // this.router.navigate(['../showcase'], {
-                //     relativeTo: this.route,
-                // });
-                this.isCheckingProgress$.next(true);
-                this.pollSimulationProgress(); // Start polling
+                this.router.navigate(['../showcase'], {
+                    relativeTo: this.route,
+                });
             },
             error: (err) => {
                 console.error('Simulation error:', err);
                 this.isLoading$.next(false);
             },
         });
-    }
-
-    pollSimulationProgress() {
-        this.progressSubscription = interval(30000) // Poll every 5 seconds
-            .pipe(
-                takeUntil(this.stopPolling$), // Stop polling when completed or destroyed
-                switchMap(() => this.checkSimulationProgress())
-            )
-            .subscribe({
-                next: (response) => {
-                    this.simulationProgress = response;
-                    console.log('Simulation Progress:', response);
-
-                    if (response?.data?.attributes?.simulationStatus === "completed") {
-                        this.isCheckingProgress$.next(false);
-                        this.stopPolling$.next(); // Stop polling
-                        this.router.navigate(['../showcase'], {
-                            relativeTo: this.route,
-                            queryParams: { 
-                                tenantId: this.queueForm.get('parameterTenantId')?.value 
-                            },
-                        });
-                    }
-                },
-                error: (error) => {
-                    console.error('Error checking simulation progress:', error);
-                    this.isCheckingProgress$.next(false);
-                    this.stopPolling$.next(); // Stop polling on error
-                }
-            });
     }
 }

@@ -9,12 +9,13 @@ import {
 @Injectable({
   providedIn: 'root'
 })
-export class QueueService {
+export class HomeService {
   constructor(private http: HttpClient) { }
 
-  simulate(): Observable<any> {
-    return this.http.post<ResponseItemWrapper<any>>(`${environment.apiUrl}${environment.apiVersion}/simulate`, {});
+  getProcessId(): Observable<any> {
+    return this.http.get<ResponseItemWrapper<any>>(`${environment.apiUrl}${environment.apiVersion}/getProcessId`);
   }
-  
-
+  checkExpiration(): Observable<any> {
+    return this.http.post<ResponseItemWrapper<any>>(`${environment.apiUrl}${environment.apiVersion}/checkTokenExpiration`, {});
+  }
 }

@@ -16,24 +16,26 @@
                         </tr>
                     </thead>
                     <tbody formArrayName="accessPoints">
-                        <tr *ngFor="let accessPoint of accessPoints.controls | slice:(pageIndex * pageSize):(pageIndex * pageSize + pageSize); let i = index" [formGroupName]="pageIndex * pageSize + i">
+                        <tr *ngFor="let accessPoint of accessPoints.controls | slice:(pageIndex * pageSize):(pageIndex * pageSize + pageSize); let i = index"
+                            [formGroupName]="pageIndex * pageSize + i">
 
-                        <!-- <tr *ngFor="let accessPoint of accessPoints.controls | slice:(pageIndex * pageSize):(pageIndex * pageSize + pageSize); let i = index" [formGroupName]="i"> -->
+                            <!-- <tr *ngFor="let accessPoint of accessPoints.controls | slice:(pageIndex * pageSize):(pageIndex * pageSize + pageSize); let i = index" [formGroupName]="i"> -->
                             <td>
-                                    <input matInput placeholder="Enter access point name" formControlName="name" />
+                                <input matInput placeholder="Enter access point name" formControlName="name" />
                             </td>
                             <td>
                                 <input matInput placeholder="Enter processing speed in seconds" type="number"
-                                    formControlName="processingSpeedLPR" />
+                                    formControlName="correctLPRProcessingTime" />
                             </td>
                             <td>
                                 <input matInput placeholder="Enter wrong LPR reading percentage" type="number"
-                                    formControlName="wrongLPRReading" (keypress)="numDecimalUtil.validateNumberInput($event)"
-                                    (input)="numDecimalUtil.enforceMaxValue($event)"/>
+                                    formControlName="wrongLPRPercentage"
+                                    (keypress)="numDecimalUtil.validateNumberInput($event)"
+                                    (input)="numDecimalUtil.enforceMaxValue($event)" />
                             </td>
                             <td>
                                 <input matInput placeholder="Enter processing speed for wrong LPR" type="number"
-                                    formControlName="processingSpeedWrongLPR" />
+                                    formControlName="wrongLPRProcessingTime" />
                             </td>
                             <td>
                                 <a (click)="removeAccessPoint(i)" class="text-danger cursor-pointer">Delete</a>
@@ -50,13 +52,13 @@
         </div>
     </material-panel-table>
 </form>
-<mat-paginator [pageSizeOptions]="pageSizeOptions"
-        [length]="length" [pageIndex]="pageIndex" (page)="onPaginateChange($event)" [pageSize]="pageSize"
-        showFirstLastButtons>
-    </mat-paginator>
-    
+<mat-paginator [pageSizeOptions]="pageSizeOptions" [length]="length" [pageIndex]="pageIndex"
+    (page)="onPaginateChange($event)" [pageSize]="pageSize" showFirstLastButtons>
+</mat-paginator>
+
 <div class="mt-6 text-right">
-    <button type="button" (click)="next()" [disabled]="!accessPointsForm.valid" class="btn text-white bg-[#3498DB] w-[160px]">
+    <button type="button" (click)="next()" [disabled]="!accessPointsForm.valid"
+        class="btn text-white bg-[#3498DB] w-[160px]">
         Next
     </button>
 </div>

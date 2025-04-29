@@ -10,15 +10,12 @@ PNPM - [pnpm](https://pnpm.io)
 
 Angular CLI - [AngularCLI](https://angular.io/cli)
 
-
 ## Development
 
 `ng serve`
 
-
 ## Build Production
 
-Usually for PHP Laravel, current setup is built with base href on /UI/
-```
-ng build --configuration=production --aot --build-optimizer --common-chunk --vendor-chunk --named-chunks --base-href=/UI/
+```shell
+ng build --configuration production --aot --build-optimizer --common-chunk --vendor-chunk --named-chunks --base-href=/UI/
 ```# QueueSimulator

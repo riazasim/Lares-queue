@@ -110,7 +110,6 @@ export class ParametersQueueComponent implements OnInit {
         this.totalTrucks = this.booking; // Set totalTrucks to booking
         this.series[3].value = this.totalTrucks;
         this.updateChartData(this.queueForm.value);
-        console.log('Queue Settings Loaded:', this.queueSettings);
         console.log('Booking Loaded:', this.booking);
       },
       error: (error) => console.error('Failed to load queue settings:', error)
@@ -215,14 +214,15 @@ export class ParametersQueueComponent implements OnInit {
   }
 
   updateChartData(values: any) {
+    console.log(values)
     const totalPercentage = 100;
     let filledTotal = ['early', 'late', 'notArrived'].reduce((acc, key) => acc + (values.arrivalConformity[key] ? parseInt(values.arrivalConformity[key], 10) : 0), 0);
     let remaining = totalPercentage - filledTotal;
 
     this.series = [
-      { name: "Early", value: Math.round(this.totalTrucks * (values.early / 100)), color: "#FFD700" },
-      { name: "Late", value: Math.round(this.totalTrucks * (values.late / 100)), color: "#1E90FF" },
-      { name: "Not Arrived", value: Math.round(this.totalTrucks * (values.notArrived / 100)), color: "#FF4081" },
+      { name: "Early", value: Math.round(this.totalTrucks * (values.arrivalConformity.early / 100)), color: "#FFD700" },
+      { name: "Late", value: Math.round(this.totalTrucks * (values.arrivalConformity.late / 100)), color: "#1E90FF" },
+      { name: "Not Arrived", value: Math.round(this.totalTrucks * (values.arrivalConformity.notArrived / 100)), color: "#FF4081" },
       { name: "On Time", value: Math.round(this.totalTrucks * (remaining / 100)), color: "#20C997" }
     ];
 

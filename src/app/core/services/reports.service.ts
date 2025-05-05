@@ -12,13 +12,8 @@ import {
 export class ReportsService {
   constructor(private http: HttpClient) { }
 
-  probabaleTransactions(): Observable<Blob> {
-    return this.http.post(`${environment.apiUrl}${environment.apiVersion}/report/downloadProbableQueueDetailCSV`, {}, {
-      responseType: 'blob'
-    });
-  }
-  worstTransactions(): Observable<Blob> {
-    return this.http.post(`${environment.apiUrl}${environment.apiVersion}/report/downloadWorstQueueDetailCSV`, {}, {
+  Transactions({ scenario }: { scenario: string }): Observable<Blob> {
+    return this.http.post(`${environment.apiUrl}${environment.apiVersion}/reports/simulation`, { scenario }, {
       responseType: 'blob'
     });
   }

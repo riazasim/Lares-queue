@@ -18,12 +18,12 @@ export class ReportsService {
     });
   }
   probabaleQueue(): Observable<Blob> {
-    return this.http.post(`${environment.apiUrl}${environment.apiVersion}/report/downloadProbableQueueDetailCSV`, {}, {
+    return this.http.post(`${environment.apiUrl}${environment.apiVersion}/reports/simulation`, { scenario: "mps" }, {
       responseType: 'blob'
     });
   }
   worstQueue(): Observable<Blob> {
-    return this.http.post(`${environment.apiUrl}${environment.apiVersion}/report/downloadWorstQueueDetailCSV`, {}, {
+    return this.http.post(`${environment.apiUrl}${environment.apiVersion}/reports/simulation`, { scenario: "wps" }, {
       responseType: 'blob'
     });
   }

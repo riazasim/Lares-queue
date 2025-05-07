@@ -12,23 +12,18 @@ import {
 export class ReportsService {
   constructor(private http: HttpClient) { }
 
-  probabaleTransactions(): Observable<Blob> {
-    return this.http.post(`${environment.apiUrl}${environment.apiVersion}/report/downloadProbableQueueDetailCSV`, {}, {
-      responseType: 'blob'
-    });
-  }
-  worstTransactions(): Observable<Blob> {
-    return this.http.post(`${environment.apiUrl}${environment.apiVersion}/report/downloadWorstQueueDetailCSV`, {}, {
+  Transactions({ scenario }: { scenario: string }): Observable<Blob> {
+    return this.http.post(`${environment.apiUrl}${environment.apiVersion}/reports/simulation`, { scenario }, {
       responseType: 'blob'
     });
   }
   probabaleQueue(): Observable<Blob> {
-    return this.http.post(`${environment.apiUrl}${environment.apiVersion}/report/downloadProbableQueueDetailCSV`, {}, {
+    return this.http.post(`${environment.apiUrl}${environment.apiVersion}/reports/simulation`, { scenario: "mps" }, {
       responseType: 'blob'
     });
   }
   worstQueue(): Observable<Blob> {
-    return this.http.post(`${environment.apiUrl}${environment.apiVersion}/report/downloadWorstQueueDetailCSV`, {}, {
+    return this.http.post(`${environment.apiUrl}${environment.apiVersion}/reports/simulation`, { scenario: "wps" }, {
       responseType: 'blob'
     });
   }

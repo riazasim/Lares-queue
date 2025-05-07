@@ -5,62 +5,66 @@
   </div>
 </div>
 <div class="p-6 bg-white rounded-lg">
-    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Thank you!</h2>
-    <p class="text-lightGray">
-      We hope this tool gave you valuable insights and relevant data for infomed decisions.<br>
-      You can donwload the necessary details using the links below.
-    </p>
-  
-    <div class="grid grid-cols-1 min-md:grid-cols-2 gap-6 mt-4">
-      <!-- Parameters Card -->
-      <div class="p-8 border border-[#CBD5E1] rounded">
-        <div class="flex items-center justify-between mb-8">
-          <h3 class="text-lg font-medium text-gray-700">Parameters</h3>
-          <img src="assets/images/Parameters.svg" alt="Parameters">
-        </div>
-        <div>
-          <a class="text-[#3498DB] text-sm font-semibold">Parmeters file (PDF)</a>
-        </div>
+  <h2 class="text-2xl font-semibold text-gray-800 mb-4">Thank you!</h2>
+  <p class="text-lightGray">
+    We hope this tool gave you valuable insights and relevant data for infomed decisions.<br>
+    You can donwload the necessary details using the links below.
+  </p>
+
+  <div class="grid grid-cols-1 min-md:grid-cols-2 gap-6 mt-4">
+    <!-- Parameters Card -->
+    <div class="p-8 border border-[#CBD5E1] rounded">
+      <div class="flex items-center justify-between mb-8">
+        <h3 class="text-lg font-medium text-gray-700">Parameters</h3>
+        <img src="assets/images/Parameters.svg" alt="Parameters">
       </div>
-  
-      <div class="p-8 border border-[#CBD5E1] rounded">
-        <div class="flex items-center justify-between mb-8">
-          <h3 class="text-lg font-medium text-gray-700">Queue</h3>
-          <img src="assets/images/Queue.svg" alt="Queue">
-        </div>
-        <div>
-          <a class="text-[#3498DB] text-sm font-semibold cursor-pointer" (click)="probabaleQueue($event)">Queue - most probable scenario (CSV)</a><br>
-          <a class="text-[#3498DB] text-sm font-semibold cursor-pointer" (click)="worstQueue($event)">Queue - worst case scenario (CSV)</a>
-        </div>
-      </div>
-  
-      <div class="p-8 border border-[#CBD5E1] rounded">
-        <div class="flex items-center justify-between mb-8">
-          <h3 class="text-lg font-medium text-gray-700">Simulation</h3>
-          <img src="assets/images/Simulation.svg" alt="Simulation">
-        </div>
-        <div>
-          <a class="text-[#3498DB] text-sm font-semibold cursor-pointer" (click)="probabaleTransactions($event)">Transactions - most probable scenario (CSV)</a><br>
-          <a class="text-[#3498DB] text-sm font-semibold cursor-pointer" (click)="worstTransactions($event)">Transactions - worst case scenario (CSV)</a><br>
-          <!-- <a class="text-[#3498DB] text-sm font-semibold">Animation - most probable scenario (AVI)</a><br>
-          <a class="text-[#3498DB] text-sm font-semibold">Animation - worst case scenario (AVI)</a><br> -->
-        </div>
-      </div>
-  
-      <div class="p-8 border border-[#CBD5E1] rounded">
-        <div class="flex items-center justify-between mb-8">
-          <h3 class="text-lg font-medium text-gray-700">Reports</h3>
-          <img src="assets/images/Reports.svg" alt="Reports">
-        </div>
-        <div>
-          <a class="text-[#3498DB] text-sm font-semibold">Reports - most probable scenario (PDF)</a><br>
-          <a class="text-[#3498DB] text-sm font-semibold">Reports - worst case scenario (PDF)</a>
-        </div>
+      <div>
+        <a class="text-[#3498DB] text-sm font-semibold">Parmeters file (PDF)</a>
       </div>
     </div>
-  
-    <div class="flex gap-3 justify-end mt-6">
-      <button type="button" (click)="startAgain()" class="btn text-white bg-[#3498DB] w-[160px]">Start Again</button>
-      <button type="button" (click)="finish()" class="btn text-white bg-[#3498DB] w-[160px]">Finish</button>
+
+    <div class="p-8 border border-[#CBD5E1] rounded">
+      <div class="flex items-center justify-between mb-8">
+        <h3 class="text-lg font-medium text-gray-700">Queue</h3>
+        <img src="assets/images/Queue.svg" alt="Queue">
+      </div>
+      <div>
+        <a class="text-[#3498DB] text-sm font-semibold cursor-pointer" (click)="probabaleQueue($event)">Queue - most
+          probable scenario (CSV)</a><br>
+        <a class="text-[#3498DB] text-sm font-semibold cursor-pointer" (click)="worstQueue($event)">Queue - worst case
+          scenario (CSV)</a>
+      </div>
+    </div>
+
+    <div class="p-8 border border-[#CBD5E1] rounded">
+      <div class="flex items-center justify-between mb-8">
+        <h3 class="text-lg font-medium text-gray-700">Simulation</h3>
+        <img src="assets/images/Simulation.svg" alt="Simulation">
+      </div>
+      <div>
+        <a class="text-[#3498DB] text-sm font-semibold cursor-pointer"
+          (click)="downloadTransactions($event, 'mps')">Transactions - most probable scenario (CSV)</a><br>
+        <a class="text-[#3498DB] text-sm font-semibold cursor-pointer"
+          (click)="downloadTransactions($event, 'wps')">Transactions - worst case scenario (CSV)</a><br>
+        <!-- <a class="text-[#3498DB] text-sm font-semibold">Animation - most probable scenario (AVI)</a><br>
+          <a class="text-[#3498DB] text-sm font-semibold">Animation - worst case scenario (AVI)</a><br> -->
+      </div>
+    </div>
+
+    <div class="p-8 border border-[#CBD5E1] rounded">
+      <div class="flex items-center justify-between mb-8">
+        <h3 class="text-lg font-medium text-gray-700">Reports</h3>
+        <img src="assets/images/Reports.svg" alt="Reports">
+      </div>
+      <div>
+        <a class="text-[#3498DB] text-sm font-semibold">Reports - most probable scenario (PDF)</a><br>
+        <a class="text-[#3498DB] text-sm font-semibold">Reports - worst case scenario (PDF)</a>
+      </div>
     </div>
   </div>
+
+  <div class="flex gap-3 justify-end mt-6">
+    <button type="button" (click)="startAgain()" class="btn text-white bg-[#3498DB] w-[160px]">Start Again</button>
+    <button type="button" (click)="finish()" class="btn text-white bg-[#3498DB] w-[160px]">Finish</button>
+  </div>
+</div>

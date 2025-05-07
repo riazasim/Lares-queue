@@ -7,17 +7,13 @@ import { WorstCaseComponent } from './worst-case/worst-case.component';
   styleUrls: ['./showcase.component.scss']
 })
 export class ShowcaseComponent implements OnInit {
-  @ViewChild(WorstCaseComponent) worstCaseComponent!: WorstCaseComponent;
   selectedIndex = 0;
 
-  constructor() {}
+  constructor() { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   onTabChange(index: number): void {
     this.selectedIndex = index;
-    if (index === 1) {
-      this.worstCaseComponent?.initData();
-    }
   }
 }

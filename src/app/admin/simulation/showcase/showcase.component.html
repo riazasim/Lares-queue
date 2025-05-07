@@ -1,33 +1,20 @@
-<!-- <div *ngIf="isLoading$ | async" class="fixed inset-0 flex items-center justify-center bg-glass-sm bg-opacity-50 z-50">
-  <div class="p-6 bg-white rounded-lg shadow-lg text-center">
-    <app-loader [buttonLoader]="true" size="lg"></app-loader>
-    <p class="mt-4 text-gray-700 font-semibold">Loading simulation data...</p>
-  </div>
-</div>
-
-<div *ngIf="isCheckingProgress$ | async" class="fixed inset-0 flex items-center justify-center bg-glass-sm bg-opacity-50 z-50">
-  <div class="p-6 bg-white rounded-lg shadow-lg text-center">
-    <app-loader [buttonLoader]="true" size="lg"></app-loader>
-    <p class="mt-4 text-gray-700 font-semibold">Your simulation is in progress, please wait...</p>
-  </div>
-</div> -->
 <div class="p-6 bg-white rounded-lg">
   <h2 class="text-2xl font-semibold text-gray-800 mb-4">Simulation</h2>
   <p class="text-lightGray mb-4">
     Now that parameters were set and queues generated, you can start the 24 hours simulation.<br />
     You can set the simulation speed or skip directly to reports.
   </p>
-<mat-tab-group [(selectedIndex)]="selectedIndex" (selectedIndexChange)="onTabChange($event)" mat-stretch-tabs="false"
-mat-align-tabs="start">
-  <mat-tab label="MOST PROBABLE SCENARIO">
-    <ng-template matTabContent>
-      <app-probable-case *ngIf="selectedIndex === 0" [key]="0"></app-probable-case>
-    </ng-template>
-  </mat-tab>
-  <mat-tab label="WORST CASE SCENARIO">
-    <ng-template matTabContent>
-      <app-worst-case *ngIf="selectedIndex === 1" [key]="1"></app-worst-case>
-    </ng-template>
-  </mat-tab>
-</mat-tab-group>
+  <mat-tab-group [(selectedIndex)]="selectedIndex" (selectedIndexChange)="onTabChange($event)" mat-stretch-tabs="false"
+    mat-align-tabs="start">
+    <mat-tab label="MOST PROBABLE SCENARIO">
+      <ng-template matTabContent>
+        <app-probable-case *ngIf="selectedIndex === 0" [key]="0"></app-probable-case>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="WORST CASE SCENARIO">
+      <ng-template matTabContent>
+        <app-worst-case *ngIf="selectedIndex === 1" [key]="1"></app-worst-case>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
 </div>

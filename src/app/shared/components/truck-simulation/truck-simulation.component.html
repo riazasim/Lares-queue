@@ -1,0 +1,40 @@
+<div class="simulation-container">
+    <div class="controls">
+        <div class="control-group">
+            <label for="duration">Simulation Duration (seconds):</label>
+            <input type="number" id="duration" [(ngModel)]="simulationDuration" min="10" max="300"
+                [disabled]="isPlaying" />
+        </div>
+
+        <div class="control-buttons">
+            <button (click)="start()" [disabled]="isPlaying || trucks.length === 0">Start</button>
+            <button (click)="pause()" [disabled]="!isPlaying">Pause</button>
+            <button (click)="resume()" [disabled]="isPlaying || !isPaused">Resume</button>
+            <button (click)="reset()">Reset</button>
+        </div>
+
+        <div class="status">
+            <span class="status-item">Status: {{ currentStatus }}</span>
+            <span class="status-item">Processed: {{ processedCount }}</span>
+            <span class="status-item">Granted: {{ grantedCount }}</span>
+            <span class="status-item">Denied: {{ deniedCount }}</span>
+        </div>
+    </div>
+
+    <div class="legend">
+        <div class="legend-item">
+            <div class="color-box early"></div>
+            <span>Early Arrival</span>
+        </div>
+        <div class="legend-item">
+            <div class="color-box ontime"></div>
+            <span>On Time</span>
+        </div>
+        <div class="legend-item">
+            <div class="color-box late"></div>
+            <span>Late Arrival</span>
+        </div>
+    </div>
+
+    <svg #svgElement class="simulation-svg"></svg>
+</div>

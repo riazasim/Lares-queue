@@ -71,6 +71,7 @@ import { SankeyChartComponent } from './components/sankey-chart/sankey-chart.com
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 import { NumberTickerComponent } from './components/number-ticker/number-ticker.component';
 import { NumberCounterComponent } from './components/number-counter/number-counter.component';
+import { TruckSimulationComponent } from './components/truck-simulation/truck-simulation.component';
 
 export const MY_FORMATS = {
     parse: {
@@ -119,7 +120,8 @@ export const MY_FORMATS = {
         SankeyChartComponent,
         ProgressBarComponent,
         NumberTickerComponent,
-        NumberCounterComponent
+        NumberCounterComponent,
+        TruckSimulationComponent
     ],
     imports: [
         FontAwesomeModule,
@@ -221,7 +223,8 @@ export const MY_FORMATS = {
         SankeyChartComponent,
         ProgressBarComponent,
         NumberTickerComponent,
-        NumberCounterComponent
+        NumberCounterComponent,
+        TruckSimulationComponent
     ],
     providers: [
         provideNgxMask(),

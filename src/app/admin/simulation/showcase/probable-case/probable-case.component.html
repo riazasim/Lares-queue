@@ -110,12 +110,18 @@
             <div class="flex flex-col">
                 <div class="flex gap-2 justify-between items-center my-2">
                     <span class="text-[#46474C]">Outside queue length (km)</span>
-                    <span class="text-[#46474C]">{{outsideQueueLength}}</span>
+                    <span class="text-[#46474C]">
+                        <app-counter-ticker [autoPlay]="false" [totalAnimationTime]="selectedAnimationDuration"
+                            [data]="(totalQueueLength$ | async) || defaultTickerValue"></app-counter-ticker>
+                    </span>
                 </div>
                 <hr class="my-1">
                 <div class="flex gap-2 justify-between items-center my-2">
                     <span class="text-[#46474C]">Average queue speed (km/h)</span>
-                    <span class="text-[#46474C]">{{outsideQueueLength}}</span>
+                    <span class="text-[#46474C]">
+                        <app-counter-ticker [autoPlay]="false" [totalAnimationTime]="selectedAnimationDuration"
+                            [data]="(totalQueueSpeed$ | async) || defaultTickerValue"></app-counter-ticker>
+                    </span>
                 </div>
                 <hr class="my-1">
                 <div class="flex gap-2 justify-between items-center my-2">
@@ -134,8 +140,8 @@
 
     </div>
     <div class="flex justify-center items-center bg-gray-100">
-        <app-sankey-chart [timeSeriesData]="(timedData | async) || {}"
-            [totalAnimationDuration]="selectedAnimationDuration" [rawData]="(data | async) || {}" [groupKeys]="labels"
+        <app-sankey-chart [simulationDataArray]="simulation$ |async"
+            [totalAnimationDuration]="selectedAnimationDuration" [labels]="labels"
             [width]="width" [height]="500">
         </app-sankey-chart>
     </div>

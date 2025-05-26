@@ -12,24 +12,21 @@ import { ParametersQueueService } from 'src/app/core/services/parameters-queue.s
 })
 export class QueueComponent {
     queues$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-    isLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    isLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
     mode: ProgressBarMode = 'determinate';
     bufferValue = 75;
+    MPSqueue = Math.round(Math.random() * 3) + 1;
+    WPSqueue = Math.round(Math.random() * 3) + 1.2;
     constructor(
         private parametersQueueService: ParametersQueueService,
         private readonly router: Router,
         private readonly route: ActivatedRoute,
-    ) { this.getParameterQueueSetting() }
-
-    getParameterQueueSetting() {
-        this.parametersQueueService.getParameterQueueSetting().subscribe({
-            next: (response) => {
-                this.queues$.next(response);
-                console.log('Queues:', this.queues$);
-            },
-            error: (error) => console.error('Failed to queues:', error)
-        });
+    ) {
+        setTimeout(() => {
+            this.isLoading$.next(false);
+        }, Math.max(this.MPSqueue, this.WPSqueue) * 1000);
     }
+
 
     async next() {
         this.isLoading$.next(true);

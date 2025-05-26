@@ -74,6 +74,8 @@ export class WorstCaseComponent implements OnInit {
     totalEarlyTrucks$: BehaviorSubject<TimeSlot[]> = new BehaviorSubject<TimeSlot[]>([]);
     totalLateTrucks$: BehaviorSubject<TimeSlot[]> = new BehaviorSubject<TimeSlot[]>([]);
     totalNotArrivedTrucks$: BehaviorSubject<TimeSlot[]> = new BehaviorSubject<TimeSlot[]>([]);
+    totalQueueLength$: BehaviorSubject<TimeSlot[]> = new BehaviorSubject<TimeSlot[]>([]);
+    totalQueueSpeed$: BehaviorSubject<TimeSlot[]> = new BehaviorSubject<TimeSlot[]>([]);
     outsideQueueLength: number = 0;
     totalOnTimeTrucks$: BehaviorSubject<TimeSlot[]> = new BehaviorSubject<TimeSlot[]>([]);
     selectedAnimationDuration: number = 120000;
@@ -246,6 +248,14 @@ export class WorstCaseComponent implements OnInit {
                 this.totalOnTimeTrucks$.value.push({
                     time: key,
                     value: Number(value?.onTimeArrivals) || 0
+                })
+                this.totalQueueLength$.value.push({
+                    time: key,
+                    value: (Number(value?.currentQueue) * 20) / 1000 || 0
+                })
+                this.totalQueueSpeed$.value.push({
+                    time: key,
+                    value: ((Number(value?.currentQueue) * 20) / 1000) / 3600 || 0
                 })
             })
             console.log(item)

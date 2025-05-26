@@ -27,6 +27,7 @@ export class NumberCounterComponent implements OnInit, OnDestroy, OnChanges {
     @Input() totalAnimationTime: number = 60000;
     @Input() maxDisplayIncrements: number = 20;
     @Input() autoPlay: boolean = true;
+    @Input() minIncrement: number = 0.0001; // NEW: minimum step size for float values
 
     slots: TimeSlot[] = [];
     currentSlotIndex = 0;
@@ -62,7 +63,7 @@ export class NumberCounterComponent implements OnInit, OnDestroy, OnChanges {
     ngOnInit(): void {
         this.slots = this.data;
         this.reset();
-        if (this.autoPlay && this.slots && this.slots.length > 0) {
+        if (this.autoPlay && this.slots.length > 0) {
             this.play();
         }
     }
@@ -142,30 +143,25 @@ export class NumberCounterComponent implements OnInit, OnDestroy, OnChanges {
             return;
         }
 
-        let steps: number;
-        if (Math.abs(difference) <= this.maxDisplayIncrements) {
-            steps = Math.abs(difference);
-            this.slotStartValue = this.currentValue;
-        } else {
-            steps = this.maxDisplayIncrements;
-            this.slotStartValue = this.currentValue + (difference > 0
-                ? difference - steps
-                : difference + steps);
-        }
+        const steps = Math.min(
+            Math.ceil(Math.abs(difference) / this.minIncrement),
+            this.maxDisplayIncrements
+        );
 
+        this.slotStartValue = this.currentValue;
         this.slotTargetValue = nextTarget;
         this.totalSteps = steps;
         this.currentStep = 0;
         this.currentUpdateInterval = Math.round(this.countingTime / steps);
         this.currentPhase = 'counting';
 
-        const direction = difference > 0 ? 1 : -1;
-
         this.countInterval = setInterval(() => {
             this.currentStep++;
-            this.currentValue = this.slotStartValue + (this.currentStep * direction);
+            const stepSize = (this.slotTargetValue - this.slotStartValue) / this.totalSteps;
+            this.currentValue = parseFloat((this.slotStartValue + stepSize * this.currentStep).toFixed(6));
             this.cd.detectChanges();
-            if (this.currentStep >= steps) {
+
+            if (this.currentStep >= this.totalSteps) {
                 clearInterval(this.countInterval);
                 this.currentValue = this.slotTargetValue;
                 this.cd.detectChanges();
@@ -175,13 +171,13 @@ export class NumberCounterComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     private resumeCountingPhase(): void {
-        const difference = this.slotTargetValue - this.slotStartValue;
-        const direction = difference > 0 ? 1 : -1;
+        const stepSize = (this.slotTargetValue - this.slotStartValue) / this.totalSteps;
 
         this.countInterval = setInterval(() => {
             this.currentStep++;
-            this.currentValue = this.slotStartValue + (this.currentStep * direction);
+            this.currentValue = parseFloat((this.slotStartValue + stepSize * this.currentStep).toFixed(6));
             this.cd.detectChanges();
+
             if (this.currentStep >= this.totalSteps) {
                 clearInterval(this.countInterval);
                 this.currentValue = this.slotTargetValue;

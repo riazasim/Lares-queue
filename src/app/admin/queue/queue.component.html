@@ -8,20 +8,20 @@
     <div class="p-3 my-2 w-full border border-[#E4E7EC] rounded-lg">
         <span class="text-sm text-gray-600">Most probable scenario</span>
         <div class="flex gap-2 justify-between items-center my-2">
-            <mat-progress-bar mode="determinate" [value]="(queues$ | async)?.orderRandomization?.MPS"
-                class="custom-progress-bar probable">
-            </mat-progress-bar>
-            <span class="text-sm text-gray-600">{{(queues$ | async)?.orderRandomization?.MPS}}%</span>
+            <app-progress-bar [autoplay]="true" [duration]="MPSqueue" class="custom-progress-bar w-full">
+            </app-progress-bar>
+            <app-number-ticker [autoPlay]="true" [totalAnimationTime]="MPSqueue * 1000"
+                [targetValue]="100"></app-number-ticker>
         </div>
 
     </div>
     <div class="p-3 my-2 w-full border border-[#E4E7EC] rounded-lg">
         <span class="text-sm text-gray-600 mb-2">Worst case scenario</span>
         <div class="flex gap-2 justify-between items-center my-2">
-            <mat-progress-bar mode="determinate" [value]="(queues$ | async)?.orderRandomization?.WPS"
-                class="custom-progress-bar worst">
-            </mat-progress-bar>
-            <span class="text-sm text-gray-600">{{(queues$ | async)?.orderRandomization?.WPS}}%</span>
+            <app-progress-bar [autoplay]="true" [duration]="WPSqueue" class="custom-progress-bar w-full">
+            </app-progress-bar>
+            <app-number-ticker [autoPlay]="true" [totalAnimationTime]="WPSqueue * 1000"
+                [targetValue]="100"></app-number-ticker>
         </div>
 
     </div>

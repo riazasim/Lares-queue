@@ -1,6 +1,6 @@
 {
     "/api": {
-        "target": "http://localhost:4000",
+        "target": "https://qsim.lares.app",
         "secure": false,
         "logLevel": "debug",
         "changeOrigin": true

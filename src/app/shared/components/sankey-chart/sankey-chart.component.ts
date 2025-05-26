@@ -3,7 +3,7 @@ import {
   Input, ElementRef, ViewChild
 } from '@angular/core';
 import * as d3 from 'd3';
-import { sankey, sankeyJustify } from 'd3-sankey';
+import { sankey, sankeyLeft } from 'd3-sankey';
 
 interface TransactionEvent {
   truckId: number;
@@ -110,6 +110,8 @@ export class SankeyChartComponent implements OnInit, AfterViewInit, OnDestroy, O
 
   private colorScale!: d3.ScaleOrdinal<string, string>;
 
+  Lilliputian: any;
+
   private particleCounter = 0;
 
   private animationStartTime: number = 0;
@@ -121,9 +123,8 @@ export class SankeyChartComponent implements OnInit, AfterViewInit, OnDestroy, O
 
   private outcomeCounters: Record<string, { granted: number; denied: number }> = {};
 
-  // New properties for fixed timing
   private totalAnimationFrames: number = 0;
-  private fixedTravelFrames: number = 60; // Standard travel time for all particles
+  private fixedTravelFrames: number = 60;
 
   constructor() { }
 
@@ -147,7 +148,7 @@ export class SankeyChartComponent implements OnInit, AfterViewInit, OnDestroy, O
   public start(): void {
     this.running = true;
     this.animationStartTime = performance.now();
-    this.totalAnimationFrames = (this.totalAnimationDuration / 1000) * 60; // 60 FPS
+    this.totalAnimationFrames = (this.totalAnimationDuration / 1000) * 60;
     this._createParticleGenerationSchedule();
     const loop = () => {
       if (!this.running) return;
@@ -219,7 +220,6 @@ export class SankeyChartComponent implements OnInit, AfterViewInit, OnDestroy, O
       return;
     }
 
-    // Sort events by timestamp
     allEvents.sort((a, b) => new Date(a.event.timestamp).getTime() - new Date(b.event.timestamp).getTime());
 
     if (!allEvents[0]?.event?.timestamp || !allEvents[allEvents.length - 1]?.event?.timestamp) {
@@ -231,7 +231,6 @@ export class SankeyChartComponent implements OnInit, AfterViewInit, OnDestroy, O
       this.simulationEndTime = new Date(allEvents[allEvents.length - 1].event.timestamp);
     }
 
-    // Calculate generation frames - ensure last particle finishes exactly at totalAnimationFrames
     const maxGenerationFrame = this.totalAnimationFrames - this.fixedTravelFrames;
 
     this.timeScale = d3.scaleLinear()
@@ -243,7 +242,6 @@ export class SankeyChartComponent implements OnInit, AfterViewInit, OnDestroy, O
       const accessPoint = eventData.accessPoint;
       let generationFrame = Math.floor(this.timeScale(new Date(event.timestamp).getTime()));
 
-      // Ensure generation frame is within bounds
       generationFrame = Math.max(0, Math.min(generationFrame, maxGenerationFrame));
 
       const outcome = event.event === 'access_granted' ? 'Granted' : 'Denied';
@@ -254,7 +252,6 @@ export class SankeyChartComponent implements OnInit, AfterViewInit, OnDestroy, O
         return;
       }
 
-      // Use fixed travel time and calculate speed based on path length
       const pathLength = this.cache[pathKey].points.length;
       const speed = pathLength / this.fixedTravelFrames * this.speed;
 
@@ -271,7 +268,6 @@ export class SankeyChartComponent implements OnInit, AfterViewInit, OnDestroy, O
       });
     });
 
-    // Sort by completion frame to ensure proper timing
     this.particleGenerationSchedule.sort((a, b) => a.completionFrame - b.completionFrame);
   }
 
@@ -280,7 +276,6 @@ export class SankeyChartComponent implements OnInit, AfterViewInit, OnDestroy, O
     this._addParticlesFromSchedule(this.tickFrame);
     this._updateCounters();
 
-    // Check if animation should complete
     if (this.tickFrame >= this.totalAnimationFrames) {
       this.stop();
       return;
@@ -288,7 +283,6 @@ export class SankeyChartComponent implements OnInit, AfterViewInit, OnDestroy, O
 
     if (!this.g) return;
 
-    // Remove particles that have completed their journey
     this.particles = this.particles.filter(particle => {
       const localT = this.tickFrame - particle.createdAt;
       return localT * particle.speed < particle.length;
@@ -392,7 +386,7 @@ export class SankeyChartComponent implements OnInit, AfterViewInit, OnDestroy, O
 
     const extraSpace = this.height - this.computedHeight;
     this.g = this.svg.append('g')
-      .attr('transform', `translate(${this.margin.left}, ${this.margin.top + extraSpace / 2})`);
+      .attr('transform', `translate(${this.margin.left}, ${this.margin.top })`);
 
     this.g.append('g')
       .attr('class', 'routes')
@@ -473,62 +467,6 @@ export class SankeyChartComponent implements OnInit, AfterViewInit, OnDestroy, O
           .text('0%')
         );
     });
-
-    const infoGroup = this.g.append('g')
-      .attr('class', 'simulation-info-group')
-      .attr('transform', `translate(10, -30)`);
-
-    infoGroup.append('text')
-      .attr('class', 'simulation-info')
-      .attr('x', 0)
-      .attr('y', 0)
-      .attr('text-anchor', 'start')
-      .attr('fill', '#666')
-      .style('font-family', 'Menlo')
-      .style('font-size', '12px')
-      .text(`Access Points: ${this._simulationDataArray.length}`);
-
-    infoGroup.append('text')
-      .attr('class', 'progress-info')
-      .attr('x', 0)
-      .attr('y', 15)
-      .attr('text-anchor', 'start')
-      .attr('fill', '#666')
-      .style('font-family', 'Menlo')
-      .style('font-size', '10px')
-      .text('Progress: 0%');
-
-    const legendGroup = this.g.append('g')
-      .attr('class', 'legend-group')
-      .attr('transform', `translate(10, ${this.height - this.margin.top - this.margin.bottom - 100})`);
-
-    legendGroup.append('text')
-      .attr('x', 0)
-      .attr('y', -10)
-      .attr('fill', '#666')
-      .style('font-size', '11px')
-      .style('font-weight', 'bold')
-      .text('Event Types:');
-
-    legendGroup.selectAll('.legend-item')
-      .data(this.eventTypes)
-      .enter()
-      .append('g')
-      .attr('class', 'legend-item')
-      .attr('transform', (d, i) => `translate(0, ${i * 15})`)
-      .each((eventType, i, nodes) => {
-        const group = d3.select(nodes[i]);
-        group.append('rect')
-          .attr('width', 10)
-          .attr('height', 10)
-          .attr('fill', this.colors[eventType]);
-        group.append('text')
-          .attr('x', 15)
-          .attr('y', 8)
-          .attr('fill', '#666')
-          .style('font-size', '10px')
-          .text(eventType.replace('_', ' '));
-      });
   }
 
   private _prepareData(): void {
@@ -553,6 +491,7 @@ export class SankeyChartComponent implements OnInit, AfterViewInit, OnDestroy, O
           });
       }
     });
+
     const accessPoints = Array.from(new Set(this._simulationDataArray.map(simData => simData.accessPoint)));
     const { nodes, links } = this._buildNodeLinkArrays();
     const dataForSankey = {
@@ -563,19 +502,19 @@ export class SankeyChartComponent implements OnInit, AfterViewInit, OnDestroy, O
     this.bandHeight = Math.min(80, Math.max(40, 120 / Math.max(1, accessPoints.length)));
 
     const computedHeight = this.margin.top + this.margin.bottom +
-      accessPoints.length * (this.bandHeight + this.padding / 2) +
-      this.padding / 2;
+      accessPoints.length * (this.bandHeight + this.padding) +
+      this.padding;
 
     this.computedHeight = computedHeight;
     this.height = Math.max(this.height, computedHeight);
 
     const sk = sankey<any, any>()
       .nodeId(d => d.name)
-      .nodeAlign(sankeyJustify)
+      .nodeAlign(sankeyLeft)
       .nodeWidth(
         (this.width - this.margin.left - this.margin.right) / 2 * this.curve
       )
-      .nodePadding(this.padding)
+      .nodePadding(this.padding * 2) // Increased padding for more space
       .extent([
         [0, 0],
         [this.width - this.margin.left - this.margin.right,
@@ -583,6 +522,42 @@ export class SankeyChartComponent implements OnInit, AfterViewInit, OnDestroy, O
       ]);
 
     this.sankeyData = sk(dataForSankey);
+
+    // Manually adjust leaf node positions for equal spacing and alignment
+    const leafNodes = this.sankeyData.nodes.filter((n: any) => n.name !== 'Trucks');
+    const rootNode = this.sankeyData.nodes.find((n: any) => n.name === 'Trucks');
+
+    // Sort leaf nodes by name for consistent ordering
+    leafNodes.sort((a: any, b: any) => d3.ascending(a.name, b.name));
+
+    // Calculate equal spacing
+    const totalHeight = this.height - this.margin.top - this.margin.bottom;
+    const spacing = totalHeight / (leafNodes.length + 1); // +1 to add padding at top and bottom
+
+    // Set x and y positions for leaf nodes
+    const maxX = leafNodes.reduce((max: number, node: any) => Math.max(max, node.x1), 0);
+    leafNodes.forEach((node: any, index: number) => {
+      node.x0 = maxX - (this.width - this.margin.left - this.margin.right) / 2 * this.curve;
+      node.x1 = maxX;
+      node.y0 = (index + 1) * spacing - this.bandHeight / 2;
+      node.y1 = (index + 1) * spacing + this.bandHeight / 2;
+    });
+
+    // Adjust root node position to center vertically
+    if (rootNode) {
+      rootNode.x0 = 0;
+      rootNode.x1 = (this.width - this.margin.left - this.margin.right) / 2 * this.curve;
+      rootNode.y0 = totalHeight / 2 - this.bandHeight / 2;
+      rootNode.y1 = totalHeight / 2 + this.bandHeight / 2;
+    }
+
+    // Update links to match new node positions
+    this.sankeyData.links.forEach((link: any) => {
+      link.source = this.sankeyData.nodes.find((n: any) => n.name === link.source.name);
+      link.target = this.sankeyData.nodes.find((n: any) => n.name === link.target.name);
+      link.y0 = link.source.y0 + this.bandHeight / 2;
+      link.y1 = link.target.y0 + this.bandHeight / 2;
+    });
 
     this.sankeyData.nodes.forEach((node: any) => {
       node.path = node.name === 'Trucks' ? '/Trucks' : `/Trucks/${node.name}`;
@@ -603,14 +578,26 @@ export class SankeyChartComponent implements OnInit, AfterViewInit, OnDestroy, O
       .range(this.eventTypes.map(et => this.colors[et] || '#999999'));
   }
 
-  private _buildNodeLinkArrays(): { nodes: Array<{ name: string }>, links: Array<{ source: string, target: string }> } {
+  private _buildNodeLinkArrays(): { nodes: Array<{ name: string }>, links: Array<{ source: string, target: string, value: number }> } {
     const nodes = new Set<string>(['Trucks']);
-    const links: Array<{ source: string, target: string }> = [];
+    const links: Array<{ source: string, target: string, value: number }> = [];
+
+    const accessPointEventCounts: Record<string, number> = {};
+    this._simulationDataArray.forEach(simData => {
+      if (simData.events) {
+        const validEvents = simData.events.filter(event => !['checkout', 'no_show'].includes(event.event));
+        accessPointEventCounts[simData.accessPoint] = (accessPointEventCounts[simData.accessPoint] || 0) + validEvents.length;
+      }
+    });
 
     const accessPoints = Array.from(new Set(this._simulationDataArray.map(simData => simData.accessPoint)));
     accessPoints.forEach(ap => {
-      links.push({ source: 'Trucks', target: ap });
       nodes.add(ap);
+      links.push({
+        source: 'Trucks',
+        target: ap,
+        value: accessPointEventCounts[ap] || 1
+      });
     });
 
     return {
@@ -620,20 +607,54 @@ export class SankeyChartComponent implements OnInit, AfterViewInit, OnDestroy, O
   }
 
   private _buildRoutes(sankeyData: any): any[] {
-    function walk(n: any): any[] {
-      const subroutes = n.sourceLinks.flatMap((d: any) => walk(d.target));
-      return subroutes.length ? subroutes.map((r: any) => [n, ...r]) : [[n]];
-    }
+    const routes: any[] = [];
     const root = sankeyData.nodes.find((x: any) => x.targetLinks.length === 0);
-    const routes = walk(root);
+
+    if (!root) {
+      console.warn('No root node found in sankeyData.');
+      return routes;
+    }
+
+    const visited = new Set<string>();
+    function collectRoutes(node: any, currentPath: any[]): void {
+      const path = [...currentPath, node];
+      visited.add(node.name);
+
+      if (!node.sourceLinks || node.sourceLinks.length === 0) {
+        routes.push(path);
+        return;
+      }
+
+      const sortedLinks = node.sourceLinks.slice().sort((a: any, b: any) => d3.ascending(a.target.name, b.target.name));
+      sortedLinks.forEach((link: any) => {
+        if (!visited.has(link.target.name)) {
+          collectRoutes(link.target, path);
+        }
+      });
+    }
+
+    collectRoutes(root, []);
+
+    const accessPoints = new Set(sankeyData.nodes.filter((n: any) => n.name !== 'Trucks').map((n: any) => n.name));
+    const includedAccessPoints = new Set(routes.map(route => route[route.length - 1].name));
+    accessPoints.forEach(ap => {
+      if (!includedAccessPoints.has(ap)) {
+        console.warn(`Access point ${ap} not included in routes. Adding direct route.`);
+        const apNode = sankeyData.nodes.find((n: any) => n.name === ap);
+        if (apNode) {
+          routes.push([root, apNode]);
+        }
+      }
+    });
+
     return routes;
   }
 
   private _sankeyLinkCustom(nodes: any[]): string {
     if (!this.g) return '';
-    const offset = this.routeAlign === 'top' ? 0 : this.bandHeight / 2;
     const pathGen = d3.path();
     nodes.forEach((n, i) => {
+      const offset = this.routeAlign === 'middle' ? this.bandHeight / 2 : 0;
       if (i === 0) {
         pathGen.moveTo(n.x0, n.y0 + offset);
       }
@@ -643,7 +664,7 @@ export class SankeyChartComponent implements OnInit, AfterViewInit, OnDestroy, O
         const w = next.x0 - n.x1;
         pathGen.bezierCurveTo(
           n.x1 + w * 0.6, n.y0 + offset,
-          n.x1 + w * 0.6, next.y0 + offset,
+          next.x0 - w * 0.4, next.y0 + offset,
           next.x0, next.y0 + offset
         );
       }
@@ -664,6 +685,7 @@ export class SankeyChartComponent implements OnInit, AfterViewInit, OnDestroy, O
     }
 
     const lastNode = nodes[nodes.length - 1];
+    const offset = this.routeAlign === 'middle' ? this.bandHeight / 2 : 0;
     points.push({ x: lastNode.x1, y: lastNode.y0 + offset });
 
     const routeKey = '/' + nodes.map((n: any) => n.name).join('/');
@@ -678,15 +700,10 @@ export class SankeyChartComponent implements OnInit, AfterViewInit, OnDestroy, O
 
     const progress = Math.min(this.tickFrame / this.totalAnimationFrames, 1);
 
-    // this.g.select('.progress-info')
-    //   .text(`Progress: ${d3.format('.1%')(progress)} | Particles: ${this.particles.length} | Frame: ${this.tickFrame}/${this.totalAnimationFrames}`);
-
-    // Reset counters
     Object.keys(this.outcomeCounters).forEach(ap => {
       this.outcomeCounters[ap] = { granted: 0, denied: 0 };
     });
 
-    // Count completed particles
     this.particles.forEach(p => {
       if (p.pos >= (p.length - 1)) {
         if (p.outcome === 'Granted') {
@@ -697,7 +714,6 @@ export class SankeyChartComponent implements OnInit, AfterViewInit, OnDestroy, O
       }
     });
 
-    // Also count particles that have been removed (completed their journey)
     this.particleGenerationSchedule
       .filter(scheduled => scheduled.generated && scheduled.completionFrame <= this.tickFrame)
       .forEach(scheduled => {

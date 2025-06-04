@@ -118,15 +118,12 @@
                 <hr class="my-1">
                 <div class="flex gap-2 justify-between items-center my-2">
                     <span class="text-[#46474C]">Average queue speed (km/h)</span>
-                    <span class="text-[#46474C]">
-                        <app-counter-ticker [autoPlay]="false" [totalAnimationTime]="selectedAnimationDuration"
-                            [data]="(totalQueueSpeed$ | async) || defaultTickerValue"></app-counter-ticker>
-                    </span>
+                    <span class="text-[#46474C]">{{(totalQueueSpeed$ | async) || 0}}</span>
                 </div>
                 <hr class="my-1">
                 <div class="flex gap-2 justify-between items-center my-2">
                     <span class="text-[#46474C]">Average time to enter (min) </span>
-                    <span class="text-[#46474C]">-</span>
+                    <span class="text-[#46474C]">{{(averageTimeToEnter$ | async)! / 60}}</span>
                 </div>
                 <hr class="my-1">
                 <div class="flex gap-2 justify-between items-center my-2">
@@ -141,8 +138,7 @@
     </div>
     <div class="flex justify-center items-center bg-gray-100">
         <app-sankey-chart [simulationDataArray]="simulation$ |async"
-            [totalAnimationDuration]="selectedAnimationDuration" [labels]="labels"
-            [width]="width" [height]="500">
+            [totalAnimationDuration]="selectedAnimationDuration" [labels]="labels" [width]="width" [height]="500">
         </app-sankey-chart>
     </div>
 

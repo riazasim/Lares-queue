@@ -81,9 +81,10 @@ export class ProbableCaseComponent implements OnInit {
     totalLateTrucks$: BehaviorSubject<TimeSlot[]> = new BehaviorSubject<TimeSlot[]>([]);
     totalNotArrivedTrucks$: BehaviorSubject<TimeSlot[]> = new BehaviorSubject<TimeSlot[]>([]);
     totalQueueLength$: BehaviorSubject<TimeSlot[]> = new BehaviorSubject<TimeSlot[]>([]);
-    totalQueueSpeed$: BehaviorSubject<TimeSlot[]> = new BehaviorSubject<TimeSlot[]>([]);
+    totalQueueSpeed$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
     outsideQueueLength: number = 0;
     totalOnTimeTrucks$: BehaviorSubject<TimeSlot[]> = new BehaviorSubject<TimeSlot[]>([]);
+    averageTimeToEnter$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
     selectedAnimationDuration: number = 120000;
     animationDuration = [
         { id: 1, name: '1 min', value: 60000 },
@@ -264,11 +265,10 @@ export class ProbableCaseComponent implements OnInit {
                     time: key,
                     value: (Number(value?.currentQueue) * 20) / 1000 || 0
                 })
-                this.totalQueueSpeed$.value.push({
-                    time: key,
-                    value: ((Number(value?.currentQueue) * 20) / 1000) / 3600 || 0
-                })
+
             })
+            this.totalQueueSpeed$.next((((item.simulationResults.granted + item.simulationResults.denied) * 20) / 1000) / 86400)
+            this.averageTimeToEnter$.next(item.averageTimetoEnter || 0);
         })
 
         console.log(transformedData, transformedTimedData)

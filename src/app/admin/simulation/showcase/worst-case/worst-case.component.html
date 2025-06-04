@@ -44,7 +44,7 @@
     <div class="p-3 my-2 w-full border border-[#E4E7EC] rounded-lg">
 
         <div class="flex gap-2 justify-start items-center p-2">
-            <span class="text-[#46474C] font-semibold">Worst probable scenario</span>
+            <span class="text-[#46474C] font-semibold">Most probable scenario</span>
         </div>
         <hr class="mx-2 my-1">
         <div class="grid min-lg:grid-cols-2 grid-cols-1 gap-x-10 min-3xl:gap-x-20 gap-y-4 p-2">
@@ -118,15 +118,12 @@
                 <hr class="my-1">
                 <div class="flex gap-2 justify-between items-center my-2">
                     <span class="text-[#46474C]">Average queue speed (km/h)</span>
-                    <span class="text-[#46474C]">
-                        <app-counter-ticker [autoPlay]="false" [totalAnimationTime]="selectedAnimationDuration"
-                            [data]="(totalQueueSpeed$ | async) || defaultTickerValue"></app-counter-ticker>
-                    </span>
+                    <span class="text-[#46474C]">{{(totalQueueSpeed$ | async) || 0}}</span>
                 </div>
                 <hr class="my-1">
                 <div class="flex gap-2 justify-between items-center my-2">
                     <span class="text-[#46474C]">Average time to enter (min) </span>
-                    <span class="text-[#46474C]">-</span>
+                    <span class="text-[#46474C]">{{(averageTimeToEnter$ | async)! / 60}}</span>
                 </div>
                 <hr class="my-1">
                 <div class="flex gap-2 justify-between items-center my-2">
@@ -140,10 +137,9 @@
 
     </div>
     <div class="flex justify-center items-center bg-gray-100">
-        <!-- <app-sankey-chart [timeSeriesData]="(timedData | async) || {}"
-            [totalAnimationDuration]="selectedAnimationDuration" [rawData]="(data | async) || {}" [labels]="labels"
-            [width]="width" [height]="500">
-        </app-sankey-chart> -->
+        <app-sankey-chart [simulationDataArray]="simulation$ |async"
+            [totalAnimationDuration]="selectedAnimationDuration" [labels]="labels" [width]="width" [height]="500">
+        </app-sankey-chart>
     </div>
 
 </div>

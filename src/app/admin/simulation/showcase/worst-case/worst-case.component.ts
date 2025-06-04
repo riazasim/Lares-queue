@@ -29,6 +29,12 @@ export class WorstCaseComponent implements OnInit {
     isCheckingProgress$ = new BehaviorSubject<boolean>(false);
     private stopPolling$ = new Subject<void>();
     private progressSubscription: Subscription | null = null;
+    particleTypes = ['onTime', 'early', 'late']
+    particleColors = {
+        'onTime': '#14B8A6',
+        'early': '#FACC15',
+        'late': '#3B82F6'
+    }
     defaultTickerValue: TimeSlot[] = [
         { time: '00:00', value: 0 },
         { time: '01:00', value: 0 },
@@ -57,7 +63,7 @@ export class WorstCaseComponent implements OnInit {
     ]
     probableScenario: any[] = [];
     worstScenario: any[] = [];
-    simulation: any[] = [];
+    simulation$: BehaviorSubject<any> = new BehaviorSubject<any>([]);
     tenantId: number | null = null;
     sliderValue: number = 300;
     hours: string = '05';
@@ -75,16 +81,11 @@ export class WorstCaseComponent implements OnInit {
     totalLateTrucks$: BehaviorSubject<TimeSlot[]> = new BehaviorSubject<TimeSlot[]>([]);
     totalNotArrivedTrucks$: BehaviorSubject<TimeSlot[]> = new BehaviorSubject<TimeSlot[]>([]);
     totalQueueLength$: BehaviorSubject<TimeSlot[]> = new BehaviorSubject<TimeSlot[]>([]);
-    totalQueueSpeed$: BehaviorSubject<TimeSlot[]> = new BehaviorSubject<TimeSlot[]>([]);
+    totalQueueSpeed$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
     outsideQueueLength: number = 0;
     totalOnTimeTrucks$: BehaviorSubject<TimeSlot[]> = new BehaviorSubject<TimeSlot[]>([]);
+    averageTimeToEnter$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
     selectedAnimationDuration: number = 120000;
-    rawData = new BehaviorSubject({
-        Early: { "Granted": 120, "Denied": 45 },
-        Late: { "Granted": 60, "Denied": 30 },
-        Expired: { "Granted": 30, "Denied": 15 },
-        "On time": { "Granted": 300, "Denied": 150 }
-    })
     animationDuration = [
         { id: 1, name: '1 min', value: 60000 },
         { id: 2, name: '2 min', value: 120000 },
@@ -133,6 +134,10 @@ export class WorstCaseComponent implements OnInit {
             this.sankey.start();
             this.progress.resume();
         }
+        if (this.data.value && this.sankey && this.numberTickers && this.numberCounters) {
+            this.numberTickers.forEach(ticker => ticker.play());
+            this.numberCounters.forEach(ticker => ticker.play())
+        }
     }
 
     resetAnimation() {
@@ -148,6 +153,11 @@ export class WorstCaseComponent implements OnInit {
             this.isStarted = false;
             this.sankey.stop();
             this.progress.pause();
+
+        }
+        if (this.data.value && this.sankey && this.numberTickers && this.numberCounters) {
+            this.numberTickers.forEach(ticker => ticker.pause());
+            this.numberCounters.forEach(ticker => ticker.pause())
         }
     }
 
@@ -181,8 +191,8 @@ export class WorstCaseComponent implements OnInit {
         const data = { scenario: "wps" };
         this.simulationService.getSimulation(data).subscribe({
             next: (response) => {
-                this.simulation = response;
-                this.transformData(this.simulation);
+                this.simulation$.next(response);
+                this.transformData(this.simulation$.value);
                 this.cdr.detectChanges();
                 this.isLoading$.next(false);
             },
@@ -203,17 +213,19 @@ export class WorstCaseComponent implements OnInit {
             }
             if (!transformedData[item.accessPoint]) {
                 transformedData[item.accessPoint] = {
-                    Denied: item.simulationResults.denied,
-                    Granted: item.simulationResults.granted
+                    Denied: { onTime: 0, late: 0, early: 0 },
+                    Granted: { onTime: 0, late: 0, early: 0 }
                 }
             }
-            transformedData[item.accessPoint].Denied += item.simulationResults.denied
-            transformedData[item.accessPoint].Granted += item.simulationResults.granted
+            transformedData[item.accessPoint].Denied.onTime += item.simulationResults.denied
+            transformedData[item.accessPoint].Denied.late += item.lateArrivals
+            transformedData[item.accessPoint].Denied.early += item.earlyArrivals
+            transformedData[item.accessPoint].Granted.onTime += item.simulationResults.granted
             Object.entries(item.timeSlots).forEach(([key, value]: any) => {
                 transformedTimedData[item.accessPoint].push({
                     "Time": key,
-                    "Granted": value.granted || 0,
-                    "Denied": value.denied || 0
+                    "Granted": { onTime: value?.granted, late: 0, early: 0 },
+                    "Denied": { onTime: value?.denied, late: value?.lateArrivals, early: value?.earlyArrivals }
                 })
                 this.totalAccessGranted$.value.push({
                     time: key,
@@ -253,14 +265,13 @@ export class WorstCaseComponent implements OnInit {
                     time: key,
                     value: (Number(value?.currentQueue) * 20) / 1000 || 0
                 })
-                this.totalQueueSpeed$.value.push({
-                    time: key,
-                    value: ((Number(value?.currentQueue) * 20) / 1000) / 3600 || 0
-                })
+
             })
-            console.log(item)
+            this.totalQueueSpeed$.next((((item.simulationResults.granted + item.simulationResults.denied) * 20) / 1000) / 86400)
+            this.averageTimeToEnter$.next(item.averageTimetoEnter || 0);
         })
 
+        console.log(transformedData, transformedTimedData)
         this.data.next(transformedData)
         this.timedData.next(transformedTimedData)
 
